@@ -26,7 +26,7 @@ def get_user(request_handler: RequestHandler) -> str:
     """
 
     # bypass authentication in the case of health.py dashboard to allow GCP to perform health checks
-    if request_handler.request.path in ("/health", "/error"):
+    if request_handler.request.path.split("/")[-1] in ("health", "error"):
         return "ok"
 
     query_arguments = request_handler.request.query_arguments
