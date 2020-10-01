@@ -1,1 +1,11 @@
+# cache
 __pycache__
+
+# IDE workspace settings
+.vscode
+
+# virutal environment
+venv
+
+# package files
+*.egg-info
