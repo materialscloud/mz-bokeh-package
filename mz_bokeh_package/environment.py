@@ -80,7 +80,7 @@ def get_db_host() -> str:
     elif env == 'production':
         host = PRODUCTION_HOST
     elif env == 'dev':
-        host = os.getenv('DB_HOST', STAGING_HOST)
+        host = os.getenv('DB_HOST', 'localhost')
     else:
         host = "error"
 
