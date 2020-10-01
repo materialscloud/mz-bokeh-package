@@ -60,3 +60,28 @@ def get_error_page_url() -> str:
         mz_app_url = "error"
 
     return mz_app_url
+
+
+def get_db_host() -> str:
+    """Returns a database host address based on the current environment
+
+    The database is a Postgres database running on GCP.
+
+    Returns:
+        str: Database host address
+    """
+    STAGING_HOST = "35.233.124.184"
+    PRODUCTION_HOST = "104.199.26.69"
+
+    env = get_environment()
+
+    if env == 'staging':
+        host = STAGING_HOST
+    elif env == 'production':
+        host = PRODUCTION_HOST
+    elif env == 'dev':
+        host = os.getenv('DB_HOST', STAGING_HOST)
+    else:
+        host = "error"
+
+    return host
