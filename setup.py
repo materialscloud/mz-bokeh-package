@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="mz_bokeh_package",
-    version="0.0.1",
+    version="0.0.2",
     packages=find_packages(),
 
     # Requirements for the package.

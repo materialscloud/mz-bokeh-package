@@ -9,7 +9,7 @@ from bokeh.io import curdoc
 from tornado.web import RequestHandler
 from typing import Optional
 
-from .environment import get_request_url, get_error_page_url, get_environment
+from mz_bokeh_package.environment import get_request_url, get_error_page_url, get_environment
 
 
 def get_user(request_handler: RequestHandler) -> str:
