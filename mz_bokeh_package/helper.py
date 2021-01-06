@@ -24,14 +24,6 @@ def str_to_bytes(value):
     return base64.b64decode(value)
 
 
-def decode_if_bytes(cls, data):
-    try:
-        data = data.decode()
-    except (UnicodeDecodeError, AttributeError):
-        pass
-    return data
-
-
 def clean_temp_folder():
     temp_path = get_temp_dir_path()
     for filename in os.listdir(temp_path):
