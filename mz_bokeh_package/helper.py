@@ -3,7 +3,7 @@ from os.path import abspath, dirname, join
 import requests
 import os
 import base64
-from typing import Type, Union
+from typing import Union
 from functools import partial
 from typing import Optional
 
@@ -22,6 +22,14 @@ def get_temp_dir_path():
 
 def str_to_bytes(value):
     return base64.b64decode(value)
+
+
+def decode_if_bytes(cls, data):
+    try:
+        data = data.decode()
+    except (UnicodeDecodeError, AttributeError):
+        pass
+    return data
 
 
 def clean_temp_folder():

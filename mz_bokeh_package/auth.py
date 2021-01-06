@@ -9,7 +9,8 @@ from bokeh.io import curdoc
 from tornado.web import RequestHandler
 from typing import Optional
 
-from mz_bokeh_package.environment import get_request_url, get_error_page_url, get_environment
+from .helper import decode_if_bytes
+from .environment import get_request_url, get_error_page_url, get_environment
 
 
 def get_user(request_handler: RequestHandler) -> str:
@@ -142,6 +143,9 @@ class CurrentUser:
         # in the development environment, allow overriding the api_key and user_key via env variables
         if get_environment() == 'dev':
             user_key = os.getenv('USER_KEY', user_key)
+
+        # convert bytes to str (this comes to fix a problem that the user_key may come as type bytes from the header)
+        user_key = decode_if_bytes(user_key)
 
         return user_key
 
