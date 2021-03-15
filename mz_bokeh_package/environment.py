@@ -60,3 +60,19 @@ def get_error_page_url() -> str:
         mz_app_url = "error"
 
     return mz_app_url
+
+
+def get_webapp_host() -> str:
+    """get the web app host based on the environment.
+
+    Returns:
+        str: Web app host.
+    """
+    env = get_environment()
+
+    if env == "production":
+        return "app.materials.zone"
+    elif env == "staging":
+        return "materials-zone-v2.firebaseapp.com"
+    else:
+        return os.getenv('WEBAPP_HOST', "materials-zone-v2.firebaseapp.com")
