@@ -30,15 +30,13 @@ def get_request_url(endpoint: str) -> str:
     env = get_environment()
 
     if env == 'staging':
-        host = 'staging.materials.zone:5000'
+        return 'staging.materials.zone:5000'
     elif env == 'production':
-        host = 'production.materials.zone:5000'
+        return 'production.materials.zone:5000'
     elif env == 'dev':
-        host = os.getenv('API_HOST', 'staging.materials.zone:5000')
+        return os.getenv('API_HOST', 'staging.materials.zone:5000')
     else:
-        host = "error"
-
-    return f"http://{host}/{endpoint}"
+        return "error"
 
 
 def get_error_page_url() -> str:
@@ -51,12 +49,28 @@ def get_error_page_url() -> str:
     env = get_environment()
 
     if env == 'staging':
-        mz_app_url = "https://bokeh-staging.materials.zone/error"
+        return "https://bokeh-staging.materials.zone/error"
     elif env == 'production':
-        mz_app_url = "https://bokeh.materials.zone/error"
+        return "https://bokeh.materials.zone/error"
     elif env == 'dev':
-        mz_app_url = "https://bokeh-staging.materials.zone/error"
+        return "https://bokeh-staging.materials.zone/error"
     else:
-        mz_app_url = "error"
+        return "error"
 
-    return mz_app_url
+
+def get_webapp_host() -> str:
+    """get the web app host based on the environment.
+
+    Returns:
+        str: Web app host.
+    """
+    env = get_environment()
+
+    if env == "staging":
+        return "materials-zone-v2.firebaseapp.com"
+    elif env == "production":
+        return "app.materials.zone"
+    elif env == "dev":
+        return os.getenv('WEBAPP_HOST', "materials-zone-v2.firebaseapp.com")
+    else:
+        return "error"
