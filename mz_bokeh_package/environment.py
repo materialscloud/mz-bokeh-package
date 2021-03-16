@@ -70,9 +70,11 @@ def get_webapp_host() -> str:
     """
     env = get_environment()
 
-    if env == "production":
-        return "app.materials.zone"
-    elif env == "staging":
+    if env == "staging":
         return "materials-zone-v2.firebaseapp.com"
-    else:
+    elif env == "production":
+        return "app.materials.zone"
+    elif env == "dev":
         return os.getenv('WEBAPP_HOST', "materials-zone-v2.firebaseapp.com")
+    else:
+        return "error"
