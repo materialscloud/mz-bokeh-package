@@ -30,15 +30,13 @@ def get_request_url(endpoint: str) -> str:
     env = get_environment()
 
     if env == 'staging':
-        host = 'staging.materials.zone:5000'
+        return 'staging.materials.zone:5000'
     elif env == 'production':
-        host = 'production.materials.zone:5000'
+        return 'production.materials.zone:5000'
     elif env == 'dev':
-        host = os.getenv('API_HOST', 'staging.materials.zone:5000')
+        return os.getenv('API_HOST', 'staging.materials.zone:5000')
     else:
-        host = "error"
-
-    return f"http://{host}/{endpoint}"
+        return "error"
 
 
 def get_error_page_url() -> str:
@@ -51,15 +49,13 @@ def get_error_page_url() -> str:
     env = get_environment()
 
     if env == 'staging':
-        mz_app_url = "https://bokeh-staging.materials.zone/error"
+        return "https://bokeh-staging.materials.zone/error"
     elif env == 'production':
-        mz_app_url = "https://bokeh.materials.zone/error"
+        return "https://bokeh.materials.zone/error"
     elif env == 'dev':
-        mz_app_url = "https://bokeh-staging.materials.zone/error"
+        return "https://bokeh-staging.materials.zone/error"
     else:
-        mz_app_url = "error"
-
-    return mz_app_url
+        return "error"
 
 
 def get_webapp_host() -> str:
