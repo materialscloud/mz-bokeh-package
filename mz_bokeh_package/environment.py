@@ -30,13 +30,15 @@ def get_request_url(endpoint: str) -> str:
     env = get_environment()
 
     if env == 'staging':
-        return 'staging.materials.zone:5000'
+        host = 'staging.materials.zone:5000'
     elif env == 'production':
-        return 'production.materials.zone:5000'
+        host = 'production.materials.zone:5000'
     elif env == 'dev':
-        return os.getenv('API_HOST', 'staging.materials.zone:5000')
+        host = os.getenv('API_HOST', 'staging.materials.zone:5000')
     else:
-        return "error"
+        host = "error"
+
+    return f"http://{host}/{endpoint}"
 
 
 def get_error_page_url() -> str:
