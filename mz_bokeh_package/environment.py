@@ -9,12 +9,20 @@ import os
 def get_environment() -> str:
     """get the current environment
 
+    Raises:
+        ValueError: Whenever the environment is invalid.
+
     Returns:
-        the current environment, possible values are: 'dev', 'staging' or 'production'
+        str: the current environment, possible values are: 'dev', 'staging' or 'production'
     """
 
     # in the kubernetes deployed containers, the environemnt variable ENVIRONMENT is set to staging/production
-    return os.getenv('ENVIRONMENT', 'dev')
+    env = os.getenv('ENVIRONMENT', 'dev')
+
+    if env not in {"staging", "production", "dev"}:
+        raise ValueError(f'The "{env}" environment is invalid. Valid environments: "staging"/"production"/"dev"')
+
+    return env
 
 
 def get_request_url(endpoint: str) -> str:
@@ -30,13 +38,13 @@ def get_request_url(endpoint: str) -> str:
     env = get_environment()
 
     if env == 'staging':
-        return 'staging.materials.zone:5000'
+        host = 'staging.materials.zone:5000'
     elif env == 'production':
-        return 'production.materials.zone:5000'
+        host = 'production.materials.zone:5000'
     elif env == 'dev':
-        return os.getenv('API_HOST', 'staging.materials.zone:5000')
-    else:
-        return "error"
+        host = os.getenv('API_HOST', 'staging.materials.zone:5000')
+
+    return f"http://{host}/{endpoint}"
 
 
 def get_error_page_url() -> str:
@@ -48,14 +56,10 @@ def get_error_page_url() -> str:
 
     env = get_environment()
 
-    if env == 'staging':
+    if env in {'staging', 'dev'}:
         return "https://bokeh-staging.materials.zone/error"
     elif env == 'production':
         return "https://bokeh.materials.zone/error"
-    elif env == 'dev':
-        return "https://bokeh-staging.materials.zone/error"
-    else:
-        return "error"
 
 
 def get_webapp_host() -> str:
@@ -72,5 +76,3 @@ def get_webapp_host() -> str:
         return "app.materials.zone"
     elif env == "dev":
         return os.getenv('WEBAPP_HOST', "materials-zone-v2.firebaseapp.com")
-    else:
-        return "error"
