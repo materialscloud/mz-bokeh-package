@@ -1,19 +1,19 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="mz_bokeh_package",
-    version="0.0.3",
-    packages=find_packages(),
+    version="0.0.4",
+    packages=["mz_bokeh_package"],
 
     # Requirements for the package.
     install_requires=[
         "requests",
-        "bokeh",
+        "bokeh~=2.3.0",
     ],
 
     # PyPI metadata.
-    author="Ori Yudilevich",
-    author_email="ori@materials.zone",
+    author="Ori Yudilevich <ori@materials.zone>, \
+        Roi Weinreb <roi.weinreb@materials.zone>",
     description="Common functionality for creating apps on the MaterialsZone platform.",
     keywords="",
     url="www.materials.zone",
