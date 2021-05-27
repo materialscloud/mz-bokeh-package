@@ -1,6 +1,4 @@
-"""
-This module contains functions for obtaining environment (e.g. dev/staging/production) specific data
-
+"""This module contains functions for obtaining environment (e.g. dev/staging/production) specific data
 """
 
 import os

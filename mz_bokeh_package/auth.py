@@ -33,14 +33,14 @@ def get_user(request_handler: RequestHandler) -> str:
 
     # get the api_key from the request header
     api_keys = query_arguments.get("api_key")
-    if not api_keys is None and len(api_keys) == 1:
+    if api_keys is not None and len(api_keys) == 1:
         api_key = api_keys[0]
     else:
         api_key = ""
 
     # get the user_key from the request header
     user_keys = query_arguments.get("user_key")
-    if not user_keys is None and len(user_keys) == 1:
+    if user_keys is not None and len(user_keys) == 1:
         user_key = user_keys[0]
     else:
         user_key = ""
@@ -111,7 +111,7 @@ class CurrentUser:
 
         # get the api_key from the request header
         api_keys = query_arguments.get("api_key")
-        if not api_keys is None and len(api_keys) == 1:
+        if api_keys is not None and len(api_keys) == 1:
             api_key = api_keys[0]
         else:
             api_key = ""
@@ -134,7 +134,7 @@ class CurrentUser:
 
         # get the api_key from the request header
         user_keys = query_arguments.get("user_key")
-        if not user_keys is None and len(user_keys) == 1:
+        if user_keys is not None and len(user_keys) == 1:
             user_key = user_keys[0]
         else:
             user_key = ""
@@ -160,5 +160,3 @@ class CurrentUser:
         """
 
         return get_user_from_api_key(CurrentUser.get_api_key(), CurrentUser.get_user_key())
-
-
