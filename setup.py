@@ -10,6 +10,11 @@ setup(
         "requests",
         "bokeh",
     ],
+    extras_require={
+        "development": [
+            "flake8~=3.8",
+        ],
+    },
 
     # PyPI metadata.
     author="Ori Yudilevich",
