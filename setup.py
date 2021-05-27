@@ -4,6 +4,7 @@ setup(
     name="mz_bokeh_package",
     version="0.0.4",
     packages=["mz_bokeh_package"],
+    include_package_data=True,
 
     # Requirements for the package.
     install_requires=[
@@ -22,5 +23,5 @@ setup(
     },
 
     # TODO: Add some stuff about licensing.
-    classifiiers=[]
+    classifiers=[]
 )
