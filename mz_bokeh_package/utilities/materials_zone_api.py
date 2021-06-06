@@ -4,7 +4,7 @@ from typing import Dict, Optional, Union
 import requests
 
 from .auth import CurrentUser
-from .environment import get_request_url
+from .environment import Environment
 from .helpers import save_file, clean_temp_folder, download_image
 
 
@@ -43,7 +43,7 @@ class MaterialsZoneApi:
         ]
 
         # upload the files. a response object will be returned with a success or fail message.
-        requests.post(get_request_url("upload/items"), files=files, params=params)
+        requests.post(Environment.get_request_url("upload/items"), files=files, params=params)
 
         # remove files
         clean_temp_folder()
@@ -76,7 +76,7 @@ class MaterialsZoneApi:
 
         # get parser endpoint
         parser_route = "parse/{}".format(processing_parameters_code.lstrip("#"))
-        url = get_request_url(parser_route)
+        url = Environment.get_request_url(parser_route)
 
         # send request to API
         res = requests.post(
