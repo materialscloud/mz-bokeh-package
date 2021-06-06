@@ -9,7 +9,7 @@ from bokeh.io import curdoc
 from tornado.web import RequestHandler
 from typing import Optional
 
-from .environment import Environment
+from mz_bokeh_package.utilities.environment import Environment
 
 
 class Auth:
