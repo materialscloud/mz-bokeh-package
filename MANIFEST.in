@@ -1,1 +1,3 @@
+recursive-include mz_bokeh_package/components *
 recursive-include mz_bokeh_package/custom_widgets *
+recursive-include mz_bokeh_package/utilities *
