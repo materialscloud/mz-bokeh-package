@@ -98,9 +98,6 @@ const common_styles = `
   span.multiselect-native-select {
     width: inherit;
   }
-  span.multiselect-group.dropdown-item-text {
-    padding-left: 10px;
-  }
   .dropdown-item.active:hover {
     background-color: #f8f9fa;
   }
@@ -109,6 +106,9 @@ const common_styles = `
   }
 `
 const default_styles = common_styles + `
+  .multiselect-group.dropdown-item-text {
+    padding-left: 10px;
+  }
   label.form-check-label.single-select::before {
     border-radius: 50%;
   }

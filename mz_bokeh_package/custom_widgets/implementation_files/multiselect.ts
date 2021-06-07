@@ -98,27 +98,34 @@ const common_styles = `
   span.multiselect-native-select {
     width: inherit;
   }
-  span.multiselect-group.dropdown-item-text {
-    padding-left: 10px;
-  }
   .dropdown-item.active:hover {
     background-color: #f8f9fa;
   }
   .multiselect-clear-filter.input-group-text {
     outline: none;
   }
-`
-const default_styles = common_styles + `
+  `
+  const default_styles = common_styles + `
+  .multiselect-group.dropdown-item,
   .multiselect-all.dropdown-item {
     padding-left: 10px;
   }
+  .multiselect-all.dropdown-item {
+    padding-bottom: 0;
+  }
+  button.multiselect-group.dropdown-item.active,
+  button.multiselect-group.dropdown-item:active,
   .multiselect-all.dropdown-item.active,
   .multiselect-all.dropdown-item:active {
     background-color: #FFFFFF;
     color: inherit;
   }
+  button.multiselect-group.dropdown-item:focus,
   .multiselect-all.dropdown-item:focus {
     outline: none;
+  }
+  button.multiselect-group.dropdown-item.active:hover {
+    background-color: #f8f9fa;
   }
 `;
 
@@ -242,6 +249,7 @@ export class CustomMultiSelectView extends InputWidgetView {
       numberDisplayed: this.model.number_displayed,
       buttonWidth: '100%',
       includeSelectAllOption: this.model.include_select_all,
+      enableClickableOptGroups: true,
       onDropdownShown: this.on_dropdown_opened.bind(this),
       onDropdownHidden: this.on_dropdown_closed.bind(this),
     }
