@@ -72,4 +72,5 @@ class CustomSelect(InputWidget):
             margin=[10, 10, 10, 5],
             allow_non_selected=True,
             sizing_mode='scale_width',
-            css_classes=['custom_select', 'custom'])
+            css_classes=['custom_select', 'custom'],
+        )

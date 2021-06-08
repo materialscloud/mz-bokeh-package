@@ -86,5 +86,5 @@ class CustomMultiSelect(InputWidget):
             title=title,
             sizing_mode='scale_width',
             margin=[10, 10, 10, 5],
-            css_classes=['custom_select', 'custom']
+            css_classes=['custom_select', 'custom'],
         )

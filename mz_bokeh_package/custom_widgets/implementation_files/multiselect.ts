@@ -105,7 +105,7 @@ const common_styles = `
     outline: none;
   }
   `
-  const default_styles = common_styles + `
+const default_styles = common_styles + `
   .multiselect-group.dropdown-item,
   .multiselect-all.dropdown-item {
     padding-left: 10px;
