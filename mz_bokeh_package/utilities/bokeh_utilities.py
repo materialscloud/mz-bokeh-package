@@ -1,4 +1,5 @@
 from functools import partial
+import inspect
 
 
 class BokehUtilities:
@@ -9,15 +10,20 @@ class BokehUtilities:
         while the callback is running.
         """
 
-        def outer(self, attr, old, new):
+        def outer(self, *args, **kwargs):
             self._state["is_loading"] = True
-            self._doc.add_next_tick_callback(partial(inner, func, self, attr, old, new))
+            self._doc.add_next_tick_callback(partial(inner, func, self, *args, **kwargs))
 
-        def inner(f, self, attr, old, new):
-            f(self, attr, old, new)
+        def inner(f, self, *args, **kwargs):
+            f(self, *args, **kwargs)
             self._state["is_loading"] = False
 
-        return outer
+        # create a version of outer that has the same signature as func (since that is expected by Bokeh)
+        func_signature = str(inspect.signature(func))
+        outer_with_signature_def = f"lambda {func_signature.lstrip('(').rstrip(')')}: outer{func_signature}"
+        outer_with_signature = eval(outer_with_signature_def, {'outer': outer})
+
+        return outer_with_signature
 
     @staticmethod
     def silent_property_change(object_name, property, value, event_handler):
