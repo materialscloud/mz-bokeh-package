@@ -26,10 +26,10 @@ class BokehUtilities:
         return outer_with_signature
 
     @staticmethod
-    def silent_property_change(object_name, property, value, event_handler):
-        """This function allows updating any of the properties in event_handlers without triggering the event handler.
+    def silent_property_change(widget, property, value):
+        """This function allows updating a property without triggering the event handler.
         """
-        object_dict = event_handler[object_name]
-        object_dict['object'].remove_on_change(property, object_dict['properties'][property])
-        object_dict['object'].update_from_json({property: value})
-        object_dict['object'].on_change(property, object_dict['properties'][property])
+        callbacks = widget._callbacks[property]
+        widget._callbacks[property] = []
+        setattr(widget, property, value)
+        widget._callbacks[property] = callbacks
