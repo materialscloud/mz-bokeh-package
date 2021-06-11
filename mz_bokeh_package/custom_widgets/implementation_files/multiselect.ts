@@ -150,11 +150,10 @@ export class CustomMultiSelectView extends InputWidgetView {
   connect_signals(): void {
     super.connect_signals()
 
-    const {value, options, select_all, name, title, enabled} = this.model.properties
+    const {value, options, name, title, enabled} = this.model.properties
     this.on_change(value, () => this.update_value())
     this.on_change([name, title], () => this.render())
     this.on_change(enabled, () => this.enable_widget())
-    this.on_change(select_all, () => this.select_all(false))
     this.on_change(options, () => this.update_options())
   }
 
