@@ -9,7 +9,7 @@ const default_styles = `
 .toggle-btn {
   position: relative;
   display: inline-block;
-  width: 40px;
+  width: 30px;
   height: 13px;
 }
 
@@ -28,9 +28,9 @@ const default_styles = `
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .25s;
-  transition: .25s;
+  background-color: #B0AFAF;
+  -webkit-transition: .15s;
+  transition: .15s;
 }
 
 .slider:before {
@@ -40,14 +40,14 @@ const default_styles = `
   width: 17px;
   left: 0px;
   bottom: -2px;
-  background-color: #62d1c4;
-  -webkit-transition: .25s;
-  -moz-transition: .25s;
-  transition: .25s;
+  background-color: #F1F1F1;
+  -webkit-transition: .15s;
+  -moz-transition: .15s;
+  transition: .15s;
 }
 
 input:checked + .slider {
-  background-color: #a8ebf8f5;
+  background-color: #00BCD4;
 }
 
 input:focus + .slider {
@@ -55,9 +55,10 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(22px);
-  -ms-transform: translateX(22px);
-  transform: translateX(22px);
+  background-color: #ABDAE0;
+  -webkit-transform: translateX(14px);
+  -ms-transform: translateX(14px);
+  transform: translateX(14px);
 }
 
 .slider.round {
@@ -66,6 +67,8 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+  border: none;
+  box-shadow: 0 0 3px -1px;
 }
 
 .bk.toggle-container {
@@ -118,7 +121,7 @@ export class CustomToggleView extends MarkupView {
   toggle_active(): void {
     setTimeout(() => {
       this.model.active = !this.model.active
-    }, 250)
+    }, 200)
   }
   
   on_document_ready(): void {
