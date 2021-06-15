@@ -2,6 +2,7 @@ import json
 from os.path import basename
 from typing import Dict, Optional, Union
 import requests
+from contextlib import ExitStack
 
 from .auth import CurrentUser
 from .environment import Environment
@@ -36,14 +37,15 @@ class MaterialsZoneApi:
             "uid": CurrentUser.get_user_key()
         }
 
-        # construct a list of files to upload via a POST HTTP request
-        files = [
-            ("data" if basename(path) == 'meta.json' else 'files', open(path, "rb"))
-            for path in files_paths
-        ]
+        with ExitStack() as stack:
+            files_objects = [stack.enter_context(open(path, "rb")) for path in files_paths]
+            files = [
+                ("data" if basename(file.name) == 'meta.json' else 'files', file)
+                for file in files_objects
+            ]
 
-        # upload the files. a response object will be returned with a success or fail message.
-        requests.post(Environment.get_request_url("upload/items"), files=files, params=params)
+            # upload the files. a response object will be returned with a success or fail message.
+            requests.post(Environment.get_request_url("upload/items"), files=files, params=params)
 
         # remove files
         clean_temp_folder()
