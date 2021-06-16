@@ -47,7 +47,7 @@ const default_styles = `
 }
 
 input:checked + .slider {
-  background-color: #00BCD4;
+  background-color: #ABDAE0;
 }
 
 input:focus + .slider {
@@ -55,7 +55,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  background-color: #ABDAE0;
+  background-color: #00BCD4;
   -webkit-transform: translateX(14px);
   -ms-transform: translateX(14px);
   transform: translateX(14px);
