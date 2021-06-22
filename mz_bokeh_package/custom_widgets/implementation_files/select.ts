@@ -182,7 +182,7 @@ export class CustomSelectView extends InputWidgetView {
         unique across all other options (not only in its group) */
         selected = this.model.value[1] === value 
       } else {
-        selected = this.model.value.includes(value) 
+        selected = isString(this.model.value) && this.model.value === value 
       }
       
       return {value, label, selected}
