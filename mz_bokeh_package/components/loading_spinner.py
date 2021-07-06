@@ -23,6 +23,6 @@ class LoadingSpinner:
         """enable/disable loading mode """
         self._enabled = value
         self._callback.code = f"""
-            document.getElementById('loadingSpinnerContainer').style.visibility = '{'visible' if value else 'hidden'}';
+            document.getElementById('loadingSpinnerInvoker').style.visibility = '{'visible' if value else 'hidden'}';
         """
         self._loader_trigger.text = str(int(self._loader_trigger.text) + 1)
