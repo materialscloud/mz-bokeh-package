@@ -12,7 +12,7 @@ from typing import Optional
 from mz_bokeh_package.utilities.environment import Environment
 
 
-def get_user(self, request_handler: RequestHandler) -> str:
+def get_user(request_handler: RequestHandler) -> str:
     """
     authenticate user based on api_key and user_key that are sent via the query parameters of the request and
     return the user_id if the user is authenticated and otherwise return None
@@ -51,7 +51,7 @@ def get_user(self, request_handler: RequestHandler) -> str:
         user_key = os.getenv('USER_KEY', user_key)
 
     # authenticate the user using the MaterialsZone API by requesting the user_id
-    user_id = self.get_user_from_api_key(api_key, user_key)
+    user_id = Auth.get_user_from_api_key(api_key, user_key)
 
     return user_id
 

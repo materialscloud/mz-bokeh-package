@@ -48,7 +48,7 @@ class Environment:
         return f"http://{host}/{endpoint}"
 
     @classmethod
-    def get_error_page_url(cls, self) -> str:
+    def get_error_page_url(cls) -> str:
         """get the url for the MaterialsZone app
 
         Returns:
