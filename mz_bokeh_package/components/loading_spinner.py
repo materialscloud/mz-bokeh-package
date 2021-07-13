@@ -3,7 +3,7 @@ from bokeh.models.widgets.markups import Div
 from bokeh.models import CustomJS
 from bokeh.layouts import column
 
-logger = logging.getLogger("mz.bokeh.package")
+logger = logging.getLogger("mzbokeh")
 
 
 class LoadingSpinner:
