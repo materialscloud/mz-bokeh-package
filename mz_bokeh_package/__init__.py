@@ -1,4 +1,4 @@
 import logging
 
 # Setup logging
-logging.getLogger('mz_bokeh_package').addHandler(logging.NullHandler())
+logging.getLogger('mz_bokeh_package').setLevel("DEBUG")
