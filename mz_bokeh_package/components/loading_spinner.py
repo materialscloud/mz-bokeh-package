@@ -1,6 +1,9 @@
+import logging
 from bokeh.models.widgets.markups import Div
 from bokeh.models import CustomJS
 from bokeh.layouts import column
+
+logger = logging.getLogger(__name__)
 
 
 class LoadingSpinner:
@@ -22,7 +25,9 @@ class LoadingSpinner:
     def enabled(self, value: bool):
         """enable/disable loading mode """
         self._enabled = value
+        visibility = 'visible' if value else 'hidden'
         self._callback.code = f"""
-            document.getElementById('loadingSpinnerInvoker').style.visibility = '{'visible' if value else 'hidden'}';
+            document.getElementById('loadingSpinnerInvoker').style.visibility = '{visibility}';
         """
+        logger.debug(f"Loading spinner is {visibility}")
         self._loader_trigger.text = str(int(self._loader_trigger.text) + 1)
