@@ -6,7 +6,7 @@ from typing import Optional
 class BokehUtilities:
 
     @staticmethod
-    def async_event_handler(_func=None, *, function_to_execute: Optional[str]=None):
+    def async_event_handler(_func=None, *, function_to_execute: Optional[str] = None):
         """A decorator for event handlers to run them asynchronously and display the loading spinner while they run
 
         This decorator will cause the decorated event handler to run asynchronously, the loading spinner
@@ -15,9 +15,9 @@ class BokehUtilities:
         The latter can be used, for example, to disable certain controls while the event handler is executing.
 
         Params:
-            function_to_execute - the name of a method of the class that accepts a single boolean parameter. For example,
-                                  there could be a method `def _disable_controls(self, disable: bool), in which case the
-                                  string "_disable_controls" should be passed.
+            function_to_execute - the name of a method of the class that accepts a single boolean parameter.
+            For example, there could be a method `def _disable_controls(self, disable: bool), in which case the
+            string "_disable_controls" should be passed.
         """
 
         def _async_event_handler(func):
@@ -54,3 +54,9 @@ class BokehUtilities:
         widget._callbacks[property] = []
         setattr(widget, property, value)
         widget._callbacks[property] = callbacks
+
+    @staticmethod
+    def get_document_title(session_context):
+        """Returns the title of the current bokeh document.
+        """
+        return session_context.server_context.application_context.url[1:]
