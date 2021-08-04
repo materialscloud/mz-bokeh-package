@@ -1,5 +1,5 @@
 import json
-from typing import Callable, List, Dict, Any, Optional
+from typing import Callable, Iterable, List, Dict, Any, Optional
 from functools import partial
 from bokeh.models import Toggle, CustomJS
 from bokeh.io import curdoc
@@ -12,7 +12,6 @@ class AppStateValue():
     def __init__(self):
         self._value: Any = None
         self._callback_functions: List[Callable] = []
-        self.persistent = False
 
     @property
     def value(self) -> Any:
@@ -68,10 +67,12 @@ class AppState:
         print(state["plot_area"])
     """
 
-    def __init__(self, cookies: Optional[Dict[str, Any]] = None):
+    def __init__(self, persistent_keys: Optional[Iterable[str]] = None):
         self._doc = curdoc()
         self._values: Dict[str, AppStateValue] = {}
-        self._cookies = self._get_cookies()
+
+        if persistent_keys:
+            self._add_persistent_values(persistent_keys)
 
     def __getitem__(self, key) -> Any:
         return self._values[key].value
@@ -104,14 +105,9 @@ class AppState:
         cookie_saver.js_on_change("active", CustomJS(code=""))
         self._doc.add_root(cookie_saver)
 
-    def set_persistent_value(self, key: str):
-        app_state_value = self._values.get(key) or AppStateValue()
-        app_state_value.value = self._cookies.get(key)
-        app_state_value.persistent = True
+    def _set_persistent_value(self, key: str, value: Optional[Any] = None):
+        self[key] = value
         self.on_change(key, partial(self._store_cookie_callback, cookie_name=key))
-
-        if not self._doc.select_one({"name": "cookie_saver"}):
-            self._add_cookie_saver_to_doc()
 
     def _store_cookie_callback(self, data, cookie_name):
         """Stores data to a HTTP cookie.
@@ -135,11 +131,11 @@ class AppState:
             Dict[str, Any]: HTTP cookies dictionary.
         """
         session_context = self._doc.session_context
-        cookies = session_context.request.cookies
+        request_cookies = session_context.request.cookies
         dashboard_title = BokehUtilities.get_document_title(session_context)
 
-        cookies = {}
-        for cookie_name, cookie_value in cookies.items():
+        dashboard_cookies = {}
+        for cookie_name, cookie_value in request_cookies.items():
             if cookie_name.startswith(dashboard_title):
                 key = cookie_name.replace(f"{dashboard_title}_", "")
 
@@ -148,6 +144,14 @@ class AppState:
                 except json.JSONDecodeError:
                     value = cookie_value
 
-                cookies[key] = value
+                dashboard_cookies[key] = value
 
-        return cookies
+        return dashboard_cookies
+
+    def _add_persistent_values(self, persistent_keys: Iterable[str]):
+        cookies = self._get_cookies()
+
+        for key in persistent_keys:
+            self._set_persistent_value(key, cookies.get(key))
+
+        self._add_cookie_saver_to_doc()
