@@ -1,6 +1,8 @@
 import json
+from inspect import getfullargspec
 from typing import Callable, Iterable, List, Dict, Any, Optional
 from functools import partial
+from bokeh.document import Document
 from bokeh.models import Toggle, CustomJS
 from bokeh.io import curdoc
 
@@ -9,8 +11,8 @@ from mz_bokeh_package.utilities import BokehUtilities, Environment, CurrentUser
 
 class AppStateValue():
 
-    def __init__(self):
-        self._value: Any = None
+    def __init__(self, value: Optional[Any] = None):
+        self._value = value
         self._callback_functions: List[Callable] = []
 
     @property
@@ -22,12 +24,26 @@ class AppStateValue():
         try:
             if self._value == new_value:
                 return
+
         except ValueError:
             pass
+
         self._value = new_value
         self._call_callbacks()
 
-    def subscribe(self, callback_function: Callable):
+    def subscribe(self, callback_function: Callable[[Any], None]):
+        callback_signature = getfullargspec(callback_function)
+
+        function_arguments = callback_signature.args
+        if "self" in function_arguments:
+            function_arguments.remove("self")
+
+        if len(function_arguments) != 1:
+            raise ValueError(
+                f"Callback functions a single argument (new_value), but the suppied callback has "
+                f"{len(callback_signature.args)} arguments."
+            )
+
         self._callback_functions.append(callback_function)
 
     def _call_callbacks(self):
