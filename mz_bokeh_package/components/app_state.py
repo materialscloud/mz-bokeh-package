@@ -4,7 +4,7 @@ from functools import partial
 from bokeh.models import Toggle, CustomJS
 from bokeh.io import curdoc
 
-from mz_bokeh_package.utilities import BokehUtilities
+from mz_bokeh_package.utilities import BokehUtilities, Environment
 
 
 class AppStateValue():
@@ -118,10 +118,19 @@ class AppState:
         """
         document_title = BokehUtilities.get_document_title(self._doc.session_context)
         cookie_value = data if isinstance(data, str) else str(data).replace("'", '"')
+        env = Environment.get_environment()
         cookie_saver = curdoc().select_one({"name": "cookie_saver"})
-        cookie_saver.js_property_callbacks["change:active"][0].code = f"""
-        document.cookie = '{document_title}_{cookie_name}={cookie_value}'
-        """
+
+        if env == "dev":
+            code = f"""
+            document.cookie = '{document_title}_{cookie_name}={cookie_value}'
+            """
+        else:
+            code = f"""
+            document.cookie = '{document_title}_{cookie_name}={cookie_value};domain=.materials.zone;path=/basic-aiml-package/{document_title}'
+            """  # noqa: E501
+
+        cookie_saver.js_property_callbacks["change:active"][0].code = code
         cookie_saver.active = not cookie_saver.active
 
     def _get_cookies(self) -> Dict[str, Any]:
