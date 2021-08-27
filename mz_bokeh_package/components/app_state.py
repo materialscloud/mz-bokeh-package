@@ -4,7 +4,7 @@ from functools import partial
 from bokeh.models import Toggle, CustomJS
 from bokeh.io import curdoc
 
-from mz_bokeh_package.utilities import BokehUtilities, Environment
+from mz_bokeh_package.utilities import BokehUtilities, Environment, CurrentUser
 
 
 class AppStateValue():
@@ -116,18 +116,19 @@ class AppState:
         Each time the value of persistent instances changes, this callback stores
         the new value as a HTTP cookie.
         """
-        document_title = BokehUtilities.get_document_title(self._doc.session_context)
+        dashboard_title = BokehUtilities.get_document_title(self._doc.session_context)
+        user_id = CurrentUser().get_user_id()
         cookie_value = data if isinstance(data, str) else str(data).replace("'", '"')
         env = Environment.get_environment()
         cookie_saver = curdoc().select_one({"name": "cookie_saver"})
 
         if env == "dev":
             code = f"""
-            document.cookie = '{document_title}_{cookie_name}={cookie_value}'
+            document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value}'
             """
         else:
             code = f"""
-            document.cookie = '{document_title}_{cookie_name}={cookie_value};domain=.materials.zone;path=/basic-aiml-package/{document_title}'
+            document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value};domain=.materials.zone;path=/basic-aiml-package/{dashboard_title}'
             """  # noqa: E501
 
         cookie_saver.js_property_callbacks["change:active"][0].code = code
@@ -142,11 +143,13 @@ class AppState:
         session_context = self._doc.session_context
         request_cookies = session_context.request.cookies
         dashboard_title = BokehUtilities.get_document_title(session_context)
+        user_id = CurrentUser().get_user_id()
+        cookies_prefix = f"{user_id}_{dashboard_title}_"
 
         dashboard_cookies = {}
         for cookie_name, cookie_value in request_cookies.items():
-            if cookie_name.startswith(dashboard_title):
-                key = cookie_name.replace(f"{dashboard_title}_", "")
+            if cookie_name.startswith(cookies_prefix):
+                key = cookie_name.replace(cookies_prefix, "")
 
                 try:
                     value = json.loads(cookie_value)
