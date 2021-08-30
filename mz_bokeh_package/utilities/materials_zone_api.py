@@ -53,6 +53,9 @@ class MaterialsZoneApi:
         # remove files
         clean_temp_folder()
 
+        # return api response
+        return res
+
     @staticmethod
     def parse_file(file_content: Union[str, bytes], processing_parameters_code: str) -> Dict[str, Union[str, dict]]:
         """parse a bokeh FileInput widget with a given processing parameters code.
