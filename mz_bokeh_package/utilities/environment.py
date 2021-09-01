@@ -37,6 +37,7 @@ class Environment:
         """
 
         env = cls.get_environment()
+        add_an_s = ""
 
         if env == 'staging':
             host = 'staging.materials.zone:5000'
@@ -44,8 +45,10 @@ class Environment:
             host = 'production.materials.zone:5000'
         elif env == 'dev':
             host = os.getenv('API_HOST', 'staging.materials.zone:5000')
+            if host.find('api') > -1:
+                add_an_s = "s"
 
-        return f"http://{host}/{endpoint}"
+        return f"http{add_an_s}://{host}/{endpoint}"
 
     @classmethod
     def get_error_page_url(cls) -> str:
