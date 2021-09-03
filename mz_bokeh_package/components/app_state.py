@@ -2,7 +2,6 @@ import json
 from inspect import getfullargspec
 from typing import Callable, Iterable, List, Dict, Any, Optional
 from functools import partial
-from bokeh.document import Document
 from bokeh.models import Toggle, CustomJS
 from bokeh.io import curdoc
 
