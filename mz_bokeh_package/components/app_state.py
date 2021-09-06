@@ -1,5 +1,5 @@
 import json
-from inspect import getfullargspec
+from inspect import getfullargspec, ismethod
 from typing import Callable, Iterable, List, Dict, Any, Optional
 from functools import partial
 from bokeh.models import Toggle, CustomJS
@@ -34,13 +34,13 @@ class AppStateValue():
         callback_signature = getfullargspec(callback_function)
 
         function_arguments = callback_signature.args
-        if "self" in function_arguments:
-            function_arguments.remove("self")
+        if ismethod(callback_function):
+            function_arguments.pop(0)
 
         if len(function_arguments) != 1:
             raise ValueError(
-                f"Callback functions a single argument (new_value), but the suppied callback has "
-                f"{len(callback_signature.args)} arguments."
+                f"Callback functions require a single argument (new_value), but the provided "
+                f"callback has {len(callback_signature.args)} arguments."
             )
 
         self._callback_functions.append(callback_function)
