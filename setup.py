@@ -14,6 +14,7 @@ setup(
     extras_require={
         "development": [
             "flake8~=3.8",
+            "pytest~=6.2.4",
         ],
     },
 
