@@ -37,7 +37,7 @@ class DummyComponent():
         self.values.append(new_value)
 
     def method_two_args(self, new_value: Any, other_value: Any) -> None:
-        self.values.append(new_value)
+        pass
 
     @staticmethod
     def static_method_no_args() -> None:
