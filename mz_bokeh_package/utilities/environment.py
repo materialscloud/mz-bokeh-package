@@ -27,7 +27,10 @@ class Environment:
 
     @classmethod
     def get_request_url(cls, endpoint: str) -> str:
-        """receives an endpoint of an API request and converts it to a request url based on the environment
+        """receives an endpoint of an API request and converts it to a request url based on the environment.
+        If the environment variable 'ENVIRONMENT' is set to 'dev' the environment variable 'API_HOST' should
+        be set to the desired url, including 'https://'. If 'API_HOST' is not set in the development environment,
+        the default staging url will be returned.
 
         Args:
             endpoint: the endpoint of the request
