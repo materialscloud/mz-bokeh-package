@@ -27,7 +27,10 @@ class Environment:
 
     @classmethod
     def get_request_url(cls, endpoint: str) -> str:
-        """receives an endpoint of an API request and converts it to a request url based on the environment
+        """receives an endpoint of an API request and converts it to a request url based on the environment.
+        If the environment variable 'ENVIRONMENT' is set to 'dev' the environment variable 'API_HOST' should
+        be set to the desired url, including 'https://'. If 'API_HOST' is not set in the development environment,
+        the default staging url will be returned.
 
         Args:
             endpoint: the endpoint of the request
@@ -39,13 +42,13 @@ class Environment:
         env = cls.get_environment()
 
         if env == 'staging':
-            host = 'staging.materials.zone:5000'
+            host = 'https://api-staging.materials.zone/v1beta1'
         elif env == 'production':
-            host = 'production.materials.zone:5000'
+            host = 'https://api.materials.zone/v1beta1'
         elif env == 'dev':
-            host = os.getenv('API_HOST', 'staging.materials.zone:5000')
+            host = os.getenv('API_HOST', 'https://api-staging.materials.zone/v1beta1')
 
-        return f"http://{host}/{endpoint}"
+        return f"{host}/{endpoint}"
 
     @classmethod
     def get_error_page_url(cls) -> str:
