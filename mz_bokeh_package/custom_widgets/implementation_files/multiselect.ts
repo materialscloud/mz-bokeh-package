@@ -336,7 +336,7 @@ export class CustomMultiSelectView extends InputWidgetView {
       const new_select_all = new_value.length === this.all_values.length ? true : false 
   
       const was_value_changed = this.model.value && (new_value.length !== this.model.value.length || 
-        this.model.value.every((el, i) => el !== new_value[i]))
+        this.model.value.some((el, i) => el !== new_value[i]))
       
       if (new_select_all !== this.model.select_all || was_value_changed) {
         this.model.setv({select_all: new_select_all, value: new_value})
