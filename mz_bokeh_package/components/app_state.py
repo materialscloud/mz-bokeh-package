@@ -34,7 +34,7 @@ class AppStateValue():
         callback_signature = getfullargspec(callback_function)
 
         function_arguments = callback_signature.args
-        if ismethod(callback_function):
+        if ismethod(callback_function) or (isinstance(callback_function, partial) and ismethod(callback_function.func)):
             function_arguments.pop(0)
 
         if len(function_arguments) != 1:
