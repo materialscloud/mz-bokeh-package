@@ -27,6 +27,10 @@ def dummy_callback_one_arg(new_value: Any) -> None:
     pass
 
 
+def dummy_callback_two_args(new_value: Any, other_value: Any) -> None:
+    pass
+
+
 class DummyComponent():
     values = []
 
@@ -69,20 +73,32 @@ def test_subscribe():
     app_state_value = AppStateValue()
     component = DummyComponent()
 
-    # Invalid callbacks raise exceptions
+    # Callbacks without arguments exceptions
     for invalid_callback in [
         dummy_callback_no_args,
-        component.method_no_args, component.method_two_args,
-        component.static_method_no_args, component.static_method_two_args,
-        component.class_method_no_args, component.class_method_two_args,
+        component.method_no_args,
+        component.static_method_no_args,
+        component.class_method_no_args,
     ]:
         with pytest.raises(ValueError):
             app_state_value.subscribe(invalid_callback)
 
-    # Valid callbacks do not raise exceptions
+    # Callbacks with two arguments exceptions
+    for invalid_callback in [
+        dummy_callback_two_args,
+        component.method_two_args,
+        component.static_method_two_args,
+        component.class_method_two_args,
+    ]:
+        with pytest.raises(ValueError):
+            app_state_value.subscribe(invalid_callback)
+
+    # Callbacks with a single argument do not raise exceptions
     for valid_callback in [
-        dummy_callback_one_arg, component.method_one_arg,
-        component.static_method_one_arg, component.class_method_one_arg,
+        dummy_callback_one_arg,
+        component.method_one_arg,
+        component.static_method_one_arg,
+        component.class_method_one_arg,
     ]:
         app_state_value.subscribe(valid_callback)
 
