@@ -1,5 +1,6 @@
 import pytest
 from typing import Any
+from functools import partial
 from mz_bokeh_package.components import AppStateValue
 
 
@@ -101,6 +102,17 @@ def test_subscribe():
         component.class_method_one_arg,
     ]:
         app_state_value.subscribe(valid_callback)
+
+    # Callbacks that are partials of a function with two arguments, reducing the number to a single argument,
+    # do not raise exceptions
+    for valid_callback in [
+        partial(dummy_callback_two_args, other_value=42),
+        partial(component.method_two_args, other_value=42),
+        partial(component.static_method_two_args, other_value=42),
+        partial(component.class_method_two_args, other_value=42),
+    ]:
+        app_state_value.subscribe(valid_callback)
+
 
 
 def test_change_value_with_callback():
