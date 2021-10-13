@@ -4,6 +4,8 @@ from typing import List, Tuple
 
 
 PRIMARY = "#4ac5db"
+DARK_PRIMARY = "#0a9e9e"
+LIGHT_PRIMARY = "#c3ecf4"
 PURPLE = "#9554ff"
 DARK_BLUE = "#254c7a"
 BLUE = "#276ef2"
