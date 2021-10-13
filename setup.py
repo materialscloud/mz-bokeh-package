@@ -10,6 +10,7 @@ setup(
     install_requires=[
         "requests",
         "bokeh>=2.3.0",
+        "seaborn~=0.11.2",
     ],
     extras_require={
         "development": [
