@@ -75,8 +75,8 @@ class Environment:
         env = cls.get_environment()
 
         if env == "staging":
-            return "materials-zone-v2.firebaseapp.com"
+            return "app-staging.materials.zone"
         elif env == "production":
             return "app.materials.zone"
         elif env == "dev":
-            return os.getenv('WEBAPP_HOST', "materials-zone-v2.firebaseapp.com")
+            return os.getenv('WEBAPP_HOST', "app-staging.materials.zone")
