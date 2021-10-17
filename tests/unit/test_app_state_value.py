@@ -114,7 +114,6 @@ def test_subscribe():
         app_state_value.subscribe(valid_callback)
 
 
-
 def test_change_value_with_callback():
 
     app_state_value = AppStateValue(3)

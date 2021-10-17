@@ -9,7 +9,7 @@ setup(
     # Requirements for the package.
     install_requires=[
         "requests",
-        "bokeh~=2.3.0",
+        "bokeh>=2.3.0",
     ],
     extras_require={
         "development": [
