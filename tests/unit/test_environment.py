@@ -8,8 +8,8 @@ from mz_bokeh_package.utilities import Environment
 staging_url_api = 'https://api-staging.materials.zone/v1beta1' + '/'
 production_url_api = 'https://api.materials.zone/v1beta1' + '/'
 
-staging_url_app = 'app-staging.materials.zone'
-production_url_app = 'app.materials.zone'
+staging_url_app = 'https://app-staging.materials.zone'
+production_url_app = 'https://app.materials.zone'
 
 staging_url_error = 'https://bokeh-staging.materials.zone/error'
 production_url_error = 'https://bokeh.materials.zone/error'
