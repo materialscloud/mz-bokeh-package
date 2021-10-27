@@ -1,0 +1,133 @@
+{% from macros import embed %}
+
+{% macro include_html(title, layout) %}
+<!-- Modal -->
+<div class="modal fade" id="plot-settings-modal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100 ml-0" id="modal-title">{{title}}</h5>
+      </div>
+      <div class="modal-body">
+        {% for widget_name in layout %}
+        {{ embed(roots | attr(widget_name)) }}
+        {% endfor %}
+      </div>
+      <div class="modal-footer justify-content-between border-top-0 ml-1">
+        <div class="d-inline-flex align-items-center">
+          {{ embed(roots.apply_btn) }}
+          {{ embed(roots.cancel_btn) }}
+        </div>
+        {{ embed(roots.reset_btn) }}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Modal -->
+{% endmacro %}
+
+{% macro include_css() %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+  .modal-dialog.modal-dialog-centered {
+    width: 400px;
+  }
+  .modal-body {
+    padding-left: 11px !important;
+  }
+  .modal-body > div:not(:last-child) {
+    margin-bottom: 10px;
+  }
+  .modal-title {
+    margin-left: 12px;
+  }
+  .modal-footer > * {
+    margin: 0 !important;
+  }
+  .modal-footer button.close-btn {
+    color: #1d1d1d;
+    background-color: #e0e0e0;
+    width: 75px;
+    height: 38px;
+  }
+  .modal-footer div.apply-plot-settings button,
+  .modal-footer div.apply-plot-settings button:hover {
+    color: #ffffff;
+    background-color: #00bcd4;
+    height: 38px;
+    font-size: 1rem;
+  }
+  .modal-footer div.cancel-plot-settings button,
+  .modal-footer div.cancel-plot-settings button:hover {
+    color: #1d1d1d;
+    background-color: #e0e0e0;
+    height: 38px;
+    font-size: 1rem;
+  }
+  .modal-footer div.reset-plot-settings button,
+  .modal-footer div.reset-plot-settings button:hover {
+    height: 38px;
+    color: #1d1d1d;
+    background-color: #e0e0e0;
+    font-size: 20px;
+  }
+  #plot-settings-modal .bk-spin-wrapper {
+    width: 100px !important;
+  }
+  #plot-settings-modal .multiselect.dropdown-toggle {
+    width: 200px !important;
+  }
+
+  /* styling for check boxes */
+  .bk.custom_checkbox label.bk {
+    position: relative;
+    margin-left: 16px;
+    cursor: pointer;
+  }
+  .bk.custom_checkbox label.bk > input.bk {
+    display: none;
+  }
+  .bk.custom_checkbox span.bk{
+  top: 0 !important;
+  position: unset !important;
+  margin-left: 3px !important;
+  }
+  .bk.custom_checkbox span.bk::after {
+    display: block;
+  }
+  .bk.custom_checkbox span.bk::before {
+    display: block;
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--my-color, currentColor);
+    background-color: var(--my-color, none);
+    border-radius: 2px;
+    box-sizing: border-box;
+    left: -16px;
+    top: 0;
+    position: absolute;
+  }
+
+  input:checked ~ span {
+    --my-color: #00bcd4;
+  }
+
+  .bk.custom_checkbox span::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 5px;
+  height: 8px;
+  box-sizing: border-box;
+  border-bottom: 2px solid white;
+  border-right: 2px solid white;
+  position: absolute;
+  display: none;
+  transform: rotate(45deg);
+  left: -12px;
+  top: 2px;
+  z-index: 1;
+  }
+</style>
+{% endmacro %}
