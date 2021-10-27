@@ -283,7 +283,7 @@ class PlotSettings:
         plot_width = self._get_setting_widget_value("plot_width")
 
         self._plot.height_policy = "auto"
-        self._plot.sizing_mode = None if value or plot_width else "scale_width"
+        self._plot.sizing_mode = "scale_width" if self._is_plot_size_scalable else None
         self._plot.aspect_ratio = "auto" if value and plot_width else 1.5
 
         if value:
@@ -298,7 +298,7 @@ class PlotSettings:
         plot_height = self._get_setting_widget_value("plot_height")
 
         self._plot.width_policy = "auto"
-        self._plot.sizing_mode = None if value or plot_height else "scale_width"
+        self._plot.sizing_mode = "scale_width" if self._is_plot_size_scalable else None
         self._plot.aspect_ratio = "auto" if value and plot_height else 1.5
 
         if value:
