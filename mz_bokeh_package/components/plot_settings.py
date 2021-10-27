@@ -173,7 +173,6 @@ class PlotSettings:
         self._state = state
         self._included_settings = included_settings or BASE_SETTINGS
         self._plot_tool_description = "Plot Settings"
-        self._is_plot_size_scalable = True
 
         # Update settings' default values
         if default_values:
@@ -700,7 +699,14 @@ class PlotSettings:
         The initial values are set to be equal to the last saved state (loaded by the AppState).
         If there is no saved state, they are default to the "default_values" class property.
         """
-        for setting_id, value in self._plot_settings_state.items():
+        settings_state = self._plot_settings_state
+
+        if not settings_state["plot_height"] and not settings_state["plot_width"]:
+            self._is_plot_size_scalable = True
+        else:
+            self._is_plot_size_scalable = False
+
+        for setting_id, value in settings_state.items():
             self._set_setting_property(setting_id, value)
             self._set_setting_widget_value(setting_id, value)
 
