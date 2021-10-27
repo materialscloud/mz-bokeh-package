@@ -668,8 +668,10 @@ class PlotSettings:
 
         if type(setting_widget).__name__ == "CheckboxGroup":
             setting_widget.active = [0] if value else []
-        else:
+        elif setting_id in {"plot_height", "plot_width"}:
             BokehUtilities.silent_property_change(setting_widget, "value", value)
+        else:
+            setting_widget.value = value
 
     def _get_setting_property(self, setting_id: str) -> Any:
         return getattr(self, f"_{setting_id}")
