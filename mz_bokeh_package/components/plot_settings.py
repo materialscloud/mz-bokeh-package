@@ -20,8 +20,9 @@ from bokeh.models import (
     Toggle,
 )
 
-from . import AppState
-from ..custom_widgets import CustomSelect, CustomMultiSelect
+from mz_bokeh_package.components import AppState
+from mz_bokeh_package.utilities import BokehUtilities
+from mz_bokeh_package.custom_widgets import CustomSelect, CustomMultiSelect
 
 BASE_DIR = os.path.dirname(__file__)
 
@@ -172,6 +173,7 @@ class PlotSettings:
         self._state = state
         self._included_settings = included_settings or BASE_SETTINGS
         self._plot_tool_description = "Plot Settings"
+        self._is_plot_size_scalable = True
 
         # Update settings' default values
         if default_values:
@@ -179,6 +181,9 @@ class PlotSettings:
 
         # Initialize settings' widgets
         self._init_included_widgets()
+
+        for setting_id in {"plot_height", "plot_width"}:
+            self._get_setting_widget(setting_id).on_change("value", self._on_change_plot_dimension)
 
         # Create a dummy widget to allow invoking a backend callback (python) from the frontend (javascript)
         self._backend_callback_invoker = Toggle()
@@ -568,6 +573,10 @@ class PlotSettings:
         for setting_id in self._included_settings:
             value = self._get_setting_widget_value(setting_id)
 
+            # Set plot dimensions to None as long as the user didn't set them explicitly.
+            if setting_id in {"plot_height", "plot_width"} and self._is_plot_size_scalable:
+                value = None
+
             # Update the plot based on the applied setting
             self._set_setting_property(setting_id, value)
 
@@ -660,7 +669,7 @@ class PlotSettings:
         if type(setting_widget).__name__ == "CheckboxGroup":
             setting_widget.active = [0] if value else []
         else:
-            setting_widget.value = value
+            BokehUtilities.silent_property_change(setting_widget, "value", value)
 
     def _get_setting_property(self, setting_id: str) -> Any:
         return getattr(self, f"_{setting_id}")
@@ -777,3 +786,9 @@ class PlotSettings:
         for setting_id in self._included_settings:
             setting_value = self._get_setting_property(setting_id)
             self._set_setting_widget_value(setting_id, setting_value)
+
+    def _on_change_plot_dimension(self, attr, old, new):
+        other_dimension = "width" if attr.endswith("height") else "height"
+        other_dimension_value = self._get_setting_widget_value(f"plot_{other_dimension}")
+
+        self._is_plot_size_scalable = not new and not other_dimension_value
