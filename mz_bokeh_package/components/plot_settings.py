@@ -21,7 +21,6 @@ from bokeh.models import (
 )
 
 from mz_bokeh_package.components import AppState
-from mz_bokeh_package.utilities import BokehUtilities
 from mz_bokeh_package.custom_widgets import CustomSelect, CustomMultiSelect
 
 BASE_DIR = os.path.dirname(__file__)
@@ -87,7 +86,8 @@ POINT_SHAPES = [
     "x",
     "y",
 ]
-BASE_SETTINGS = ["grid_lines", "plot_outline", "plot_height", "plot_width"]
+PLOT_DIMENSIONS_SETTINGS = ["custom_plot_dimensions", "plot_height", "plot_width"]
+BASE_SETTINGS = ["grid_lines", "plot_outline", *PLOT_DIMENSIONS_SETTINGS]
 
 
 def get_options_from_ids(ids: List[str]) -> List[Tuple[str]]:
@@ -103,23 +103,24 @@ def get_options_from_ids(ids: List[str]) -> List[Tuple[str]]:
 
 
 SETTINGS = {
-    "grid_lines": (CheckboxGroup, dict(labels=["Grid Lines"], name="grid_lines_checkbox")),
-    "plot_outline": (CheckboxGroup, dict(labels=["Plot Outline"], name="plot_outline_checkbox")),
-    "plot_height": (Spinner, dict(title="Plot Height", low=PLOT_DIMENSION_MIN, high=PLOT_DIMENSION_MAX, step=PLOT_DIMENSION_STEP, name="plot_height_spinner")),  # noqa: E501
-    "plot_width": (Spinner, dict(title="Plot Width", low=PLOT_DIMENSION_MIN, high=PLOT_DIMENSION_MAX, step=PLOT_DIMENSION_STEP, name="plot_width_spinner")),  # noqa: E501
-    "text_size": (Spinner, dict(title="Text size", low=0, high=100, step=1, value=0, name="text_size_spinner")),
-    "point_size": (Spinner, dict(title="Point size", low=0, high=100, step=1, value=0, name="point_size_spinner")),
-    "point_shape": (CustomSelect, dict(title="Point shape", options=get_options_from_ids(POINT_SHAPES), allow_non_selected=False, name="point_shape_selector")),  # noqa: E501
-    "point_color": (CustomSelect, dict(title="Point color", options=list(POINT_COLORS.items()), allow_non_selected=False, name="point_color_selector",)),  # noqa: E501
-    "multi_point_color": (CustomMultiSelect, dict(title="Point colors", options=list(POINT_COLORS.items()), name="multi_point_color_selector",)),  # noqa: E501
-    "text_thickness": (CheckboxGroup, dict(labels=["Bold Text"], name="text_thickness_checkbox")),
-    "axes_thickness": (CheckboxGroup, dict(labels=["Bold Axes"], name="axes_thickness_checkbox")),
-    "line_thickness": (CheckboxGroup, dict(labels=["Bold Line"], name="line_thickness_checkbox")),
-    "line_color": (CustomSelect, dict(title="Line color", options=list(POINT_COLORS.items()), allow_non_selected=False, name="line_color_selector",)),  # noqa: E501
-    "multi_line_color": (CustomMultiSelect, dict(title="Line colors", options=list(POINT_COLORS.items()), name="multi_line_color_selector",)),  # noqa: E501
-    "fill_color": (CustomSelect, dict(title="Fill color", options=list(POINT_COLORS.items()), allow_non_selected=False, name="fill_color_selector",)),  # noqa: E501
-    "show_legend": (CheckboxGroup, dict(labels=["Legend"], name="show_legend_checkbox")),
-    "legend_position": (CustomSelect, dict(title="Legend Position", options=get_options_from_ids(LEGEND_POSITIONS), allow_non_selected=False, name="legend_position_selector",)),  # noqa: E501
+    "grid_lines": (CheckboxGroup, {"labels": ["Grid Lines"]}),
+    "plot_outline": (CheckboxGroup, {"labels": ["Plot Outline"]}),
+    "custom_plot_dimensions": (CheckboxGroup, {"labels": ["Custom Plot Dimensions:"]}),  # noqa: E501
+    "plot_height": (Spinner, {"title": "Height (pixels)", "low": PLOT_DIMENSION_MIN, "high": PLOT_DIMENSION_MAX, "step": PLOT_DIMENSION_STEP, "disabled": True, "css_classes": ["plot-dimensions"]}),  # noqa: E501
+    "plot_width": (Spinner, {"title": "Width (pixels)", "low": PLOT_DIMENSION_MIN, "high": PLOT_DIMENSION_MAX, "step": PLOT_DIMENSION_STEP, "disabled": True, "css_classes": ["plot-dimensions"]}),  # noqa: E501
+    "text_size": (Spinner, {"title": "Text size", "low": 0, "high": 100, "step": 1, "value": 0}),
+    "point_size": (Spinner, {"title": "Point size", "low": 0, "high": 100, "step": 1, "value": 0}),
+    "point_shape": (CustomSelect, {"title": "Point shape", "options": get_options_from_ids(POINT_SHAPES), "allow_non_selected": False}),  # noqa: E501
+    "point_color": (CustomSelect, {"title": "Point color", "options": [*POINT_COLORS.items()], "allow_non_selected": False}),  # noqa: E501
+    "multi_point_color": (CustomMultiSelect, {"title": "Point colors", "options": [*POINT_COLORS.items()]}),  # noqa: E501
+    "text_thickness": (CheckboxGroup, {"labels": ["Bold Text"]}),
+    "axes_thickness": (CheckboxGroup, {"labels": ["Bold Axes"]}),
+    "line_thickness": (CheckboxGroup, {"labels": ["Bold Line"]}),
+    "line_color": (CustomSelect, {"title": "Line color", "options": [*POINT_COLORS.items()], "allow_non_selected": False}),  # noqa: E501
+    "multi_line_color": (CustomMultiSelect, {"title": "Line colors", "options": [*POINT_COLORS.items()], }),  # noqa: E501
+    "fill_color": (CustomSelect, {"title": "Fill color", "options": [*POINT_COLORS.items()], "allow_non_selected": False}),  # noqa: E501
+    "show_legend": (CheckboxGroup, {"labels": ["Legend"]}),
+    "legend_position": (CustomSelect, {"title": "Legend Position", "options": get_options_from_ids(LEGEND_POSITIONS), "allow_non_selected": False}),  # noqa: E501
 }
 
 
@@ -129,8 +130,9 @@ class PlotSettings:
     default_values = {
         "grid_lines": True,
         "plot_outline": False,
-        "plot_height": None,
-        "plot_width": None,
+        "custom_plot_dimensions": False,
+        "plot_height": 600,
+        "plot_width": 600,
         "text_size": 11,
         "point_size": 8,
         "point_shape": "circle",
@@ -180,9 +182,6 @@ class PlotSettings:
 
         # Initialize settings' widgets
         self._init_included_widgets()
-
-        for setting_id in {"plot_height", "plot_width"}:
-            self._get_setting_widget(setting_id).on_change("value", self._on_change_plot_dimension)
 
         # Create a dummy widget to allow invoking a backend callback (python) from the frontend (javascript)
         self._backend_callback_invoker = Toggle()
@@ -274,19 +273,22 @@ class PlotSettings:
             self._plot.outline_line_alpha = 0
 
     @property
+    def _custom_plot_dimensions(self) -> bool:
+        return self._plot.sizing_mode is None
+
+    @_custom_plot_dimensions.setter
+    def _custom_plot_dimensions(self, value: bool):
+        self._plot.sizing_mode = None if value else "scale_width"
+        self._plot.aspect_ratio = "auto" if value else 1.5
+
+    @property
     def _plot_height(self) -> Optional[int]:
         return PLOT_DIMENSION_STEP * round(self._plot.outer_height / PLOT_DIMENSION_STEP)
 
     @_plot_height.setter
     def _plot_height(self, value: Optional[int]):
-        plot_width = self._get_setting_widget_value("plot_width")
-
         self._plot.height_policy = "auto"
-        self._plot.sizing_mode = "scale_width" if self._is_plot_size_scalable else None
-        self._plot.aspect_ratio = "auto" if value and plot_width else 1.5
-
-        if value:
-            self._plot.height = value
+        self._plot.height = value
 
     @property
     def _plot_width(self) -> Optional[int]:
@@ -294,14 +296,8 @@ class PlotSettings:
 
     @_plot_width.setter
     def _plot_width(self, value: Optional[int]):
-        plot_height = self._get_setting_widget_value("plot_height")
-
         self._plot.width_policy = "auto"
-        self._plot.sizing_mode = "scale_width" if self._is_plot_size_scalable else None
-        self._plot.aspect_ratio = "auto" if value and plot_height else 1.5
-
-        if value:
-            self._plot.width = value
+        self._plot.width = value
 
     @property
     def _text_size(self) -> float:
@@ -432,7 +428,7 @@ class PlotSettings:
         if renderers_num == 1:
             renderer = self._plot.renderers[0]
             color_field_name = renderer.glyph.line_color
-            return list(set(renderer.data_source.data[color_field_name]))
+            return [*{*renderer.data_source.data[color_field_name]}]
         else:
             return [renderer.glyph.line_color for renderer in self._plot.renderers]
 
@@ -458,7 +454,7 @@ class PlotSettings:
         if renderers_num == 1:
             renderer = self._plot.renderers[0]
             color_field_name = renderer.glyph.fill_color
-            return list(set(renderer.data_source.data[color_field_name]))
+            return [*{*renderer.data_source.data[color_field_name]}]
         else:
             return [renderer.glyph.fill_color for renderer in self._plot.renderers]
 
@@ -519,7 +515,13 @@ class PlotSettings:
             if widget_class.__name__ == "CheckboxGroup":
                 kwargs["css_classes"] = ["custom_checkbox"]
 
-            setattr(self, f"_{setting_id}_widget", widget_class(**kwargs))
+            setting_widget = widget_class(**kwargs)
+            setting_widget.name = setting_id
+
+            if setting_id == "custom_plot_dimensions":
+                setting_widget.on_change("active", self._toggle_plot_dimensions)
+
+            setattr(self, f"_{setting_id}_widget", setting_widget)
 
     def _get_settings_button_click_js_callback(self) -> CustomJS:
         """Returns a javascript callback to run when the settings tool is clicked.
@@ -528,7 +530,7 @@ class PlotSettings:
             CustomJS: "on_click" Javascript callback.
         """
 
-        args = dict(backend_callback_invoker=self._backend_callback_invoker)
+        args = {"backend_callback_invoker": self._backend_callback_invoker}
         code = f"""
         // Add "data" attributes to the "Settings" tool to allow toggling the modal.
         $(".bk-toolbar-button-custom-action[title='{self._plot_tool_description}']").attr("data-toggle", "modal")
@@ -571,10 +573,6 @@ class PlotSettings:
 
         for setting_id in self._included_settings:
             value = self._get_setting_widget_value(setting_id)
-
-            # Set plot dimensions to None as long as the user didn't set them explicitly.
-            if setting_id in {"plot_height", "plot_width"} and self._is_plot_size_scalable:
-                value = None
 
             # Update the plot based on the applied setting
             self._set_setting_property(setting_id, value)
@@ -667,8 +665,6 @@ class PlotSettings:
 
         if type(setting_widget).__name__ == "CheckboxGroup":
             setting_widget.active = [0] if value else []
-        elif setting_id in {"plot_height", "plot_width"}:
-            BokehUtilities.silent_property_change(setting_widget, "value", value)
         else:
             setting_widget.value = value
 
@@ -699,14 +695,7 @@ class PlotSettings:
         The initial values are set to be equal to the last saved state (loaded by the AppState).
         If there is no saved state, they are default to the "default_values" class property.
         """
-        settings_state = self._plot_settings_state
-
-        if not settings_state["plot_height"] and not settings_state["plot_width"]:
-            self._is_plot_size_scalable = True
-        else:
-            self._is_plot_size_scalable = False
-
-        for setting_id, value in settings_state.items():
+        for setting_id, value in self._plot_settings_state.items():
             self._set_setting_property(setting_id, value)
             self._set_setting_widget_value(setting_id, value)
 
@@ -752,7 +741,7 @@ class PlotSettings:
         # The field that the data is grouped by
         grouped_by = self._plot.legend.items[0].label["field"]
 
-        groups = set(data[grouped_by])
+        groups = {*data[grouped_by]}
         groups_colors = self._fill_missing_colors(colors, len(groups))
 
         # Set color for each group
@@ -795,8 +784,9 @@ class PlotSettings:
             setting_value = self._get_setting_property(setting_id)
             self._set_setting_widget_value(setting_id, setting_value)
 
-    def _on_change_plot_dimension(self, attr, old, new):
-        other_dimension = "width" if attr.endswith("height") else "height"
-        other_dimension_value = self._get_setting_widget_value(f"plot_{other_dimension}")
-
-        self._is_plot_size_scalable = not new and not other_dimension_value
+    def _toggle_plot_dimensions(self, attr, old, new):
+        """Enables/disables the "plot height" and "plot width" widgets.
+        """
+        is_disabled = False if new else True
+        self._get_setting_widget("plot_height").disabled = is_disabled
+        self._get_setting_widget("plot_width").disabled = is_disabled
