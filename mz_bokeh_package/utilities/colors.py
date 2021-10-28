@@ -115,3 +115,26 @@ def make_palette_cyclic(palette: Iterable[str]) -> Iterable[str]:
         Iterable[str]: An infinite palette.
     """
     return itertools.cycle(palette)
+
+
+def find_darker_shade(color: str) -> str:
+    """Finds a darker shade for a given hex color.
+
+    Args:
+        color (str): A valid hex color (e.g "#4F4F4F").
+
+    Returns:
+        str: A darker hex color.
+    """
+    MIN = 0
+    MAX = 255
+    DELTA = 30
+    hex_color = color.lstrip("#")
+
+    # For each of the RGB parts, find a darker shade by decreasing the value (by "DELTA") and
+    # concatenate the results back together. Each result is being clipped to (MIN, MAX)
+    # in order to keep it valid.
+    return "#" + "".join(
+        "{:02x}".format(np.clip(int(hex_color[i:i+2], 16) - DELTA, MIN, MAX))
+        for i in (0, 2, 4)
+    )
