@@ -132,5 +132,39 @@
   top: 2px;
   z-index: 1;
   }
+
+  /* Styling for tooltips */
+  .tooltip_mz .tooltiptext_mz {
+    visibility: hidden;
+    width: 236px;
+    background-color: #555;
+    color: #fff;
+    text-align: justify;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -46px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip_mz .tooltiptext_mz::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 19%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  .tooltip_mz:hover .tooltiptext_mz {
+    visibility: visible;
+    opacity: 1;
+  }
 </style>
 {% endmacro %}
