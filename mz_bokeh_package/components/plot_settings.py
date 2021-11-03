@@ -263,8 +263,8 @@ class PlotSettings:
     @_plot_outline.setter
     def _plot_outline(self, value: bool):
         if value:
-            axes_width = AXES_BOLD_WIDTH if self._axes_thickness else AXES_NORMAL_WIDTH
-            outline_width = axes_width if "_axes_thickness" in self._included_settings else AXES_NORMAL_WIDTH
+            axes_width = AXES_BOLD_WIDTH if self._get_setting_widget_value("axes_thickness") else AXES_NORMAL_WIDTH
+            outline_width = axes_width if "axes_thickness" in self._included_settings else AXES_NORMAL_WIDTH
             self._plot.outline_line_dash = "solid"
             self._plot.outline_line_color = "black"
             self._plot.outline_line_alpha = 1
