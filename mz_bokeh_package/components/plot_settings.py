@@ -87,7 +87,7 @@ POINT_SHAPES = [
     "y",
 ]
 PLOT_DIMENSIONS_SETTINGS = ["custom_plot_dimensions", "plot_height", "plot_width"]
-BASE_SETTINGS = ["grid_lines", "plot_outline", *PLOT_DIMENSIONS_SETTINGS]
+BASE_SETTINGS = ["grid_lines", "plot_outline", "axes_thickness", *PLOT_DIMENSIONS_SETTINGS]
 
 
 def get_options_from_ids(ids: List[str]) -> List[Tuple[str]]:
