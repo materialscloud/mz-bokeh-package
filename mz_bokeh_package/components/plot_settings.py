@@ -87,7 +87,7 @@ POINT_SHAPES = [
     "y",
 ]
 PLOT_DIMENSIONS_SETTINGS = ["custom_plot_dimensions", "plot_height", "plot_width"]
-BASE_SETTINGS = ["grid_lines", "plot_outline", *PLOT_DIMENSIONS_SETTINGS]
+BASE_SETTINGS = ["grid_lines", "plot_outline", "axes_thickness", *PLOT_DIMENSIONS_SETTINGS]
 
 
 def get_options_from_ids(ids: List[str]) -> List[Tuple[str]]:
@@ -263,8 +263,8 @@ class PlotSettings:
     @_plot_outline.setter
     def _plot_outline(self, value: bool):
         if value:
-            axes_width = AXES_BOLD_WIDTH if self._axes_thickness else AXES_NORMAL_WIDTH
-            outline_width = axes_width if "_axes_thickness" in self._included_settings else AXES_NORMAL_WIDTH
+            axes_width = AXES_BOLD_WIDTH if self._get_setting_widget_value("axes_thickness") else AXES_NORMAL_WIDTH
+            outline_width = axes_width if "axes_thickness" in self._included_settings else AXES_NORMAL_WIDTH
             self._plot.outline_line_dash = "solid"
             self._plot.outline_line_color = "black"
             self._plot.outline_line_alpha = 1
