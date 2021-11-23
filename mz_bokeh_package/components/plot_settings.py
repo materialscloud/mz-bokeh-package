@@ -240,8 +240,12 @@ class PlotSettings:
 
     @property
     def _plot_settings_state(self) -> Dict[str, Any]:
-        default_values = {k: v for k, v in self.default_values.items() if k in self._included_settings}
-        return self._state["plot_settings_state"] or default_values
+        state_cookie = self._state["plot_settings_state"] or {}
+
+        return {
+            setting_id: state_cookie.get(setting_id) or self.default_values.get(setting_id)
+            for setting_id in self._included_settings
+        }
 
     @_plot_settings_state.setter
     def _plot_settings_state(self, value: Dict[str, Any]):
