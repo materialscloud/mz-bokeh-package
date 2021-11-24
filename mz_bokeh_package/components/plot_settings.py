@@ -379,11 +379,11 @@ class PlotSettings:
 
     @_text_thickness.setter
     def _text_thickness(self, value: bool):
-        axis_label_style, major_label_style = ("bold", "bold") if value else ("italic", "normal")
-        self._plot.xaxis.major_label_text_font_style = major_label_style
-        self._plot.yaxis.major_label_text_font_style = major_label_style
-        self._plot.xaxis.axis_label_text_font_style = axis_label_style
-        self._plot.yaxis.axis_label_text_font_style = axis_label_style
+        label_style = "bold" if value else "normal"
+        self._plot.xaxis.major_label_text_font_style = label_style
+        self._plot.yaxis.major_label_text_font_style = label_style
+        self._plot.xaxis.axis_label_text_font_style = label_style
+        self._plot.yaxis.axis_label_text_font_style = label_style
 
     @property
     def _axes_thickness(self) -> bool:
