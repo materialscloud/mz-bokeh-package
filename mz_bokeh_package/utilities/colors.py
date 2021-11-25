@@ -1,7 +1,7 @@
 import itertools
 import numpy as np
 import seaborn as sns
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 
 TURQUOISE = "#4ac5db"
@@ -138,3 +138,15 @@ def find_darker_shade(color: str) -> str:
         "{:02x}".format(np.clip(int(hex_color[i:i+2], 16) - DELTA, MIN, MAX))
         for i in (0, 2, 4)
     )
+
+
+def map_categories_to_colors(color_palette: Iterable[str], categories: Iterable[str], nan_color: Optional[str] = None):
+    categories_set = {*categories}
+    color_mapper = {category: color for category, color in zip(categories_set, color_palette)}
+    return [color_mapper.get(category, nan_color) for category in categories]
+
+
+def map_numbers_to_colors(color_palette: Iterable[str], numbers: Iterable[str], nan_color: Optional[str] = None):
+    bin_edges = np.histogram_bin_edges(numbers, bins=len(color_palette))
+    bin_indices = np.digitize(numbers, bin_edges)
+    return [color_palette[index] if index < len(color_palette) else nan_color for index in bin_indices]
