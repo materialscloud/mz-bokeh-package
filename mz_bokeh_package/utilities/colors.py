@@ -7,6 +7,7 @@ from typing import Iterable, List, Optional, Tuple
 TURQUOISE = "#4ac5db"
 DARK_TURQUOISE = "#0a9e9e"
 LIGHT_TURQUOISE = "#c3ecf4"
+LIGHT_GRAY = "#f4f4f4"
 PURPLE = "#9554ff"
 DARK_BLUE = "#254c7a"
 BLUE = "#276ef2"
