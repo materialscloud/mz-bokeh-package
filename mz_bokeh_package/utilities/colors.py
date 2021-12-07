@@ -4,13 +4,14 @@ import seaborn as sns
 from typing import Iterable, List, Optional, Tuple
 
 
-TURQUOISE = "#4ac5db"
+TURQUOISE = "#6acece"
 DARK_TURQUOISE = "#0a9e9e"
 LIGHT_TURQUOISE = "#c3ecf4"
 LIGHT_GRAY = "#f4f4f4"
 PURPLE = "#9554ff"
-DARK_BLUE = "#254c7a"
-BLUE = "#276ef2"
+DARK_BLUE = "#1a1358"
+BLUE = "#5a52da"
+EXTRA_LIGHT_YELLOW = "#f4ffca"
 BASE_COLORS = [DARK_BLUE, PURPLE, BLUE, TURQUOISE]
 
 
