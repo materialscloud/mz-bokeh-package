@@ -243,7 +243,7 @@ class PlotSettings:
         state_cookie = self._state["plot_settings_state"] or {}
 
         return {
-            setting_id: state_cookie.get(setting_id) or self.default_values.get(setting_id)
+            setting_id: state_cookie.get(setting_id, self.default_values.get(setting_id))
             for setting_id in self._included_settings
         }
 
