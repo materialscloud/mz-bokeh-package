@@ -16,6 +16,7 @@ const common_styles = `
   .multiselect-container.dropdown-menu {
     width: inherit;
     overflow: auto auto !important;
+    z-index: 1;
   }
   .multiselect-option.dropdown-item {
     color: inherit;
