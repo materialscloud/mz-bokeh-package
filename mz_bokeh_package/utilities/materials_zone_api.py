@@ -1,7 +1,7 @@
 import json
 import requests
 from io import BytesIO
-from typing import Dict, Optional, Union, Any
+from typing import Dict, List, Optional, Tuple, Union, Any
 
 from .auth import CurrentUser
 from .helpers import download_image
@@ -11,14 +11,24 @@ from .environment import Environment
 class MaterialsZoneApi:
 
     @staticmethod
-    def upload(metadata: Dict[str, Any], data_files: Optional[list] = None):
+    def upload(
+        metadata: Dict[str, Any],
+        data_files: Optional[List[Tuple[str, bytes]]] = None,
+        user_api_key: Optional[str] = None
+    ):
         """Uploads MZ components using MZ external API.
 
         Args:
             metadata (Dict[str, Any]): MZ Metadata object.
-            data_files (Optional[List[Tuple[str, bytes]]], optional): A list of data files to upload.
+            data_files (Optional[List[Tuple[str, bytes]]]): A list of data files to upload.
                 each file should be represented by a tuple that includes the file name and
                 its content i.e (filename, content). Defaults to None.
+            user_api_key (Optional[str]): The API key of the user who makes the request.
+                Note, this parameter should be provided when using this function in a multi-threading manner.
+                If not provided, an attempt is made to extract the API key from the Bokeh app's
+                URL parameters (see CurrentUser.get_api_key() method). This attempt will fail when trying
+                to run this function in a multi-threading manner since the app's session context misses the request
+                info in such cases. Defaults to None.
         """
 
         # Convert metadata object to a file-like object.
@@ -33,7 +43,7 @@ class MaterialsZoneApi:
             files.append(("files", data_file))
 
         # User credentials.
-        params = {"api_key": CurrentUser.get_api_key()}
+        params = {"api_key": user_api_key or CurrentUser.get_api_key()}
 
         # Upload the files.
         # A response object will be returned with a success or fail message.
