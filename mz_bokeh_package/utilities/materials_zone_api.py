@@ -1,59 +1,58 @@
 import json
-from os.path import basename
-from typing import Dict, Optional, Union
 import requests
-from contextlib import ExitStack
+from io import BytesIO
+from typing import Dict, List, Optional, Tuple, Union, Any
 
 from .auth import CurrentUser
+from .helpers import download_image
 from .environment import Environment
-from .helpers import save_file, clean_temp_folder, download_image
 
 
 class MaterialsZoneApi:
 
     @staticmethod
-    def upload(metadata: dict, data_files: Optional[list] = None):
+    def upload(
+        metadata: Dict[str, Any],
+        data_files: Optional[List[Tuple[str, bytes]]] = None,
+        user_api_key: Optional[str] = None
+    ):
         """Uploads MZ components using MZ external API.
 
         Args:
-            metadata (dict): MZ Metadata object.
-            data_files (Optional[List[Tuple[str, bytes]]], optional): A list of data files to upload.
+            metadata (Dict[str, Any]): MZ Metadata object.
+            data_files (Optional[List[Tuple[str, bytes]]]): A list of data files to upload.
                 each file should be represented by a tuple that includes the file name and
                 its content i.e (filename, content). Defaults to None.
+            user_api_key (Optional[str]): The API key of the user who makes the request.
+                Note, this parameter should be provided when using this function in a multi-threading manner.
+                If not provided, an attempt is made to extract the API key from the Bokeh app's
+                URL parameters (see CurrentUser.get_api_key() method). This attempt will fail when trying
+                to run this function in a multi-threading manner since the app's session context misses the request
+                info in such cases. Defaults to None.
         """
 
-        # convert metadata object to string
-        meta_file_content = json.dumps(metadata, indent=2)
+        # Convert metadata object to a file-like object.
+        meta_file_content = json.dumps(metadata, indent=2).encode("utf-8")
+        meta_file = BytesIO(meta_file_content)
 
-        # save files in hard disk
-        files_paths = [
-            save_file(name, content)
-            for name, content in [("meta.json", meta_file_content), *data_files]
-        ]
+        # Convert the data files to file-like objects.
+        files = [("data", meta_file)]
+        for (name, content) in data_files:
+            data_file = BytesIO(content)
+            data_file.name = name
+            files.append(("files", data_file))
 
-        # user credentials
-        params = {
-            "key": CurrentUser.get_api_key(),
-            "uid": CurrentUser.get_user_key()
-        }
+        # User credentials.
+        params = {"api_key": user_api_key or CurrentUser.get_api_key()}
 
-        with ExitStack() as stack:
-            files_objects = [stack.enter_context(open(path, "rb")) for path in files_paths]
-            files = [
-                ("data" if basename(file.name) == 'meta.json' else 'files', file)
-                for file in files_objects
-            ]
+        # Upload the files.
+        # A response object will be returned with a success or fail message.
+        res = requests.post(Environment.get_request_url("upload/items"), files=files, params=params)
 
-            # upload the files. a response object will be returned with a success or fail message.
-            res = requests.post(Environment.get_request_url("upload/items"), files=files, params=params)
+        if res.status_code != 200:
+            raise Exception(res.json()["error"])
 
-            if res.status_code != 200:
-                raise Exception(res.json()["error"])
-
-        # remove files
-        clean_temp_folder()
-
-        # return api response
+        # Return API response
         return res
 
     @staticmethod
