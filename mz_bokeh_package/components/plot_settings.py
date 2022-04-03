@@ -128,19 +128,19 @@ class PlotSettings:
     """This class contains widgets and logic that are common to all settings modals.
     """
     default_values = {
-        "grid_lines": True,
-        "plot_outline": False,
+        "grid_lines": False,
+        "plot_outline": True,
         "custom_plot_dimensions": False,
         "plot_height": 600,
         "plot_width": 600,
-        "text_size": 11,
+        "text_size": 14,
         "point_size": 8,
         "point_shape": "circle",
         "point_color": COLORS_PALETTE[0],  # Blue
         "multi_point_color": [COLORS_PALETTE[0]],  # Blue
-        "text_thickness": False,
+        "text_thickness": True,
         "axes_thickness": False,
-        "line_thickness": False,
+        "line_thickness": True,
         "line_color": COLORS_PALETTE[7],  # Gray
         "multi_line_color": [COLORS_PALETTE[0]],  # Blue
         "fill_color": COLORS_PALETTE[-2],  # Light Turquoise
