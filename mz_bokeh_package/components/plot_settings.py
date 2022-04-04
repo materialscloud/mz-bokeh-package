@@ -18,6 +18,9 @@ from bokeh.models import (
     CustomJS,
     Column,
     Toggle,
+    Quad,
+    Rect
+
 )
 
 from mz_bokeh_package.components import AppState
@@ -51,7 +54,7 @@ POINT_COLORS = {color: name for color, name in zip(COLORS_PALETTE, COLORS_NAMES)
 AXES_WIDTH_ATTRIBUTES = {"axis_line_width", "major_tick_line_width", "minor_tick_line_width"}
 AXES_NORMAL_WIDTH = 1
 AXES_BOLD_WIDTH = 2
-LINE_NORMAL_WIDTH = 0.8
+LINE_NORMAL_WIDTH = 0.1
 LINE_BOLD_WIDTH = 2
 PLOT_DIMENSION_STEP = 50
 PLOT_DIMENSION_MIN = 300
@@ -128,19 +131,19 @@ class PlotSettings:
     """This class contains widgets and logic that are common to all settings modals.
     """
     default_values = {
-        "grid_lines": True,
-        "plot_outline": False,
+        "grid_lines": False,
+        "plot_outline": True,
         "custom_plot_dimensions": False,
         "plot_height": 600,
         "plot_width": 600,
-        "text_size": 11,
+        "text_size": 14,
         "point_size": 8,
         "point_shape": "circle",
         "point_color": COLORS_PALETTE[0],  # Blue
         "multi_point_color": [COLORS_PALETTE[0]],  # Blue
-        "text_thickness": False,
+        "text_thickness": True,
         "axes_thickness": False,
-        "line_thickness": False,
+        "line_thickness": True,
         "line_color": COLORS_PALETTE[7],  # Gray
         "multi_line_color": [COLORS_PALETTE[0]],  # Blue
         "fill_color": COLORS_PALETTE[-2],  # Light Turquoise
@@ -408,8 +411,20 @@ class PlotSettings:
 
     @_line_thickness.setter
     def _line_thickness(self, value: bool):
-        line_width = LINE_BOLD_WIDTH if value else LINE_NORMAL_WIDTH
+
         renderer = self._plot.renderers[0]
+
+        dataset_size = 0
+        line_width = LINE_BOLD_WIDTH
+        if type(renderer.glyph) is Quad: # histogram plot
+            highest_column = max(renderer.data_source.data['top'])
+
+        elif type(renderer.glyph) is Rect:  # bar_chart plot
+            highest_column = max(renderer.data_source.data['y'])
+
+        if highest_column > 100 or not value:
+            line_width = LINE_NORMAL_WIDTH
+
         renderer.glyph.line_width = line_width
         renderer.hover_glyph.line_width = line_width
 
