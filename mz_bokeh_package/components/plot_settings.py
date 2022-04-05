@@ -54,7 +54,8 @@ POINT_COLORS = {color: name for color, name in zip(COLORS_PALETTE, COLORS_NAMES)
 AXES_WIDTH_ATTRIBUTES = {"axis_line_width", "major_tick_line_width", "minor_tick_line_width"}
 AXES_NORMAL_WIDTH = 1
 AXES_BOLD_WIDTH = 2
-LINE_NORMAL_WIDTH = 0.1
+LINE_HIDE_WIDTH = 0.1
+LINE_NORMAL_WIDTH = 0.8
 LINE_BOLD_WIDTH = 2
 PLOT_DIMENSION_STEP = 50
 PLOT_DIMENSION_MIN = 300
@@ -414,15 +415,20 @@ class PlotSettings:
 
         renderer = self._plot.renderers[0]
 
-        dataset_size = 0
+        highest_column = 0
         line_width = LINE_BOLD_WIDTH
-        if type(renderer.glyph) is Quad: # histogram plot
+        self.layout.children[4].disabled = False
+        if type(renderer.glyph) is Quad:  # histogram plot
             highest_column = max(renderer.data_source.data['top'])
 
         elif type(renderer.glyph) is Rect:  # bar_chart plot
             highest_column = max(renderer.data_source.data['y'])
 
-        if highest_column > 100 or not value:
+        if highest_column > 100:  # automatic size decision: disable bold line Checkbox and shrink line width
+            line_width = LINE_HIDE_WIDTH
+            self.layout.children[4].disabled = True
+
+        elif not value:  # user choice: shrink line width
             line_width = LINE_NORMAL_WIDTH
 
         renderer.glyph.line_width = line_width
