@@ -406,9 +406,7 @@ class PlotSettings:
 
     @property
     def _line_thickness(self) -> bool:
-        renderer = self._plot.renderers[0]
-        return renderer.glyph.line_width == LINE_BOLD_WIDTH and \
-            renderer.hover_glyph.line_width == LINE_BOLD_WIDTH
+        return True
 
     @_line_thickness.setter
     def _line_thickness(self, value: bool):
