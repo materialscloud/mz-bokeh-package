@@ -103,8 +103,8 @@
     content: '';
     width: 14px;
     height: 14px;
-    border: 1px solid var(--my-color, currentColor);
-    background-color: var(--my-color, none);
+    border: 1px solid var(--my-color-border, currentColor);
+    background-color: var(--my-color-background, none);
     border-radius: 2px;
     box-sizing: border-box;
     left: -16px;
@@ -113,7 +113,14 @@
   }
 
   input:checked ~ span {
-    --my-color: #00bcd4;
+    --my-color-background: #00bcd4;
+    --my-color-border: #00bcd4;
+  }
+
+  input[type='checkbox'][disabled] ~ span {
+    color: #808080;
+    --my-color-background: #ffffff;
+    --my-color-border: #808080;
   }
 
   .bk.custom_checkbox span::after {
