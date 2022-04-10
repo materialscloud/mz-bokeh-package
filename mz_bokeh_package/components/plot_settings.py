@@ -363,7 +363,6 @@ class PlotSettings:
 
         # remove previous renderers
         excluded_renderers_list=[]
-        new_renderers_list = []
         for renderer in self._plot.renderers:
             # Deny excluded list renderers removal , such as trend line.
             if renderer.name in self._excluded_renderers:
