@@ -180,7 +180,7 @@ class PlotSettings:
         self._included_settings = included_settings or BASE_SETTINGS
         self._plot_tool_description = "Plot Settings"
 
-        # List of renderer to exclude (currently, only trend_line):
+        # List of renderers to exclude (currently, only trend_line):
         self._excluded_renderers = ["trend_line",
                                     "upper_prediction_limit_intercept",
                                     "lower_prediction_limit_intercept"]
