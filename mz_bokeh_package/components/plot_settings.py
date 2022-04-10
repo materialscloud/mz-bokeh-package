@@ -407,7 +407,7 @@ class PlotSettings:
     @property
     def _line_thickness(self) -> bool:
         is_bold = len(self.layout.children[4].active)
-        return is_bold is not 0
+        return is_bold != 0
 
     @_line_thickness.setter
     def _line_thickness(self, value: bool):
