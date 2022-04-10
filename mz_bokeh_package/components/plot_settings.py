@@ -180,6 +180,11 @@ class PlotSettings:
         self._included_settings = included_settings or BASE_SETTINGS
         self._plot_tool_description = "Plot Settings"
 
+        # List of renderer to exclude (currently, only trend_line):
+        self._excluded_renderers = ["trend_line",
+                                    "upper_prediction_limit_intercept",
+                                    "lower_prediction_limit_intercept"]
+
         # Update settings' default values
         if default_values:
             self.default_values.update(default_values)
@@ -357,12 +362,21 @@ class PlotSettings:
             create_glyph(**kwargs)
 
         # remove previous renderers
-        self._plot.renderers = self._plot.renderers[len(glyph_kwargs):]
+        excluded_renderers_list=[]
+        new_renderers_list = []
+        for renderer in self._plot.renderers:
+            # Deny excluded list renderers removal , such as trend line.
+            if renderer.name in self._excluded_renderers:
+                excluded_renderers_list.append(renderer)
+        self._plot.renderers = self._plot.renderers[(len(self._plot.renderers)-len(glyph_kwargs)):] + \
+                               excluded_renderers_list
 
-        # Update legend
+        # Update legend: scatter point renderers are not added to the legend
+        number_of_legend_items = len(self._plot.renderers) - len(self._plot.legend.items)
         if getattr(self._plot, "legend"):
-            for renderer, legend_item in zip(self._plot.renderers, self._plot.legend.items):
+            for renderer, legend_item in zip(self._plot.renderers[number_of_legend_items:], self._plot.legend.items):
                 legend_item.renderers = [renderer]
+        self._plot.legend.items = self._plot.legend.items[::-1]
 
     @property
     def _point_color(self) -> str:
@@ -371,8 +385,10 @@ class PlotSettings:
     @_point_color.setter
     def _point_color(self, value: str):
         for renderer in self._plot.renderers:
-            renderer.glyph.line_color = value
-            renderer.glyph.fill_color = value
+            # Deny update to renderers in the excluded list, such as trend line.
+            if renderer.name not in self._excluded_renderers:
+                renderer.glyph.line_color = value
+                renderer.glyph.fill_color = value
 
     @property
     def _text_thickness(self) -> bool:
@@ -704,14 +720,21 @@ class PlotSettings:
         """
         if len(self._plot.renderers) == 0:
             return []
+        
+        # Deny automatic updater the access to renderers in the excluded list, such as trend line.
+        renderers_list = []
+        for renderer in self._plot.renderers:
+            if renderer.name not in self._excluded_renderers:
+                renderers_list.append(renderer)
 
         return [
             {
                 **renderer.glyph._property_values,
                 "source": renderer.data_source,
                 "visible": renderer.visible,
+                "name": renderer.name
             }
-            for renderer in self._plot.renderers
+            for renderer in renderers_list
         ]
 
     def _init_plot_settings_values(self):
@@ -758,7 +781,7 @@ class PlotSettings:
             colors (List[str]): A list of colors that were chosen by the user in the settings modal.
         """  # noqa: E501
 
-        renderer = self._plot.renderers[0]
+        renderer = self._plot.select(name="actualData")
         source = renderer.data_source
         data = source.data
         color_field_name = getattr(renderer, "fill_color", renderer.glyph.line_color)
