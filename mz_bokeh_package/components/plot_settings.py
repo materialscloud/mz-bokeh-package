@@ -414,9 +414,10 @@ class PlotSettings:
         renderer = self._plot.renderers[0]
 
         highest_column = 0
-        line_width = LINE_BOLD_WIDTH
+        line_width = LINE_BOLD_WIDTH if value else LINE_NORMAL_WIDTH
         self.layout.children[4].disabled = False
-        self.layout.children[4].active = [0]
+        self.layout.children[4].active = [0] if value else []
+
         if type(renderer.glyph) is Quad:  # histogram plot
             highest_column = max(renderer.data_source.data['top'])
 
@@ -426,10 +427,6 @@ class PlotSettings:
         if highest_column > 100:  # automatic size decision: disable bold line Checkbox and shrink line width
             line_width = LINE_HIDE_WIDTH
             self.layout.children[4].disabled = True
-            self.layout.children[4].active = []
-
-        elif not value:  # user choice: shrink line width
-            line_width = LINE_NORMAL_WIDTH
             self.layout.children[4].active = []
 
         renderer.glyph.line_width = line_width
