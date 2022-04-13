@@ -18,8 +18,6 @@ from bokeh.models import (
     CustomJS,
     Column,
     Toggle,
-    Quad,
-    Rect
 
 )
 
@@ -54,7 +52,6 @@ POINT_COLORS = {color: name for color, name in zip(COLORS_PALETTE, COLORS_NAMES)
 AXES_WIDTH_ATTRIBUTES = {"axis_line_width", "major_tick_line_width", "minor_tick_line_width"}
 AXES_NORMAL_WIDTH = 1
 AXES_BOLD_WIDTH = 2
-LINE_HIDE_WIDTH = 0.1
 LINE_NORMAL_WIDTH = 0.8
 LINE_BOLD_WIDTH = 2
 PLOT_DIMENSION_STEP = 50
@@ -406,32 +403,13 @@ class PlotSettings:
 
     @property
     def _line_thickness(self) -> bool:
-        is_bold = len(self.layout.children[4].active)
-        return is_bold != 0
+        renderer = self._plot.renderers[0]
+        return True if renderer.glyph.line_width == LINE_BOLD_WIDTH else False
 
     @_line_thickness.setter
     def _line_thickness(self, value: bool):
         renderer = self._plot.renderers[0]
-
-        highest_column = 0
-        line_width = LINE_BOLD_WIDTH
-        self.layout.children[4].disabled = False
-        self.layout.children[4].active = [0]
-        if type(renderer.glyph) is Quad:  # histogram plot
-            highest_column = max(renderer.data_source.data['top'])
-
-        elif type(renderer.glyph) is Rect:  # bar_chart plot
-            highest_column = max(renderer.data_source.data['y'])
-
-        if highest_column > 100:  # automatic size decision: disable bold line Checkbox and shrink line width
-            line_width = LINE_HIDE_WIDTH
-            self.layout.children[4].disabled = True
-            self.layout.children[4].active = []
-
-        elif not value:  # user choice: shrink line width
-            line_width = LINE_NORMAL_WIDTH
-            self.layout.children[4].active = []
-
+        line_width = LINE_BOLD_WIDTH if value else LINE_NORMAL_WIDTH
         renderer.glyph.line_width = line_width
         renderer.hover_glyph.line_width = line_width
 
