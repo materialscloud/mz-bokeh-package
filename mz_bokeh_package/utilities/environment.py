@@ -51,6 +51,31 @@ class Environment:
         return f"{host}/{endpoint}"
 
     @classmethod
+    def get_parser_service_url(cls, endpoint: str) -> str:
+        """receives an endpoint of a Parser Service request and converts it to a request url based on the environment.
+        If the environment variable 'ENVIRONMENT' is set to 'dev' the environment variable 'PARSER_SERVICE_HOST' should
+        be set to the desired url, including 'https://'. If 'PARSER_SERVICE_HOST' is not set in the development
+        environment, the default staging url will be returned.
+
+        Args:
+            endpoint: the endpoint of the request
+
+        Returns:
+            the full URL of the request
+        """
+
+        env = cls.get_environment()
+
+        if env == 'staging':
+            host = 'https://parser-service-staging.materials.zone/api/v1beta1'
+        elif env == 'production':
+            host = 'https://parser-service.materials.zone/api/v1beta1'
+        elif env == 'dev':
+            host = os.getenv('PARSER_SERVICE_HOST', 'https://parser-service.materials.zone/api/v1beta1')
+
+        return f"{host}/{endpoint}"
+
+    @classmethod
     def get_error_page_url(cls) -> str:
         """get the url for the MaterialsZone app
 
