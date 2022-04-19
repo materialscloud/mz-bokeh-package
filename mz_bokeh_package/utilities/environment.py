@@ -71,7 +71,7 @@ class Environment:
         elif env == 'production':
             host = 'https://parser-service.materials.zone/api/v1beta1'
         elif env == 'dev':
-            host = os.getenv('PARSER_SERVICE_HOST', 'https://parser-service.materials.zone/api/v1beta1')
+            host = os.getenv('PARSER_SERVICE_HOST', 'https://parser-service-staging.materials.zone/api/v1beta1')
 
         return f"{host}/{endpoint}"
 
