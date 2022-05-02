@@ -109,6 +109,10 @@ class CurrentUser:
         Returns:
             the api_key of the current user
         """
+        # in the development environment, allow overriding the api_key and user_key via env variables
+        if Environment.get_environment() == 'dev':
+            api_key = os.getenv('API_KEY')
+            return api_key
 
         query_arguments = curdoc().session_context.request.arguments
 
@@ -118,10 +122,6 @@ class CurrentUser:
             api_key = api_keys[0]
         else:
             api_key = ""
-
-        # in the development environment, allow overriding the api_key and user_key via env variables
-        if Environment.get_environment() == 'dev':
-            api_key = os.getenv('API_KEY', api_key)
 
         return api_key
 
@@ -133,6 +133,11 @@ class CurrentUser:
             the user_key of the current user
         """
 
+        # in the development environment, allow overriding the api_key and user_key via env variables
+        if Environment.get_environment() == 'dev':
+            user_key = os.getenv('USER_KEY')
+            return user_key
+
         query_arguments = curdoc().session_context.request.arguments
 
         # get the api_key from the request header
@@ -141,10 +146,6 @@ class CurrentUser:
             user_key = user_keys[0]
         else:
             user_key = ""
-
-        # in the development environment, allow overriding the api_key and user_key via env variables
-        if Environment.get_environment() == 'dev':
-            user_key = os.getenv('USER_KEY', user_key)
 
         # convert bytes to str (this comes to fix a problem that the user_key may come as type bytes from the header)
         try:
