@@ -51,6 +51,28 @@ class Environment:
         return f"{host}/{endpoint}"
 
     @classmethod
+    def get_graphql_api_url(cls) -> str:
+        """Returns the url of the GraphQL API Server.
+        If the environment variable 'ENVIRONMENT' is set to 'dev' the environment variable 'GRAPHQL_API_HOST' should
+        be set to the desired url, including 'https://'. If 'GRAPHQL_API_HOST' is not set in the development
+        environment, the default staging url will be returned.
+
+        Returns:
+            the full URL of the GraphQL API server
+        """
+
+        env = cls.get_environment()
+
+        if env == 'staging':
+            host = 'https://api-staging.materials.zone/graphql'
+        elif env == 'production':
+            host = 'https://api.materials.zone/graphql'
+        elif env == 'dev':
+            host = os.getenv('GRAPHQL_API_HOST', 'https://api-staging.materials.zone/graphql')
+
+        return f"{host}"
+
+    @classmethod
     def get_parser_service_url(cls, endpoint: str) -> str:
         """receives an endpoint of a Parser Service request and converts it to a request url based on the environment.
         If the environment variable 'ENVIRONMENT' is set to 'dev' the environment variable 'PARSER_SERVICE_HOST' should
