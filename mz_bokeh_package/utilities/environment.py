@@ -64,11 +64,11 @@ class Environment:
         env = cls.get_environment()
 
         if env == 'staging':
-            host = 'https://api-staging.materials.zone/graphql'
+            host = 'https://api-staging-wip.materials.zone/graphql'
         elif env == 'production':
             host = 'https://api.materials.zone/graphql'
         elif env == 'dev':
-            host = os.getenv('GRAPHQL_API_HOST', 'https://api-staging.materials.zone/graphql')
+            host = os.getenv('GRAPHQL_API_HOST', 'https://api-staging-wip.materials.zone/graphql')
 
         return f"{host}"
 
