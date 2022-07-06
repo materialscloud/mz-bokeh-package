@@ -44,7 +44,7 @@ class Environment:
         if env == 'staging':
             host = 'https://api-staging-wip.materials.zone/v1beta1'
         elif env == 'production':
-            host = 'https://api.materials.zone/v1beta1'
+            host = 'https://api-wip.materials.zone/v1beta1'
         elif env == 'dev':
             host = os.getenv('API_HOST', 'https://api-staging-wip.materials.zone/v1beta1')
 
@@ -66,7 +66,7 @@ class Environment:
         if env == 'staging':
             host = 'https://api-staging-wip.materials.zone/graphql'
         elif env == 'production':
-            host = 'https://api.materials.zone/graphql'
+            host = 'https://api-wip.materials.zone/graphql'
         elif env == 'dev':
             host = os.getenv('GRAPHQL_API_HOST', 'https://api-staging-wip.materials.zone/graphql')
 
@@ -91,7 +91,7 @@ class Environment:
         if env == 'staging':
             host = 'https://parser-service-staging-wip.materials.zone/api/v1beta1'
         elif env == 'production':
-            host = 'https://parser-service.materials.zone/api/v1beta1'
+            host = 'https://parser-service-wip.materials.zone/api/v1beta1'
         elif env == 'dev':
             host = os.getenv('PARSER_SERVICE_HOST', 'https://parser-service-staging-wip.materials.zone/api/v1beta1')
 
@@ -110,7 +110,7 @@ class Environment:
         if env in {'staging', 'dev'}:
             return "https://bokeh-staging-wip.materials.zone/error"
         elif env == 'production':
-            return "https://bokeh.materials.zone/error"
+            return "https://bokeh-wip.materials.zone/error"
 
     @classmethod
     def get_webapp_host(cls) -> str:
@@ -124,6 +124,6 @@ class Environment:
         if env == "staging":
             return "https://app-staging-wip.materials.zone"
         elif env == "production":
-            return "https://app.materials.zone"
+            return "https://app-wip.materials.zone"
         elif env == "dev":
             return os.getenv('WEBAPP_HOST', "https://app-staging-wip.materials.zone")
