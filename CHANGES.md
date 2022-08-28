@@ -1,6 +1,12 @@
 Changes in MZ-Bokeh-Package
 ===========================
 
+0.12.1
+******
+
+A fix following bokeh version update: when providing a path to an icon image in CustomAction, a pathlib.Path is required instead of a string.
+
+
 0.10.0
 ******
 
