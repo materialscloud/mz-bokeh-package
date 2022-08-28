@@ -2,6 +2,7 @@
 allows modifying various properties of the plot.
 """
 import os
+from pathlib import Path
 import re
 import itertools
 import numpy as np
@@ -191,7 +192,7 @@ class PlotSettings:
         # Add the settings tool to the plot
         self._settings_plot_tool = CustomAction(
             description=self._plot_tool_description,
-            icon=os.path.join(BASE_DIR, "../assets/img/settings-icon.png"),
+            icon=Path(BASE_DIR, "../assets/img/settings-icon.png"),
             callback=self._get_settings_button_click_js_callback(),
         )
         self._plot.add_tools(self._settings_plot_tool)

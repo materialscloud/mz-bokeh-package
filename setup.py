@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="mz_bokeh_package",
-    version="0.12.0",
+    version="0.12.1",
     packages=["mz_bokeh_package"],
     include_package_data=True,
 
