@@ -351,8 +351,10 @@ class PlotSettings:
 
             kwargs["fill_alpha"] = fill_alpha
 
-            # Setting a color to initiate the selection_glyph and nonselection_glyph.
-            # The color must be set here and will be overwritten later.
+            # Bokeh-problem: color attributes of the selection_glyph and nonselection_glyph are not synced with
+            # the main glyph.
+            # Solution-workaround: initiate an arbitrary color to the two glyphs. The color will be overwritten
+            # in the _point_color function.
             # See Jira card MZC-1315.
             kwargs["selection_color"] = COLORS_PALETTE[COLORS_NAMES.index("Light Turquoise")]
             kwargs["nonselection_color"] = COLORS_PALETTE[COLORS_NAMES.index("Light Turquoise")]
