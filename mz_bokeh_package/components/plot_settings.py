@@ -351,6 +351,12 @@ class PlotSettings:
 
             kwargs["fill_alpha"] = fill_alpha
 
+            # Setting a color to initiate the selection_glyph and nonselection_glyph.
+            # The color must be set here and will be overwritten later.
+            # See Jira card MZC-1315.
+            kwargs["selection_color"] = COLORS_PALETTE[COLORS_NAMES.index("Light Turquoise")]
+            kwargs["nonselection_color"] = COLORS_PALETTE[COLORS_NAMES.index("Light Turquoise")]
+
             # Create the glyph renderer
             create_glyph(**kwargs)
 
@@ -369,8 +375,9 @@ class PlotSettings:
     @_point_color.setter
     def _point_color(self, value: str):
         for renderer in self._plot.renderers:
-            renderer.glyph.line_color = value
-            renderer.glyph.fill_color = value
+            if renderer.name is None:
+                renderer.name = "arbitery_name"
+            self._set_color_for_renderer(renderer.name, value)
 
     @property
     def _text_thickness(self) -> bool:
@@ -703,6 +710,24 @@ class PlotSettings:
         for setting_id, value in self._plot_settings_state.items():
             self._set_setting_property(setting_id, value)
             self._set_setting_widget_value(setting_id, value)
+
+    def _set_color_for_renderer(self, renderer_name, new_color):
+        """Set line color and fill color to a renderer default presentaion, on selction,
+        and not selected plyphs.
+
+        See Jira card MZC-1315.
+
+        Args:
+            renderer_name: name of the renderer to apply the function.
+            new_color: HEX value of the target color
+        """
+        renderer = self._plot.select(name=renderer_name)
+        renderer.glyph.line_color = new_color
+        renderer.glyph.fill_color = new_color
+        renderer.selection_glyph.line_color = new_color
+        renderer.selection_glyph.fill_color = new_color
+        renderer.nonselection_glyph.line_color = new_color
+        renderer.nonselection_glyph.fill_color = new_color
 
     @staticmethod
     def _find_darker_shade(color: str) -> str:
