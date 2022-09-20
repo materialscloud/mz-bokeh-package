@@ -11,6 +11,7 @@ from bokeh.io import curdoc
 from bokeh.plotting import Figure
 from bokeh.core.enums import Anchor
 from bokeh.palettes import Category10
+from bokeh.models.renderers import GlyphRenderer
 from bokeh.models import (
     CustomAction,
     Spinner,
@@ -19,7 +20,6 @@ from bokeh.models import (
     CustomJS,
     Column,
     Toggle,
-
 )
 
 from mz_bokeh_package.components import AppState
@@ -351,11 +351,8 @@ class PlotSettings:
 
             kwargs["fill_alpha"] = fill_alpha
 
-            # Bokeh-problem: color attributes of the selection_glyph and nonselection_glyph are not synced with
-            # the main glyph.
-            # Solution-workaround: initiate an arbitrary color to the two glyphs. The color will be overwritten
-            # in the _point_color function.
-            # See Jira card MZC-1315.
+            # Make sure that the selection_glyph and the nonselection_glyphs are
+            # instantiated along with the newly created glyph.
             kwargs["selection_color"] = COLORS_PALETTE[COLORS_NAMES.index("Light Turquoise")]
             kwargs["nonselection_color"] = COLORS_PALETTE[COLORS_NAMES.index("Light Turquoise")]
 
@@ -377,9 +374,7 @@ class PlotSettings:
     @_point_color.setter
     def _point_color(self, value: str):
         for renderer in self._plot.renderers:
-            if renderer.name is None:
-                renderer.name = "arbitery_name"
-            self._set_color_for_renderer(renderer.name, value)
+            self._set_color_for_renderer(renderer, value)
 
     @property
     def _text_thickness(self) -> bool:
@@ -713,17 +708,17 @@ class PlotSettings:
             self._set_setting_property(setting_id, value)
             self._set_setting_widget_value(setting_id, value)
 
-    def _set_color_for_renderer(self, renderer_name, new_color):
-        """Set line color and fill color to a renderer default presentaion, on selction,
-        and not selected plyphs.
-
-        See Jira card MZC-1315.
+    def _set_color_for_renderer(self, renderer: GlyphRenderer, new_color: str):
+        """Set line color and fill color of a bokeh renderer for its default representation,
+        as well as for the selection and nonselection glyphs.
 
         Args:
-            renderer_name: name of the renderer to apply the function.
+            renderer: a renderer to apply the function.
             new_color: HEX value of the target color
         """
-        renderer = self._plot.select(name=renderer_name)
+
+        if not renderer.selection_glyph or not renderer.nonselection_glyph:
+            return
         renderer.glyph.line_color = new_color
         renderer.glyph.fill_color = new_color
         renderer.selection_glyph.line_color = new_color
