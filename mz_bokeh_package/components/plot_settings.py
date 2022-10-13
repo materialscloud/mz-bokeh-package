@@ -374,7 +374,7 @@ class PlotSettings:
     @_point_color.setter
     def _point_color(self, value: str):
         for renderer in self._plot.renderers:
-            self._set_color_for_renderer(renderer, value)
+            self._set_color_for_renderer(value, )
 
     @property
     def _text_thickness(self) -> bool:
@@ -708,7 +708,8 @@ class PlotSettings:
             self._set_setting_property(setting_id, value)
             self._set_setting_widget_value(setting_id, value)
 
-    def _set_color_for_renderer(self, renderer: GlyphRenderer, new_color: str):
+    @staticmethod
+    def _set_color_for_renderer(renderer: GlyphRenderer, new_color: str):
         """Set line color and fill color of a bokeh renderer for its default representation,
         as well as for the selection and nonselection glyphs.
 
