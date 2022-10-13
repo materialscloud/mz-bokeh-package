@@ -374,7 +374,7 @@ class PlotSettings:
     @_point_color.setter
     def _point_color(self, value: str):
         for renderer in self._plot.renderers:
-            self._set_color_for_renderer(value, )
+            self._set_color_for_renderer(renderer, value)
 
     @property
     def _text_thickness(self) -> bool:
