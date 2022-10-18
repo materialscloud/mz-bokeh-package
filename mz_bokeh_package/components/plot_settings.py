@@ -11,6 +11,7 @@ from bokeh.io import curdoc
 from bokeh.plotting import Figure
 from bokeh.core.enums import Anchor
 from bokeh.palettes import Category10
+from bokeh.models.renderers import GlyphRenderer
 from bokeh.models import (
     CustomAction,
     Spinner,
@@ -19,7 +20,6 @@ from bokeh.models import (
     CustomJS,
     Column,
     Toggle,
-
 )
 
 from mz_bokeh_package.components import AppState
@@ -351,6 +351,11 @@ class PlotSettings:
 
             kwargs["fill_alpha"] = fill_alpha
 
+            # Make sure that the selection_glyph and the nonselection_glyphs are
+            # instantiated along with the newly created glyph.
+            kwargs["selection_color"] = COLORS_PALETTE[COLORS_NAMES.index("Light Turquoise")]
+            kwargs["nonselection_color"] = COLORS_PALETTE[COLORS_NAMES.index("Light Turquoise")]
+
             # Create the glyph renderer
             create_glyph(**kwargs)
 
@@ -369,8 +374,7 @@ class PlotSettings:
     @_point_color.setter
     def _point_color(self, value: str):
         for renderer in self._plot.renderers:
-            renderer.glyph.line_color = value
-            renderer.glyph.fill_color = value
+            self._set_color_for_renderer(renderer, value)
 
     @property
     def _text_thickness(self) -> bool:
@@ -703,6 +707,27 @@ class PlotSettings:
         for setting_id, value in self._plot_settings_state.items():
             self._set_setting_property(setting_id, value)
             self._set_setting_widget_value(setting_id, value)
+
+    @staticmethod
+    def _set_color_for_renderer(renderer: GlyphRenderer, new_color: str):
+        """Set line color and fill color of a bokeh renderer for its default representation,
+        as well as for the selection and nonselection glyphs.
+
+        Args:
+            renderer: a renderer to apply the function.
+            new_color: HEX value of the target color
+        """
+
+        renderer.glyph.line_color = new_color
+        renderer.glyph.fill_color = new_color
+
+        if renderer.selection_glyph == "auto" or renderer.nonselection_glyph == "auto":
+            return
+
+        renderer.selection_glyph.line_color = new_color
+        renderer.selection_glyph.fill_color = new_color
+        renderer.nonselection_glyph.line_color = new_color
+        renderer.nonselection_glyph.fill_color = new_color
 
     @staticmethod
     def _find_darker_shade(color: str) -> str:
