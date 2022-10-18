@@ -718,10 +718,12 @@ class PlotSettings:
             new_color: HEX value of the target color
         """
 
-        if not renderer.selection_glyph or not renderer.nonselection_glyph:
-            return
         renderer.glyph.line_color = new_color
         renderer.glyph.fill_color = new_color
+
+        if renderer.selection_glyph == "auto" or renderer.nonselection_glyph == "auto":
+            return
+
         renderer.selection_glyph.line_color = new_color
         renderer.selection_glyph.fill_color = new_color
         renderer.nonselection_glyph.line_color = new_color
