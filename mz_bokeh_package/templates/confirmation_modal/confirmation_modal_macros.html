@@ -1,0 +1,54 @@
+{% from macros import embed %}
+
+{% macro include_html(title, widget_names) %}
+<!-- Modal -->
+<div class="modal fade" id="confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100 ml-0" id="modal-title">{{title}}</h5>
+      </div>
+      <div class="modal-body">
+        {% for widget_name in widget_names %}
+        {{ embed(roots | attr(widget_name)) }}
+        {% endfor %}
+      </div>
+      <div class="modal-footer justify-content-between border-top-0 ml-1">
+        <div class="d-inline-flex align-items-center">
+          {{ embed(roots.apply_btn) }}
+          {{ embed(roots.cancel_btn) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Modal -->
+{% endmacro %}
+
+{% macro include_css(additional_css = "") %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+  .modal-dialog.modal-dialog-centered {
+    width: 400px;
+  }
+  .modal-body {
+    padding-left: 11px !important;
+  }
+  .modal-body > div:not(:last-child) {
+    margin-bottom: 10px;
+  }
+  .modal-title {
+    margin-left: 12px;
+  }
+  .modal-footer > * {
+    margin: 0 !important;
+  }
+  .modal-footer button.close-btn {
+    color: #1d1d1d;
+    background-color: #e0e0e0;
+    width: 75px;
+    height: 38px;
+  }
+  {{ additional_css }}
+</style>
+{% endmacro %}
