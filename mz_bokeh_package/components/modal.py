@@ -80,11 +80,6 @@ class ConfirmationModal:
 
         args = {"backend_callback_invoker": self._backend_callback_invoker}
         code = f"""
-        // Add "data" attributes to the modal invoker to allow toggling the modal.
-        $(".{self._invoker_css_class}")
-            .attr("data-toggle", "modal")
-            .attr("data-target", "#confirmation-modal")
-
         // Add "data" attribute to both the "Apply" and "Cancel" buttons (in the modal) to allow closing the modal.
         $(".apply-btn > .bk-btn-group > .bk-btn").attr("data-dismiss", "modal")
         $(".cancel-btn > .bk-btn-group > .bk-btn").attr("data-dismiss", "modal")
