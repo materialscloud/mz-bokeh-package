@@ -28,6 +28,11 @@ class ConfirmationModal:
         self._content_widgets = content_widgets
         self._invoker_css_class = "confirmation-modal-invoker"
 
+        # Name content widgets. This is necessary for embedding the widgets
+        # in the app's Jinja template.
+        for i, widget in enumerate(self._content_widgets):
+            widget.name = f"content_widget_{i}"
+
         # Create a dummy widget to allow invoking the modal from the backend.
         self._modal_invoker = Toggle(visible=False, name="modal_invoker")
         self._modal_invoker.js_on_change("active", self._get_modal_invoker_js_callback())
