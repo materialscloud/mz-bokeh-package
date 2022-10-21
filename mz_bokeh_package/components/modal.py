@@ -112,13 +112,13 @@ class ConfirmationModal:
         doc.template_variables["confirmation_modal_title"] = self._title
         doc.template_variables["confirmation_modal_widgets"] = [widget.name for widget in self._content_widgets]
 
-    def _on_apply_modal(self):
+    def _on_apply_modal(self, event):
         """This function runs when the "Apply" button is clicked.
         """
         logger.info('The "Apply" button was clicked.')
 
-    def _on_cancel_modal(self):
+    def _on_cancel_modal(self, event):
         logger.info('The "Cancel" button was clicked.')
 
-    def _on_modal_invocation(self):
+    def _on_modal_invocation(self, attr, old, new):
         logger.info('The modal was invoked.')
