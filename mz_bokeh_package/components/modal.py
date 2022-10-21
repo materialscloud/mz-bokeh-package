@@ -37,7 +37,7 @@ class ConfirmationModal:
         #   - Invoking the modal
         #   - Dismissing the modal when clicking apply/cancel
         #   - Run a backend callback on modal invocation
-        self._invoking_widget.js_on_click(self._get_js_callback)
+        self._invoking_widget.js_on_click(self._get_js_callback())
 
         # Create a dummy widget to allow invoking a backend callback (python)
         # from the frontend (javascript).
