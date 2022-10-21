@@ -30,6 +30,11 @@ class ConfirmationModal:
         self._content_widgets = content_widgets
         self._invoker_css_class = "confirmation-modal-invoker"
 
+        # Create a dummy widget to allow invoking a backend callback (python)
+        # from the frontend (javascript).
+        self._backend_callback_invoker = Toggle()
+        self._backend_callback_invoker.on_change("active", self._on_modal_invocation)
+
         # Add a class name to the modal invoker.
         self._invoking_widget.css_classes += [self._invoker_css_class]
 
@@ -38,11 +43,6 @@ class ConfirmationModal:
         #   - Dismissing the modal when clicking apply/cancel
         #   - Run a backend callback on modal invocation
         self._invoking_widget.js_on_click(self._get_js_callback())
-
-        # Create a dummy widget to allow invoking a backend callback (python)
-        # from the frontend (javascript).
-        self._backend_callback_invoker = Toggle()
-        self._backend_callback_invoker.on_change("active", self._on_modal_invocation)
 
         # "Apply" button.
         self._apply_modal_btn = Button(
