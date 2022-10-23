@@ -27,7 +27,7 @@
         {{ embed(roots | attr(widget_name)) }}
         {% endfor %}
       </div>
-      <div class="modal-footer justify-content-between border-top-0 ml-1">
+      <div class="modal-footer justify-content-between border-top-0">
         <div class="d-inline-flex align-items-center">
           {{ embed(roots.apply_btn) }}
           {{ embed(roots.cancel_btn) }}
@@ -40,7 +40,7 @@
 <!-- End Modal -->
 {% endmacro %}
 
-{% macro include_css(additional_css = "") %}
+{% macro include_css() %}
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
   .modal-dialog.modal-dialog-centered {
@@ -58,12 +58,9 @@
   .modal-footer > * {
     margin: 0 !important;
   }
-  .modal-footer button.close-btn {
-    color: #1d1d1d;
-    background-color: #e0e0e0;
-    width: 75px;
-    height: 38px;
+  .apply-btn button{
+    background-color: #0091B2 !important;
+    color: white !important;
   }
-  {{ additional_css }}
 </style>
 {% endmacro %}
