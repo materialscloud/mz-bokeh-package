@@ -244,6 +244,8 @@ export class CustomMultiSelectView extends InputWidgetView {
       selectAllValue: 'Select All',
       disableIfEmpty: true,
       nonSelectedText: this.model.non_selected_text,
+      enableCollapsibleOptGroups: this.model.collapsible,
+      collapseOptGroupsByDefault: this.model.collapsed_by_default,
       enableCaseInsensitiveFiltering: this.model.enable_filtering,
       numberDisplayed: this.model.number_displayed,
       buttonWidth: '100%',
@@ -255,6 +257,10 @@ export class CustomMultiSelectView extends InputWidgetView {
 
     if (this.model.width) {
       plugin_config.buttonWidth = `${this.model.width}px`
+    }
+
+    if (!this.model.collapsible) {
+      plugin_config.collapseOptGroupsByDefault = false
     }
 
     return plugin_config
@@ -398,6 +404,8 @@ export namespace CustomMultiSelect {
     non_selected_text: p.Property<string>
     is_opt_grouped: p.Property<boolean>
     dropdown_closed: p.Property<boolean>
+    collapsible: p.Property<boolean>
+    collapsed_by_default: p.Property<boolean>
   }
 }
 
@@ -425,6 +433,8 @@ export class CustomMultiSelect extends InputWidget {
       non_selected_text:     [ String, "Select..." ],
       is_opt_grouped:        [ Boolean, false ],
       dropdown_closed:       [ Boolean, false ],
+      collapsible:           [ Boolean, false ],
+      collapsed_by_default:  [ Boolean, false ],
     }))
   }
 }
