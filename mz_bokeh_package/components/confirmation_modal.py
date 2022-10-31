@@ -65,6 +65,15 @@ class ConfirmationModal:
 
         self._configure_jinja_environment()
 
+    def show(self):
+        """Displays the modal.
+
+        Toggling the "active" property of the "_modal_invoker" widget triggers a
+        JS callback that displays the modal.
+        """
+        self._modal_invoker.active = not self._modal_invoker.active
+        logger.debug("The modal was displayed.")
+
     def _get_modal_invoker_js_callback(self) -> CustomJS:
         """Returns a javascript callback to run when the modal invoker is triggered.
 
@@ -106,9 +115,3 @@ class ConfirmationModal:
 
     def _on_cancel_modal(self, event):
         logger.debug('The "Cancel" button was clicked.')
-
-    def show(self):
-        # Change the "active" property in order to trigger the
-        # JS callback that displays the modal.
-        self._modal_invoker.active = not self._modal_invoker.active
-        logger.debug("The modal was displayed.")
