@@ -28,7 +28,7 @@ class ConfirmationModal:
             title: Modal's title.
             content_widgets: The Bokeh widgets that should be displayed in the
                 main area of the modal.
-        """
+        """  # noqa: E501
         self._title = title
         self._content_widgets = content_widgets
         self._invoker_css_class = "confirmation-modal-invoker"
