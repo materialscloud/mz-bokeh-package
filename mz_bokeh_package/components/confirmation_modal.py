@@ -16,8 +16,13 @@ class ConfirmationModal:
         """This class creates a confirmation modal.
 
         In addition to instantiating this class, it's also required to include the
-        confirmation modal Jinja macros in the Jinja template that's used to generate the app.
-        Currently, the modal can only be invoked by a Button Bokeh widget.
+        confirmation modal Jinja macros in the Jinja template that's used to generate the app:
+            - Import the macros: Add the line '{% import "confirmation_modal_macros.html" as confirmation_modal with context %}'
+                as the first line of the template file.
+            - Include modal's css: Add the line '{{ confirmation_modal.include_css() }}'
+                to the "preamble" block.
+            - Include modal's html: Add the line '{{ confirmation_modal.include_html(confirmation_modal_title, confirmation_modal_widgets) }}'
+                to the "contents" block.
 
         Args:
             title: Modal's title.
