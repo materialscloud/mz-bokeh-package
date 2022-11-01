@@ -39,6 +39,9 @@ class BokehUtilities:
             outer_with_signature_def = f"lambda {func_signature.lstrip('(').rstrip(')')}: outer{func_signature}"
             outer_with_signature = eval(outer_with_signature_def, {'outer': outer})
 
+            # Add the original func (unwrapped) as a property.
+            outer_with_signature._original = func
+
             return outer_with_signature
 
         if _func is None:
