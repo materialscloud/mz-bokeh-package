@@ -15,7 +15,7 @@ class LoadingSpinner:
         self._loader_trigger.js_on_change('text', self._callback)
         self._enabled = True
 
-        self.layout = column(self._loader_trigger, name="loaderTrigger")
+        self.layout = column(self._loader_trigger, name="loader_trigger")
 
     @property
     def enabled(self):
