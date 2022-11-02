@@ -27,7 +27,7 @@ class LoadingSpinner:
         self._enabled = value
         visibility = 'visible' if value else 'hidden'
         self._callback.code = f"""
-            document.getElementById('loadingSpinnerInvoker').style.visibility = '{visibility}';
+            document.getElementById('loading-spinner-invoker').style.visibility = '{visibility}';
         """
         logger.debug(f"Loading spinner is {visibility}")
         self._loader_trigger.text = str(int(self._loader_trigger.text) + 1)
