@@ -113,6 +113,7 @@ class ConfirmationModal:
         doc.template.environment.loader.searchpath.append(CONFIRMATION_MODAL_MACROS_PATH)
 
         # Add template variables. These variables are necessary for generating the confirmation modal HTML.
+        doc.template_variables["is_confirmation_modal"] = True
         doc.template_variables["confirmation_modal_title"] = self._title
         doc.template_variables["confirmation_modal_widgets"] = [widget.name for widget in self._content_widgets]
 
