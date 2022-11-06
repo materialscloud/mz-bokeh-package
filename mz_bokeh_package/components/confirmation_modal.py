@@ -1,9 +1,10 @@
 import os
 import logging
 from typing import List
-
 from bokeh.io import curdoc
 from bokeh.models import Widget, Toggle, Button, CustomJS, Column
+
+from .app_state import AppState
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ CONFIRMATION_MODAL_MACROS_PATH = os.path.join(BASE_DIR, "../templates/confirmati
 
 
 class ConfirmationModal:
-    def __init__(self, title: str, content_widgets: List[Widget]):
+    def __init__(self, title: str, content_widgets: List[Widget], state: AppState):
         """This class creates a confirmation modal.
 
         In addition to instantiating this class, it's also required to include the
@@ -28,8 +29,10 @@ class ConfirmationModal:
             title: Modal's title.
             content_widgets: The Bokeh widgets that should be displayed in the
                 main area of the modal.
+            state: App state object.
         """  # noqa: E501
         self._title = title
+        self._state = state
         self._content_widgets = content_widgets
         self._invoker_css_class = "confirmation-modal-invoker"
 
@@ -117,6 +120,8 @@ class ConfirmationModal:
         """This function runs when the "Apply" button is clicked.
         """
         logger.debug('The "Apply" button was clicked.')
+        self._state["confirmation_modal_applied"] += 1
 
     def _on_cancel_modal(self, event):
         logger.debug('The "Cancel" button was clicked.')
+        self._state["confirmation_modal_canceled"] += 1
