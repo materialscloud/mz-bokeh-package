@@ -46,29 +46,29 @@ class ConfirmationModal:
         self._modal_invoker.js_on_change("active", self._get_modal_invoker_js_callback())
 
         # "Apply" button.
-        self._apply_modal_btn = Button(
+        self.apply_modal_btn = Button(
             label="Apply",
             width=75,
             css_classes=["apply-btn"],
             name="apply_btn",
         )
-        self._apply_modal_btn.on_click(self._on_apply_modal)
+        self.apply_modal_btn.on_click(self._on_apply_modal)
 
         # "Cancel" button.
-        self._cancel_modal_btn = Button(
+        self.cancel_modal_btn = Button(
             label="Cancel",
             width=75,
             css_classes=["cancel-btn"],
             name="cancel_btn",
         )
-        self._cancel_modal_btn.on_click(self._on_cancel_modal)
+        self.cancel_modal_btn.on_click(self._on_cancel_modal)
 
         # Layout the widgets.
         self.layout = Column(
             *(widget for widget in self._content_widgets),
             self._modal_invoker,
-            self._apply_modal_btn,
-            self._cancel_modal_btn,
+            self.apply_modal_btn,
+            self.cancel_modal_btn,
         )
 
         self._configure_jinja_environment()
