@@ -52,7 +52,7 @@ class ConfirmationModal:
             css_classes=["apply-btn"],
             name="apply_btn",
         )
-        self._apply_modal_btn.on_click(self._on_apply_modal)
+        self._apply_modal_btn.on_click(self.on_apply_modal)
 
         # "Cancel" button.
         self._cancel_modal_btn = Button(
@@ -61,7 +61,7 @@ class ConfirmationModal:
             css_classes=["cancel-btn"],
             name="cancel_btn",
         )
-        self._cancel_modal_btn.on_click(self._on_cancel_modal)
+        self._cancel_modal_btn.on_click(self.on_cancel_modal)
 
         # Layout the widgets.
         self.layout = Column(
@@ -117,12 +117,12 @@ class ConfirmationModal:
         doc.template_variables["confirmation_modal_title"] = self._title
         doc.template_variables["confirmation_modal_widgets"] = [widget.name for widget in self._content_widgets]
 
-    def _on_apply_modal(self, event):
+    def on_apply_modal(self, event):
         """This function runs when the "Apply" button is clicked.
         """
         logger.debug('The "Apply" button was clicked.')
         self._state["confirmation_modal_applied"] += 1
 
-    def _on_cancel_modal(self, event):
+    def on_cancel_modal(self, event):
         logger.debug('The "Cancel" button was clicked.')
         self._state["confirmation_modal_canceled"] += 1
