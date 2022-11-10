@@ -46,32 +46,48 @@ class ConfirmationModal:
         self._modal_invoker.js_on_change("active", self._get_modal_invoker_js_callback())
 
         # "Apply" button.
-        self.apply_modal_btn = Button(
+        self._apply_modal_btn = Button(
             label="Apply",
             width=75,
             css_classes=["apply-btn"],
             name="apply_btn",
         )
-        self.apply_modal_btn.on_click(self._on_apply_modal)
+        self._apply_modal_btn.on_click(self._on_apply_modal)
 
         # "Cancel" button.
-        self.cancel_modal_btn = Button(
+        self._cancel_modal_btn = Button(
             label="Cancel",
             width=75,
             css_classes=["cancel-btn"],
             name="cancel_btn",
         )
-        self.cancel_modal_btn.on_click(self._on_cancel_modal)
+        self._cancel_modal_btn.on_click(self._on_cancel_modal)
 
         # Layout the widgets.
         self.layout = Column(
             *(widget for widget in self._content_widgets),
             self._modal_invoker,
-            self.apply_modal_btn,
-            self.cancel_modal_btn,
+            self._apply_modal_btn,
+            self._cancel_modal_btn,
         )
 
         self._configure_jinja_environment()
+
+    @property
+    def apply_button_label(self) -> str:
+        return self._apply_modal_btn.label
+
+    @apply_button_label.setter
+    def apply_button_label(self, label: str):
+        self._apply_modal_btn.label = label
+
+    @property
+    def cancel_button_label(self) -> str:
+        return self._cancel_modal_btn.label
+
+    @cancel_button_label.setter
+    def cancel_button_label(self, label: str):
+        self._cancel_modal_btn.label = label
 
     def show(self):
         """Displays the modal.
