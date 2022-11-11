@@ -24,6 +24,9 @@ class ConfirmationModal:
                 to the "preamble" block.
             - Include modal's html: Add the line '{{ confirmation_modal.include_html(confirmation_modal_title, confirmation_modal_widgets) }}'
                 to the "contents" block.
+                
+        AppState Events Raised:
+            confirmation_modal_applied: When the "apply" button is clicked.
 
         Args:
             title: Modal's title.
@@ -35,6 +38,7 @@ class ConfirmationModal:
         self._state = state
         self._content_widgets = content_widgets
         self._invoker_css_class = "confirmation-modal-invoker"
+        self._state["confirmation_modal_applied"] = 0
 
         # Name content widgets. This is necessary for embedding the widgets
         # in the app's Jinja template.
