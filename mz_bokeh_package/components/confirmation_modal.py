@@ -27,6 +27,7 @@ class ConfirmationModal:
                 
         AppState Events Raised:
             confirmation_modal_applied: When the "apply" button is clicked.
+            confirmation_modal_canceled: When the "cancel" button is clicked.
 
         Args:
             title: Modal's title.
@@ -39,6 +40,7 @@ class ConfirmationModal:
         self._content_widgets = content_widgets
         self._invoker_css_class = "confirmation-modal-invoker"
         self._state["confirmation_modal_applied"] = 0
+        self._state["confirmation_modal_canceled"] = 0
 
         # Name content widgets. This is necessary for embedding the widgets
         # in the app's Jinja template.
