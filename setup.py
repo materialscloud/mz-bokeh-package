@@ -2,14 +2,14 @@ from setuptools import setup
 
 setup(
     name="mz_bokeh_package",
-    version="0.13.0",
+    version="0.13.1",
     packages=["mz_bokeh_package"],
     include_package_data=True,
 
     # Requirements for the package.
     install_requires=[
-        "requests",
-        "bokeh~=2.3.0",
+        "requests~=2.28.0",
+        "bokeh>=2.3.0, <2.5",
         "seaborn~=0.12.0",
     ],
     extras_require={
