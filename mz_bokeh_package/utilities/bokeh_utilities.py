@@ -1,6 +1,9 @@
-from functools import partial
+import re
 import inspect
+from functools import partial
 from typing import Optional
+
+TYPE_HINT_PATTERN = r"\: ?[^ ,)]+"
 
 
 class BokehUtilities:
@@ -35,8 +38,9 @@ class BokehUtilities:
                 self._state["is_loading"] = False
 
             # create a version of outer that has the same signature as func (since that is expected by Bokeh)
-            func_signature = str(inspect.signature(func))
-            outer_with_signature_def = f"lambda {func_signature.lstrip('(').rstrip(')')}: outer{func_signature}"
+            # Note! type hints are removed from the signature.
+            func_signature = re.sub(TYPE_HINT_PATTERN, "", str(inspect.signature(func)))
+            outer_with_signature_def = f"lambda {func_signature.strip('()')}: outer{func_signature}"
             outer_with_signature = eval(outer_with_signature_def, {'outer': outer})
 
             # Add the original func (unwrapped) as a property.
