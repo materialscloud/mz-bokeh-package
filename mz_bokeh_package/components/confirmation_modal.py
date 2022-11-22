@@ -24,7 +24,7 @@ class ConfirmationModal:
                 to the "preamble" block.
             - Include modal's html: Add the line '{{ confirmation_modal.include_html(confirmation_modal_title, confirmation_modal_widgets) }}'
                 to the "contents" block.
-                
+
         AppState Events Raised:
             confirmation_modal_applied: When the "apply" button is clicked.
             confirmation_modal_canceled: When the "cancel" button is clicked.
