@@ -1,9 +1,10 @@
 import os
 import logging
 from typing import List
-
 from bokeh.io import curdoc
 from bokeh.models import Widget, Toggle, Button, CustomJS, Column
+
+from .app_state import AppState
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ CONFIRMATION_MODAL_MACROS_PATH = os.path.join(BASE_DIR, "../templates/confirmati
 
 
 class ConfirmationModal:
-    def __init__(self, title: str, content_widgets: List[Widget]):
+    def __init__(self, title: str, content_widgets: List[Widget], state: AppState):
         """This class creates a confirmation modal.
 
         In addition to instantiating this class, it's also required to include the
@@ -23,15 +24,23 @@ class ConfirmationModal:
                 to the "preamble" block.
             - Include modal's html: Add the line '{{ confirmation_modal.include_html(confirmation_modal_title, confirmation_modal_widgets) }}'
                 to the "contents" block.
+                
+        AppState Events Raised:
+            confirmation_modal_applied: When the "apply" button is clicked.
+            confirmation_modal_canceled: When the "cancel" button is clicked.
 
         Args:
             title: Modal's title.
             content_widgets: The Bokeh widgets that should be displayed in the
                 main area of the modal.
+            state: App state object.
         """  # noqa: E501
         self._title = title
+        self._state = state
         self._content_widgets = content_widgets
         self._invoker_css_class = "confirmation-modal-invoker"
+        self._state["confirmation_modal_applied"] = 0
+        self._state["confirmation_modal_canceled"] = 0
 
         # Name content widgets. This is necessary for embedding the widgets
         # in the app's Jinja template.
@@ -69,6 +78,22 @@ class ConfirmationModal:
         )
 
         self._configure_jinja_environment()
+
+    @property
+    def apply_button_label(self) -> str:
+        return self._apply_modal_btn.label
+
+    @apply_button_label.setter
+    def apply_button_label(self, label: str):
+        self._apply_modal_btn.label = label
+
+    @property
+    def cancel_button_label(self) -> str:
+        return self._cancel_modal_btn.label
+
+    @cancel_button_label.setter
+    def cancel_button_label(self, label: str):
+        self._cancel_modal_btn.label = label
 
     def show(self):
         """Displays the modal.
@@ -110,6 +135,7 @@ class ConfirmationModal:
         doc.template.environment.loader.searchpath.append(CONFIRMATION_MODAL_MACROS_PATH)
 
         # Add template variables. These variables are necessary for generating the confirmation modal HTML.
+        doc.template_variables["is_confirmation_modal"] = True
         doc.template_variables["confirmation_modal_title"] = self._title
         doc.template_variables["confirmation_modal_widgets"] = [widget.name for widget in self._content_widgets]
 
@@ -117,6 +143,8 @@ class ConfirmationModal:
         """This function runs when the "Apply" button is clicked.
         """
         logger.debug('The "Apply" button was clicked.')
+        self._state["confirmation_modal_applied"] += 1
 
     def _on_cancel_modal(self, event):
         logger.debug('The "Cancel" button was clicked.')
+        self._state["confirmation_modal_canceled"] += 1
