@@ -139,11 +139,11 @@ class AppState:
 
         if env == "dev":
             code = f"""
-            document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value}'
+            document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value};SameSite=None;Secure'
             """
         else:
             code = f"""
-            document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value};domain=.materials.zone;path=/basic-aiml-package/{dashboard_title}'
+            document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value};Domain=.materials.zone;SameSite=None;Secure'
             """  # noqa: E501
 
         cookie_saver.js_property_callbacks["change:active"][0].code = code
