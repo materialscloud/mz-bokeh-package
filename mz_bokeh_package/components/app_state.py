@@ -138,13 +138,12 @@ class AppState:
         cookie_saver = curdoc().select_one({"name": "cookie_saver"})
 
         if env == "dev":
-            code = f"""
-            document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value};SameSite=None;Secure'
-            """
+            domain_option = ""
         else:
-            code = f"""
-            document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value};Domain=.materials.zone;SameSite=None;Secure'
-            """  # noqa: E501
+            domain_option = "Domain=.materials.zone;"
+
+        code = f"document.cookie = '{user_id}_{dashboard_title}_{cookie_name}={cookie_value};" \
+               f"{domain_option}SameSite=None;Secure;Expires=Fri, 31 Dec 9999 23:59:59 GMT'"
 
         cookie_saver.js_property_callbacks["change:active"][0].code = code
         cookie_saver.active = not cookie_saver.active
