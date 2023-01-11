@@ -8,7 +8,7 @@ import itertools
 import numpy as np
 from typing import Any, Dict, List, Optional, Tuple
 from bokeh.io import curdoc
-from bokeh.plotting import Figure
+from bokeh.plotting import figure
 from bokeh.core.enums import Anchor
 from bokeh.palettes import Category10
 from bokeh.models.renderers import GlyphRenderer
@@ -96,10 +96,10 @@ def get_options_from_ids(ids: List[str]) -> List[Tuple[str]]:
     """Creates a list of options for a given list of option IDs.
 
     Args:
-        ids (List[str]): A list of option IDs.
+        ids: A list of option IDs.
 
     Returns:
-        List[Tuple[str]]: A list of tuples in the format (<option_id>, <option_label>).
+        A list of tuples in the format (<option_id>, <option_label>).
     """
     return [(id, id.replace("_", " ").title()) for id in ids]
 
@@ -153,7 +153,7 @@ class PlotSettings:
     def __init__(
         self,
         title: str,
-        plot: Figure,
+        plot: figure,
         state: AppState,
         included_settings: Optional[List[str]] = None,
         default_values: Optional[Dict[str, Any]] = None,
@@ -161,15 +161,14 @@ class PlotSettings:
         """Initializes a PlotSettings instance.
 
         Args:
-            title (str): The title of the plot settings modal.
-            plot (Figure): The plot to apply the settings to.
-            state (AppState): Bokeh application state.
-            included_settings (Optional[List[str]], optional): A list of setting IDs to include in the settings modal.
+            title: The title of the plot settings modal.
+            plot: The plot to apply the settings to.
+            state: Bokeh application state.
+            included_settings: A list of setting IDs to include in the settings modal.
                 The order in which the settings widgets are rendered matches the order they appear in this list.
                 Defaults to None.
-            default_values (Optional[Dict[str, Any]], optional): A dictionary that maps settings to
+            default_values: A dictionary that maps settings to
                 their default values. For example, {"show_legend": False}. Defaults to None.
-            configure_jinja_env (bool, optional): Whether to configure the jinja environment or not. Defaults to True.
         """
 
         self._title = title
@@ -562,19 +561,19 @@ class PlotSettings:
         """
         return CustomJS(args=args, code=code)
 
-    def on_apply_dialog(self, new_plot: Optional[Figure] = None):
+    def on_apply_dialog(self, new_plot: Optional[figure] = None):
         """Modifies the plot based on the settings configurations.
 
         This method can be triggered either by clicking the "Apply" button in the settings modal
         or by another component that replaces the existing plot with a new one and needs to apply the settings on
         the newly created plot. For example, updating the "Parameter to Display" filter in the "Histogram" dashboard
-        causes a creation of a new Figure instance. In such case, the histogram component can use this function
+        causes a creation of a new figure instance. In such case, the histogram component can use this function
         in order to apply the plot settings on the newly created plot.
 
         Args:
-            new_plot (Optional[Figure], optional): The newly created Figure instance. Defaults to None.
+            new_plot: The newly created figure instance. Defaults to None.
         """
-        if isinstance(new_plot, Figure):
+        if isinstance(new_plot, figure):
             self._plot = new_plot
             self._plot.add_tools(self._settings_plot_tool)
 
@@ -628,10 +627,10 @@ class PlotSettings:
         """Returns the corresponding Bokeh widget of a given setting.
 
         Args:
-            setting_id (str): ID of a setting.
+            setting_id: ID of a setting.
 
         Returns:
-            Any: The setting's corresponding Bokeh widget.
+            The setting's corresponding Bokeh widget.
         """
         return getattr(self, f"_{setting_id}_widget", None)
 
@@ -639,10 +638,10 @@ class PlotSettings:
         """Returns the value of the corresponding Bokeh widget of a given setting.
 
         Args:
-            setting_id (str): ID of a setting.
+            setting_id: ID of a setting.
 
         Returns:
-            Any: The value of the setting's corresponding Bokeh widget.
+            The value of the setting's corresponding Bokeh widget.
         """
         setting_widget = getattr(self, f"_{setting_id}_widget", None)
 
@@ -658,8 +657,8 @@ class PlotSettings:
         """Sets the value of the corresponding class property of a given setting.
 
         Args:
-            setting_id (str): ID of the setting.
-            value (Any): Value to set to the corresponding class property.
+            setting_id: ID of the setting.
+            value: Value to set to the corresponding class property.
         """
         setattr(self, f"_{setting_id}", value)
 
@@ -667,8 +666,8 @@ class PlotSettings:
         """Sets the value of the corresponding widget of a given setting.
 
         Args:
-            setting_id (str): ID of the setting.
-            value (Any): Value to set to the corresponding widget.
+            setting_id: ID of the setting.
+            value: Value to set to the corresponding widget.
         """
         setting_widget = self._get_setting_widget(setting_id)
 
@@ -734,10 +733,10 @@ class PlotSettings:
         """Finds a darker shade for a given hex color.
 
         Args:
-            color (str): A valid hex color (e.g "#4F4F4F").
+            color: A valid hex color (e.g "#4F4F4F").
 
         Returns:
-            str: A darker hex color.
+            A darker hex color.
         """
         MIN = 0
         MAX = 255
@@ -760,7 +759,7 @@ class PlotSettings:
         rather than having multiple renderers.
 
         Args:
-            colors (List[str]): A list of colors that were chosen by the user in the settings modal.
+            colors: A list of colors that were chosen by the user in the settings modal.
         """  # noqa: E501
 
         renderer = self._plot.renderers[0]
@@ -785,11 +784,11 @@ class PlotSettings:
         the function will add the missing colors.
 
         Args:
-            chosen_colors (List[str]): Colors that were chosen by the user.
-            groups_num (int): Groups to be colored.
+            chosen_colors: Colors that were chosen by the user.
+            groups_num: Groups to be colored.
 
         Returns:
-            List[str]: A list with the same number of colors as the number of groups.
+            A list with the same number of colors as the number of groups.
         """
         # There are enough colors to color all the groups.
         if len(chosen_colors) >= groups_num:

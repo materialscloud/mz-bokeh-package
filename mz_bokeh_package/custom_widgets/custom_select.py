@@ -3,7 +3,7 @@ For more information about the plugin: "http://davidstutz.github.io/bootstrap-mu
 """
 import os
 from bokeh.models import InputWidget
-from bokeh.core.properties import List, Either, String, Tuple, Bool, Dict
+from bokeh.core.properties import List, Either, String, Tuple, Bool, Dict, Readonly
 from typing import TypeVar, Type
 
 T = TypeVar("T", bound="CustomSelect")
@@ -56,7 +56,7 @@ class CustomSelect(InputWidget):
     Allows/Disallows none of the options to be selected. If set to False, the first option is selected by default.
     """)
 
-    is_opt_grouped = Bool(readonly=True, help="""
+    is_opt_grouped = Readonly(Bool, help="""
     Indicates whether the widget contains grouped options or not.
     """)
 

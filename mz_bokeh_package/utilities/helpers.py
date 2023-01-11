@@ -16,11 +16,11 @@ def save_file(file_name: str, file_content: Union[str, bytes]) -> str:
     """Saves a file to the "temp" folder.
 
     Args:
-        file_name (str): Name of the file (including format).
-        file_content (Union[str, bytes]): Content of the file.
+        file_name: Name of the file (including format).
+        file_content: Content of the file.
 
     Returns:
-        str: Absolute path to the file.
+        Absolute path to the file.
     """
 
     temp_path = get_temp_dir_path()
@@ -47,10 +47,10 @@ def download_image(url: str) -> bytes:
     """Downloads an image from a given url path.
 
     Args:
-        url (str): URL address of the image.
+        url: URL address of the image.
 
     Returns:
-        bytes: Image data.
+        Image data.
     """
     res = requests.get(url)
 

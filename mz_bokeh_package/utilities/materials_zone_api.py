@@ -19,11 +19,11 @@ class MaterialsZoneApi:
         """Uploads MZ components using MZ external API.
 
         Args:
-            metadata (Dict[str, Any]): MZ Metadata object.
-            data_files (Optional[List[Tuple[str, bytes]]]): A list of data files to upload.
+            metadata: MZ Metadata object.
+            data_files: A list of data files to upload.
                 each file should be represented by a tuple that includes the file name and
                 its content i.e (filename, content). Defaults to None.
-            user_api_key (Optional[str]): The API key of the user who makes the request.
+            user_api_key: The API key of the user who makes the request.
                 Note, this parameter should be provided when using this function in a multi-threading manner.
                 If not provided, an attempt is made to extract the API key from the Bokeh app's
                 URL parameters (see CurrentUser.get_api_key() method). This attempt will fail when trying
@@ -60,14 +60,14 @@ class MaterialsZoneApi:
         """parse a bokeh FileInput widget with a given processing parameters code.
 
         Args:
-            file_content (Union[str, bytes]): Content of the file to parse.
-            processing_parameters_code (str): Processing parameters code e.g. #PE-ED-F-ED.
+            file_content: Content of the file to parse.
+            processing_parameters_code: Processing parameters code e.g. #PE-ED-F-ED.
 
         Raises:
             Exception: Whenever the parsing process has failed.
 
         Returns:
-            Dict[str, Union[str, dict]]: a dictionary that contains:
+            a dictionary that contains:
                 data_type (str): the type of the processed file ('image' | 'json' | 'text').
                 data (Union[str,dict]): this field's value depends on the data type:
                     'image': download url for the processed image.

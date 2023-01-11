@@ -19,10 +19,10 @@ def hex_to_rgb(hex_color: str) -> Tuple[int]:
     """Converts Hex color to RGB.
 
     Args:
-        hex_color (str): Hex color (e.g. "#4ac5db").
+        hex_color: Hex color (e.g. "#4ac5db").
 
     Returns:
-        Tuple[int]: RGB color (e.g. (10, 154, 130)).
+        RGB color (e.g. (10, 154, 130)).
     """
     h = hex_color.lstrip('#')
     return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
@@ -32,10 +32,10 @@ def rgb_to_hex(rgb_color: Tuple[int]) -> str:
     """Converts RGB color to Hex.
 
     Args:
-        rgb_color (Tuple[int]): RGB color (e.g. (10, 154, 130)).
+        rgb_color: RGB color (e.g. (10, 154, 130)).
 
     Returns:
-        str: Hex color (e.g. "#4ac5db").
+        Hex color (e.g. "#4ac5db").
     """
     MIN = 0
     MAX = 255
@@ -49,10 +49,10 @@ def normalize_rgb(rgb_color: Tuple[int]) -> Tuple[float]:
     """Normalizes RGB color so its components will range from 0 to 1.
 
     Args:
-        rgb_color (Tuple[int]): RGB color (e.g. (10, 154, 130)).
+        rgb_color: RGB color (e.g. (10, 154, 130)).
 
     Returns:
-        Tuple[float]: RGB color (e.g. (10/255, 154/255, 130/255)).
+        RGB color (e.g. (10/255, 154/255, 130/255)).
     """
     return tuple(x/255 for x in rgb_color)
 
@@ -61,10 +61,10 @@ def denormalize_rgb(rgb_color: Tuple[float]) -> Tuple[int]:
     """Denormalizes RGB color so its components will range from 0 to 255.
 
     Args:
-        rgb_color (Tuple[int]): RGB color (e.g. (10/255, 154/255, 130/255)).
+        rgb_color: RGB color (e.g. (10/255, 154/255, 130/255)).
 
     Returns:
-        Tuple[float]: RGB color (e.g. (10, 154, 130)).
+        RGB color (e.g. (10, 154, 130)).
     """
     return tuple(int(x*255) for x in rgb_color)
 
@@ -73,11 +73,11 @@ def generate_continuous_palette(colors, n_colors: int = 256) -> List[str]:
     """Generates a continuous color palette out of a given sequence of colors.
 
     Args:
-        colors (str): A sequence of Hex colors.
-        n_colors (int, optional): Number of colors to include in the resulting palette. Defaults to 256.
+        colors: A sequence of Hex colors.
+        n_colors: Number of colors to include in the resulting palette. Defaults to 256.
 
     Returns:
-        List[str]: A continuous color palette.
+        A continuous color palette.
     """
     palette = sns.blend_palette([normalize_rgb(hex_to_rgb(c)) for c in colors], n_colors=n_colors)
     return [rgb_to_hex(denormalize_rgb(color)) for color in palette]
@@ -90,10 +90,10 @@ def generate_categorical_palette(base_colors: List[str] = BASE_COLORS) -> List[s
     the base colors and their light shades.
 
     Args:
-        base_colors (List[str], optional): Hex colors. Defaults to BASE_COLORS.
+        base_colors: Hex colors. Defaults to BASE_COLORS.
 
     Returns:
-        List[str]: A categorical palette.
+        A categorical palette.
     """
     lighter_palettes = [sns.light_palette(normalize_rgb(hex_to_rgb(hex_color))) for hex_color in base_colors]
     return [
@@ -107,10 +107,10 @@ def make_palette_cyclic(palette: Iterable[str]) -> Iterable[str]:
     """Returns a periodic infinite palette.
 
     Args:
-        palette (Iterable[str]): A finite palette.
+        palette: A finite palette.
 
     Returns:
-        Iterable[str]: An infinite palette.
+        An infinite palette.
     """
     return itertools.cycle(palette)
 
@@ -119,10 +119,10 @@ def find_darker_shade(color: str) -> str:
     """Finds a darker shade for a given hex color.
 
     Args:
-        color (str): A valid hex color (e.g "#4F4F4F").
+        color: A valid hex color (e.g "#4F4F4F").
 
     Returns:
-        str: A darker hex color.
+        A darker hex color.
     """
     MIN = 0
     MAX = 255

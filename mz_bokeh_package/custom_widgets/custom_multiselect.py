@@ -3,7 +3,7 @@ For more information about the plugin: "http://davidstutz.github.io/bootstrap-mu
 """
 import os
 from bokeh.models import InputWidget
-from bokeh.core.properties import List, Either, String, Tuple, Bool, Int, Nullable, Dict
+from bokeh.core.properties import List, Either, String, Tuple, Bool, Int, Nullable, Dict, Readonly
 from typing import TypeVar, Type
 
 T = TypeVar("T", bound="CustomMultiSelect")
@@ -66,7 +66,7 @@ class CustomMultiSelect(InputWidget):
     The text to display on the toggle button when none of the options are selected.
     """)
 
-    is_opt_grouped = Bool(readonly=True, help="""
+    is_opt_grouped = Readonly(Bool, help="""
     Indicates whether the widget contains grouped options or not.
     """)
 
