@@ -3,6 +3,7 @@ import {isString} from "core/util/types"
 import * as p from "core/properties"
 
 import {InputWidget, InputWidgetView} from "models/widgets/input_widget"
+import {StyleSheetLike, ImportedStyleSheet} from "core/dom"
 
 declare function $(...args: any[]): any
 
@@ -139,8 +140,11 @@ export class CustomSelectView extends InputWidgetView {
     this.on_change(enabled, () => this.enable_widget())
   }
 
-  styles(): string[] {
-    return [...super.styles(), default_styles]
+  override styles(): StyleSheetLike[] {
+    return [
+      ...super.styles(),
+      new ImportedStyleSheet(default_styles),
+    ]
   }
 
   initialize(): void {
