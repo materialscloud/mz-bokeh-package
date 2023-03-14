@@ -8,13 +8,13 @@ class Environment:
 
     @staticmethod
     def get_environment() -> str:
-        """get the current environment
-
-        Raises:
-            ValueError: Whenever the environment is invalid.
+        """Get the current environment.
 
         Returns:
             str: the current environment, possible values are: 'dev', 'staging' or 'production'
+
+        Raises:
+            ValueError: Whenever the environment is invalid.
         """
 
         # in the kubernetes deployed containers, the environemnt variable ENVIRONMENT is set to staging/production
@@ -27,10 +27,8 @@ class Environment:
 
     @classmethod
     def get_request_url(cls, endpoint: str) -> str:
-        """receives an endpoint of an API request and converts it to a request url based on the environment.
-        If the environment variable 'ENVIRONMENT' is set to 'dev' the environment variable 'API_HOST' should
-        be set to the desired url, including 'https://'. If 'API_HOST' is not set in the development environment,
-        the default staging url will be returned.
+        """Converts an endpoint of an External API request to a request url. The host of the External API should be set
+        in the environment variable 'API_HOST'. If it is not set, a KeyError will be raised.
 
         Args:
             endpoint: the endpoint of the request
@@ -38,46 +36,24 @@ class Environment:
         Returns:
             the full URL of the request
         """
-
-        env = cls.get_environment()
-
-        if env == 'staging':
-            host = 'https://api-staging.materials.zone/v1beta1'
-        elif env == 'production':
-            host = 'https://api.materials.zone/v1beta1'
-        elif env == 'dev':
-            host = os.getenv('API_HOST', 'https://api-staging.materials.zone/v1beta1')
-
+        host = Environment._getenv_or_raise_value_error('API_HOST')
         return f"{host}/{endpoint}"
 
     @classmethod
     def get_graphql_api_url(cls) -> str:
-        """Returns the url of the GraphQL API Server.
-        If the environment variable 'ENVIRONMENT' is set to 'dev' the environment variable 'GRAPHQL_API_HOST' should
-        be set to the desired url, including 'https://'. If 'GRAPHQL_API_HOST' is not set in the development
-        environment, the default staging url will be returned.
+        """Returns the url of the GraphQL API Server. The host of the GraphQL API should be set in the environment
+        variable 'GRAPHQL_API_HOST'. If it is not set, a KeyError will be raised.
 
         Returns:
             the full URL of the GraphQL API server
         """
-
-        env = cls.get_environment()
-
-        if env == 'staging':
-            host = 'https://api-staging.materials.zone/graphql'
-        elif env == 'production':
-            host = 'https://api.materials.zone/graphql'
-        elif env == 'dev':
-            host = os.getenv('GRAPHQL_API_HOST', 'https://api-staging.materials.zone/graphql')
-
-        return f"{host}"
+        host = Environment._getenv_or_raise_value_error('GRAPHQL_API_HOST')
+        return host
 
     @classmethod
     def get_parser_service_url(cls, endpoint: str) -> str:
-        """receives an endpoint of a Parser Service request and converts it to a request url based on the environment.
-        If the environment variable 'ENVIRONMENT' is set to 'dev' the environment variable 'PARSER_SERVICE_HOST' should
-        be set to the desired url, including 'https://'. If 'PARSER_SERVICE_HOST' is not set in the development
-        environment, the default staging url will be returned.
+        """Converts an endpoint of the Parser Service to a request url. The host of the Parser Service should be set in
+        the environment variable 'PARSER_SERVICE_HOST'. If it is not set, a KeyError will be raised.
 
         Args:
             endpoint: the endpoint of the request
@@ -86,16 +62,25 @@ class Environment:
             the full URL of the request
         """
 
-        env = cls.get_environment()
-
-        if env == 'staging':
-            host = 'https://parser-service-staging.materials.zone/api/v1beta1'
-        elif env == 'production':
-            host = 'https://parser-service.materials.zone/api/v1beta1'
-        elif env == 'dev':
-            host = os.getenv('PARSER_SERVICE_HOST', 'https://parser-service-staging.materials.zone/api/v1beta1')
-
+        host = Environment._getenv_or_raise_value_error('PARSER_SERVICE_HOST')
         return f"{host}/{endpoint}"
+
+    @classmethod
+    def get_webapp_host(cls) -> str:
+        """Returns the web app host as set in the environment variable WEBAPP_HOST. If it is not set, a KeyError will be
+         raised.
+
+        Returns:
+            str: Web app host.
+        """
+        return Environment._getenv_or_raise_value_error('WEBAPP_HOST')
+
+    @classmethod
+    def _getenv_or_raise_value_error(cls, env_var_name: str):
+        host = os.getenv(env_var_name)
+        if not host:
+            raise KeyError(f'The {env_var_name} environment variable is not set.')
+        return host
 
     @classmethod
     def get_error_page_url(cls) -> str:
@@ -111,19 +96,3 @@ class Environment:
             return "https://bokeh-staging.materials.zone/error"
         elif env == 'production':
             return "https://bokeh.materials.zone/error"
-
-    @classmethod
-    def get_webapp_host(cls) -> str:
-        """get the web app host based on the environment.
-
-        Returns:
-            str: Web app host.
-        """
-        env = cls.get_environment()
-
-        if env == "staging":
-            return "https://app-staging.materials.zone"
-        elif env == "production":
-            return "https://app.materials.zone"
-        elif env == "dev":
-            return os.getenv('WEBAPP_HOST', "https://app-staging.materials.zone")
