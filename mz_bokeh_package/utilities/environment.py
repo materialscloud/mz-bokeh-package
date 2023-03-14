@@ -48,7 +48,7 @@ class Environment:
             the full URL of the GraphQL API server
         """
         host = Environment._getenv_or_raise_value_error('GRAPHQL_API_HOST')
-        return f"{host}"
+        return host
 
     @classmethod
     def get_parser_service_url(cls, endpoint: str) -> str:
@@ -79,7 +79,7 @@ class Environment:
     def _getenv_or_raise_value_error(cls, env_var_name: str):
         host = os.getenv(env_var_name)
         if not host:
-            raise ValueError(f'The {env_var_name} environment variable is not set.')
+            raise KeyError(f'The {env_var_name} environment variable is not set.')
         return host
 
     @classmethod
