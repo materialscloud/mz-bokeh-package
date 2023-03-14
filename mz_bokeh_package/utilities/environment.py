@@ -27,8 +27,8 @@ class Environment:
 
     @classmethod
     def get_request_url(cls, endpoint: str) -> str:
-        """Converts an endpoint of an API request to a request url. The host should be set in the environment variable
-        'API_HOST'. If it is not set, a ValueError will be raised.
+        """Converts an endpoint of an External API request to a request url. The host of the External API should be set
+        in the environment variable 'API_HOST'. If it is not set, a KeyError will be raised.
 
         Args:
             endpoint: the endpoint of the request
@@ -41,8 +41,8 @@ class Environment:
 
     @classmethod
     def get_graphql_api_url(cls) -> str:
-        """Returns the url of the GraphQL API Server. The host should be set in the environment variable
-        'GRAPHQL_API_HOST'. If it is not set, a ValueError will be raised.
+        """Returns the url of the GraphQL API Server. The host of the GraphQL API should be set in the environment
+        variable 'GRAPHQL_API_HOST'. If it is not set, a KeyError will be raised.
 
         Returns:
             the full URL of the GraphQL API server
@@ -52,8 +52,8 @@ class Environment:
 
     @classmethod
     def get_parser_service_url(cls, endpoint: str) -> str:
-        """Converts an endpoint of the Parser Service to a request url. The host should be set in the environment
-        variable 'PARSER_SERVICE_HOST'. If it is not set, a ValueError will be raised.
+        """Converts an endpoint of the Parser Service to a request url. The host of the Parser Service should be set in
+        the environment variable 'PARSER_SERVICE_HOST'. If it is not set, a KeyError will be raised.
 
         Args:
             endpoint: the endpoint of the request
@@ -67,7 +67,7 @@ class Environment:
 
     @classmethod
     def get_webapp_host(cls) -> str:
-        """Get the web app host as set in the environment variable WEBAPP_HOST. If it is not set, a ValueError will be
+        """Returns the web app host as set in the environment variable WEBAPP_HOST. If it is not set, a KeyError will be
          raised.
 
         Returns:
