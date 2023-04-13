@@ -71,10 +71,9 @@ class Environment:
         environment variable 'LOGGING_SERVICE_HOST'. If it is not set, a KeyError will be raised.
 
         Returns:
-            the full URL of the GraphQL API server
+            the full URL of the logging service API Server
         """
-        host = Environment._getenv_or_raise_value_error('LOGGING_SERVICE_HOST')
-        return host
+        return Environment._getenv_or_raise_value_error('LOGGING_SERVICE_HOST')
 
     @classmethod
     def get_webapp_host(cls) -> str:
@@ -85,6 +84,16 @@ class Environment:
             str: Web app host.
         """
         return Environment._getenv_or_raise_value_error('WEBAPP_HOST')
+
+    @classmethod
+    def get_mixpanel_token(cls) -> str:
+        """Returns the token of the MixPanel project. The token of the MixPanel project should be set in the
+        environment variable 'MIXPANEL_TOKEN'. If it is not set, a KeyError will be raised.
+
+        Returns:
+            the token URL of the MixPanel project
+        """
+        return Environment._getenv_or_raise_value_error('MIXPANEL_TOKEN')
 
     @classmethod
     def _getenv_or_raise_value_error(cls, env_var_name: str):
