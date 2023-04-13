@@ -66,6 +66,17 @@ class Environment:
         return f"{host}/{endpoint}"
 
     @classmethod
+    def get_logging_service_url(cls) -> str:
+        """Returns the url of the logging service API Server. The host of the logging service should be set in the
+        environment variable 'LOGGING_SERVICE_HOST'. If it is not set, a KeyError will be raised.
+
+        Returns:
+            the full URL of the GraphQL API server
+        """
+        host = Environment._getenv_or_raise_value_error('LOGGING_SERVICE_HOST')
+        return host
+
+    @classmethod
     def get_webapp_host(cls) -> str:
         """Returns the web app host as set in the environment variable WEBAPP_HOST. If it is not set, a KeyError will be
          raised.
