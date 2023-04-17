@@ -126,32 +126,20 @@ class CurrentUser:
         return api_key
 
     @staticmethod
-    def get_user_key() -> str:
-        """get the user_key of the current user
+    def get_user_id() -> str | None:
+        """get the user_id of the current user
 
         Returns:
-            the user_key of the current user
+            the user_id of the current user
         """
 
         # in the development environment, allow overriding the api_key and user_key via env variables
         if Environment.get_environment() == 'dev':
-            user_key = os.getenv('USER_KEY')
-            return user_key
-
-        query_arguments = curdoc().session_context.request.arguments
-
-        # get the api_key from the request header
-        user_keys = query_arguments.get("user_key")
-        if user_keys is not None and len(user_keys) == 1:
-            user_key = user_keys[0]
+            user_id = os.getenv('USER_KEY')
         else:
-            user_key = ""
+            user_id = MZGraphQLClient().get_user().id
 
-        # convert bytes to str (this comes to fix a problem that the user_key may come as type bytes from the header)
-        try:
-            user_key = user_key.decode()
-        except (UnicodeDecodeError, AttributeError):
-            pass
+        return user_id if user_id else None
 
     @staticmethod
     def get_user_name() -> str:
