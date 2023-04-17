@@ -153,13 +153,12 @@ class CurrentUser:
         except (UnicodeDecodeError, AttributeError):
             pass
 
-        return user_key
-
-    def get_user_id(self) -> str:
-        """get the user_id of the current user, this is obtained by an API call
+    @staticmethod
+    def get_user_name() -> str:
+        """get the name of the current user, this is obtained by an API call
 
         Returns:
-            the user_id of the current user
+            the name of the current user
         """
 
-        return Auth.get_user_from_api_key(self.get_api_key(), self.get_user_key())
+        return MZGraphQLClient().get_user().name
