@@ -7,8 +7,7 @@ import os
 from bokeh.io import curdoc
 from tornado.web import RequestHandler
 
-from mz_bokeh_package.utilities.environment import Environment
-from .graphql_api import MZGraphQLClient
+from mz_bokeh_package import utilities
 
 
 def get_user(request_handler: RequestHandler) -> str:
@@ -38,7 +37,7 @@ def get_login_url(request_handler: RequestHandler) -> str:
         the MZ App URL (environment dependant) to redirect to if authentication fails
     """
 
-    return Environment.get_error_page_url()
+    return utilities.Environment.get_error_page_url()
 
 
 class CurrentUser:
@@ -54,7 +53,7 @@ class CurrentUser:
             the api_key of the current user
         """
         # in the development environment, allow overriding the api_key and user_key via env variables
-        if Environment.get_environment() == 'dev':
+        if utilities.Environment.get_environment() == 'dev':
             api_key = os.getenv('API_KEY')
             return api_key
 
@@ -78,10 +77,10 @@ class CurrentUser:
         """
 
         # in the development environment, allow overriding the api_key and user_key via env variables
-        if Environment.get_environment() == 'dev':
+        if utilities.Environment.get_environment() == 'dev':
             user_id = os.getenv('USER_KEY')
         else:
-            user_id = MZGraphQLClient().get_user().id
+            user_id = utilities.MZGraphQLClient().get_user().id
 
         return user_id if user_id else None
 
@@ -93,4 +92,4 @@ class CurrentUser:
             the name of the current user
         """
 
-        return MZGraphQLClient().get_user().name
+        return utilities.MZGraphQLClient().get_user().name

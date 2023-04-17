@@ -8,7 +8,7 @@ from jsonschema import validate, ValidationError
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport, log as requests_logger
 
-from mz_bokeh_package.utilities import CurrentUser, Environment
+from mz_bokeh_package import utilities
 
 requests_logger.setLevel(logging.WARNING)
 
@@ -84,8 +84,9 @@ class MZGraphQLClient:
         Returns:
             GraphQL client
         """
-        transport = RequestsHTTPTransport(url=Environment.get_graphql_api_url(), verify=True, retries=3)
+
+        transport = RequestsHTTPTransport(url=utilities.Environment.get_graphql_api_url(), verify=True, retries=3)
         client = Client(transport=transport)
 
-        client.transport.headers = {"authorization": f"API {CurrentUser.get_api_key()}"}
+        client.transport.headers = {"authorization": f"API {utilities.CurrentUser.get_api_key()}"}
         return client
