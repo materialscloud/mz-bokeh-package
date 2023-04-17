@@ -36,7 +36,7 @@ class Environment:
         Returns:
             the full URL of the request
         """
-        host = Environment._getenv_or_raise_value_error('API_HOST')
+        host = Environment.getenv_or_raise_value_error('API_HOST')
         return f"{host}/{endpoint}"
 
     @classmethod
@@ -47,7 +47,7 @@ class Environment:
         Returns:
             the full URL of the GraphQL API server
         """
-        host = Environment._getenv_or_raise_value_error('GRAPHQL_API_HOST')
+        host = Environment.getenv_or_raise_value_error('GRAPHQL_API_HOST')
         return host
 
     @classmethod
@@ -62,18 +62,8 @@ class Environment:
             the full URL of the request
         """
 
-        host = Environment._getenv_or_raise_value_error('PARSER_SERVICE_HOST')
+        host = Environment.getenv_or_raise_value_error('PARSER_SERVICE_HOST')
         return f"{host}/{endpoint}"
-
-    @classmethod
-    def get_logging_service_url(cls) -> str:
-        """Returns the url of the logging service API Server. The host of the logging service should be set in the
-        environment variable 'LOGGING_SERVICE_HOST'. If it is not set, a KeyError will be raised.
-
-        Returns:
-            the full URL of the logging service API Server
-        """
-        return Environment._getenv_or_raise_value_error('LOGGING_SERVICE_HOST')
 
     @classmethod
     def get_webapp_host(cls) -> str:
@@ -83,20 +73,10 @@ class Environment:
         Returns:
             str: Web app host.
         """
-        return Environment._getenv_or_raise_value_error('WEBAPP_HOST')
+        return Environment.getenv_or_raise_value_error('WEBAPP_HOST')
 
     @classmethod
-    def get_mixpanel_token(cls) -> str:
-        """Returns the token of the MixPanel project. The token of the MixPanel project should be set in the
-        environment variable 'MIXPANEL_TOKEN'. If it is not set, a KeyError will be raised.
-
-        Returns:
-            the token URL of the MixPanel project
-        """
-        return Environment._getenv_or_raise_value_error('MIXPANEL_TOKEN')
-
-    @classmethod
-    def _getenv_or_raise_value_error(cls, env_var_name: str):
+    def getenv_or_raise_value_error(cls, env_var_name: str):
         host = os.getenv(env_var_name)
         if not host:
             raise KeyError(f'The {env_var_name} environment variable is not set.')
