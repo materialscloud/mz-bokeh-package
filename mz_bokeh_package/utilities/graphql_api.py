@@ -52,7 +52,7 @@ class MZGraphQLClient:
         result_schema = {
             "type": "object",
             "properties": {
-                "user": {
+                "viewer": {
                     "type": "object",
                     "properties": {
                         "id": {"type": "string"},
@@ -72,10 +72,11 @@ class MZGraphQLClient:
             raise GraphqlQueryError(f"invalid result of GraphQL query for getting the user's organization ID. "
                                     f"Validation error: {e.message}")
 
-        if not result['user']:
+        viewer = result['viewer']
+        if not viewer:
             return None
         else:
-            return User(id=result['user']['id'], name=result['user']['name'])
+            return User(id=viewer['id'], name=viewer['name'])
 
     @staticmethod
     def _get_gql_client() -> Client:
