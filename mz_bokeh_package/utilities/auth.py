@@ -3,13 +3,12 @@ This module takes care of the authentication of calls to bokeh apps
 
 """
 
-import requests
 import os
 from bokeh.io import curdoc
 from tornado.web import RequestHandler
-from typing import Optional
 
 from mz_bokeh_package.utilities.environment import Environment
+from .graphql_api import MZGraphQLClient
 
 
 def get_user(request_handler: RequestHandler) -> str:
@@ -29,31 +28,7 @@ def get_user(request_handler: RequestHandler) -> str:
     if request_handler.request.path.split("/")[-1] in ("health", "error"):
         return "ok"
 
-    query_arguments = request_handler.request.query_arguments
-
-    # get the api_key from the request header
-    api_keys = query_arguments.get("api_key")
-    if api_keys is not None and len(api_keys) == 1:
-        api_key = api_keys[0]
-    else:
-        api_key = ""
-
-    # get the user_key from the request header
-    user_keys = query_arguments.get("user_key")
-    if user_keys is not None and len(user_keys) == 1:
-        user_key = user_keys[0]
-    else:
-        user_key = ""
-
-    # in the development environment, allow overriding the api_key and user_key via env variables
-    if Environment.get_environment() == 'dev':
-        api_key = os.getenv('API_KEY', api_key)
-        user_key = os.getenv('USER_KEY', user_key)
-
-    # authenticate the user using the MaterialsZone API by requesting the user_id
-    user_id = Auth.get_user_from_api_key(api_key, user_key)
-
-    return user_id
+    return CurrentUser.get_user_id()
 
 
 def get_login_url(request_handler: RequestHandler) -> str:
