@@ -66,37 +66,6 @@ def get_login_url(request_handler: RequestHandler) -> str:
     return Environment.get_error_page_url()
 
 
-class Auth:
-
-    @staticmethod
-    def get_user_from_api_key(api_key: str, user_key: str) -> Optional[str]:
-        """get the user_id using an API call by using the api_key and user_key
-
-        Args:
-            api_key: the api_key of the user
-            user_key: the user fbkey of the user
-
-        Returns:
-            the user_id corresponding to the api_key and user_key or None if the two keys are invalid
-        """
-
-        # Add credentials to request parameters object
-        params = {
-            "key": api_key,
-            "uid": user_key
-        }
-
-        # send a get request to get the user_id corresponding to the credentials
-        response = requests.get(Environment.get_request_url("users/currentuser"), params=params)
-
-        # extract the user ID from the response
-        response_body = response.json()
-        if 'user_id' in response_body:
-            return response_body['user_id']
-        else:
-            return None
-
-
 class CurrentUser:
     """
     Class with static methods for getting information about the current user
