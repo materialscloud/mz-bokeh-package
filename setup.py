@@ -11,6 +11,8 @@ setup(
         "requests~=2.28.0",
         "bokeh>=2.3.0, <2.5",
         "seaborn~=0.12.0",
+        "gql[requests]~=3.4.0",
+        "jsonschema~=4.17.0",
     ],
     extras_require={
         "development": [
