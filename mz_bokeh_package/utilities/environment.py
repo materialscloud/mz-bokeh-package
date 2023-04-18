@@ -93,6 +93,6 @@ class Environment:
         env = cls.get_environment()
 
         if env in {'staging', 'dev'}:
-            return "https://bokeh-staging.materials.zone/error"
+            return "https://app-staging.materials.zone/insights/error"
         elif env == 'production':
-            return "https://bokeh.materials.zone/error"
+            return "https://app.materials.zone/insights/error"
