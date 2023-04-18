@@ -4,3 +4,4 @@ __pycache__
 mz_bokeh_package.egg-info/
 venv
 .vscode
+/build
