@@ -1,6 +1,13 @@
 from bokeh.io import curdoc
-from bokeh.models.layouts import Column, Row
+from bokeh.models import Column, Row, Div
 from mz_bokeh_package.custom_widgets import CustomMultiSelect, CustomSelect
+
+explanation = """<p>This panel shows all boolean options for the CustomSelect and for the
+CustomMultiSelect widgets. </p>
+<p> Note that some combinations don't work, e.g. you cannot have the <i>select_all</i>, the <i>collapsible</i>,
+and the <i>collapsed_by_default</i> option active at the same time - in this case the Select All button is not
+responding.</p>
+"""
 
 options = {"Group 1": [["id1.1", "Title 1.1"], ["id1.2", "Title 1.2"]],
            "Group 2": [["id2.1", "Title 2.1"], ["id2.2", "Title 2.2"]]
@@ -38,4 +45,5 @@ for widget in multi_select_widgets + select_widgets:
     widget.options = options
     widget.on_change("value", on_change)
 
-curdoc().add_root(Row(Column(*select_widgets),  Column(*multi_select_widgets)))
+curdoc().add_root(Column(Div(text=explanation, width=600),
+                         Row(Column(*select_widgets),  Column(*multi_select_widgets))))
