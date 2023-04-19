@@ -19,7 +19,7 @@ const default_styles = common_styles + `
 
 export class CustomSelectView extends InputWidgetView {
   model: CustomSelect
-  protected input_el: HTMLSelectElement
+  protected select_el: HTMLSelectElement
   protected options: any
   protected plugin_config: any
   protected all_values: Array<string|string[]>
@@ -40,12 +40,12 @@ export class CustomSelectView extends InputWidgetView {
     super.initialize()
     super.render()
 
-    this.input_el = this.init_select_element()
+    this.select_el = this.init_select_element()
   }
 
   init_select_element(): HTMLSelectElement{
     // Create a "Select" web element
-    const input_el = select({
+    const select_el = select({
       size: this.model.allow_non_selected ? 2 : 1,  // Allows none of the options to be selected
       class: "custom-select",
       name: this.model.name,
@@ -53,9 +53,9 @@ export class CustomSelectView extends InputWidgetView {
     })
 
     // Add the "Select" web element to its container 
-    this.group_el.appendChild(input_el)
+    this.group_el.appendChild(select_el)
 
-    return input_el
+    return select_el
   }
 
   parse_options_list(options: Array<(string | string[])>): Array<DropdownOption> {
@@ -149,7 +149,7 @@ export class CustomSelectView extends InputWidgetView {
 
     this.plugin_config = this.set_plugin_config()
     
-    $(this.input_el).multiselect(this.plugin_config).multiselect('dataprovider', this.options).multiselect('rebuild')
+    $(this.select_el).multiselect(this.plugin_config).multiselect('dataprovider', this.options).multiselect('rebuild')
   
     // fixes the scroll issue on mobile
     $('.multiselect-container.dropdown-menu', this.group_el).unbind('touchstart')
@@ -185,7 +185,7 @@ export class CustomSelectView extends InputWidgetView {
     const hasOptions = (this.model.is_opt_grouped && this.options.some((opt: any) => opt.children.length)) || this.options.length
     
     if (hasOptions) {
-      $(document).ready(() => $(this.input_el).multiselect(`${this.model.enabled ? 'enable' : 'disable'}`))
+      $(document).ready(() => $(this.select_el).multiselect(`${this.model.enabled ? 'enable' : 'disable'}`))
     }
   }
 
@@ -197,7 +197,7 @@ export class CustomSelectView extends InputWidgetView {
     const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
     
     if (!selected.length) {
-      $(this.input_el).multiselect('select', this.model.value).multiselect('refresh')
+      $(this.select_el).multiselect('select', this.model.value).multiselect('refresh')
     }
   }
 
@@ -217,7 +217,7 @@ export class CustomSelectView extends InputWidgetView {
   on_dropdown_closed(): void {
     let value: string | string[]
     let was_value_changed: boolean
-    const selectedValue = $(this.input_el).val() || ""
+    const selectedValue = $(this.select_el).val() || ""
 
     if (this.model.is_opt_grouped) {
       value = this.all_values.find((v: any) => v[1] === selectedValue) || ""
