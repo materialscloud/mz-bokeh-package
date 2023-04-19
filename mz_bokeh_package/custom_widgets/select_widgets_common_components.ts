@@ -97,3 +97,13 @@ export const common_styles = `
     outline: none;
   }
   `
+
+export interface DropdownOption {
+  value: string,
+  label: string,
+  selected: boolean,
+}
+export interface GroupedOptions {
+  label: string,
+  children: Array<DropdownOption>
+}

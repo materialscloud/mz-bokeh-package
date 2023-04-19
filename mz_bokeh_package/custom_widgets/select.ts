@@ -4,7 +4,7 @@ import * as p from "core/properties"
 
 import {InputWidget, InputWidgetView} from "models/widgets/input_widget"
 
-import {common_styles} from "./select_widgets_common_components"
+import {common_styles, DropdownOption, GroupedOptions} from "./select_widgets_common_components"
 
 declare function $(...args: any[]): any
 
@@ -16,16 +16,6 @@ const default_styles = common_styles + `
     border-radius: 50%;
   }
 `;
-
-interface DropdownOption {
-  value: string,
-  label: string,
-  selected: boolean,
-}
-interface GroupedOptions {
-  label: string,
-  children: Array<DropdownOption>
-}
 
 export class CustomSelectView extends InputWidgetView {
   model: CustomSelect
@@ -203,7 +193,7 @@ export class CustomSelectView extends InputWidgetView {
   on_dropdown_change(): void {
     if (this.model.allow_non_selected)
       return
-    
+
     const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
     
     if (!selected.length) {
