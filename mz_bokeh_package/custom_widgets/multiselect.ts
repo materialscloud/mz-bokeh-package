@@ -4,7 +4,7 @@ import * as p from "core/properties"
 
 import {InputWidget, InputWidgetView} from "models/widgets/input_widget"
 
-import {common_styles} from "./select_widgets_common_components"
+import {common_styles, DropdownOption, GroupedOptions} from "./select_widgets_common_components"
 
 declare function $(...args: any[]): any
 
@@ -31,16 +31,6 @@ const default_styles = common_styles + `
     background-color: #f8f9fa;
   }
 `;
-
-interface DropdownOption {
-  value: string,
-  label: string,
-  selected: boolean,
-}
-interface GroupedOptions {
-  label: string,
-  children: Array<DropdownOption>
-}
 
 export class CustomMultiSelectView extends InputWidgetView {
   model: CustomMultiSelect
