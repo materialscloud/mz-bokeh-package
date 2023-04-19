@@ -1,7 +1,6 @@
 """This script defines a custom multiselect widget using a jQuery plugin called "bootstrap-multiselect".
 For more information about the plugin: "http://davidstutz.github.io/bootstrap-multiselect"
 """
-import os
 from bokeh.models import InputWidget
 from bokeh.core.properties import List, Either, String, Tuple, Bool, Int, Nullable, Dict
 from typing import TypeVar, Type
@@ -12,7 +11,7 @@ T = TypeVar("T", bound="CustomMultiSelect")
 class CustomMultiSelect(InputWidget):
     ''' Custom Multi-select widget.
     '''
-    __implementation__ = os.path.join("implementation_files", "multiselect.ts")
+    __implementation__ = "multiselect.ts"
     __javascript__ = [
         "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js",

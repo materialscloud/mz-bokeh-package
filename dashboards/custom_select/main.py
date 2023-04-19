@@ -6,7 +6,10 @@ explanation = """<p>This panel shows all boolean options for the CustomSelect an
 CustomMultiSelect widgets. </p>
 <p> Note that some combinations don't work, e.g. you cannot have the <i>select_all</i>, the <i>collapsible</i>,
 and the <i>collapsed_by_default</i> option active at the same time - in this case the Select All button is not
-responding.</p>
+responding, or more specifically: The Select All button selects only those sub-items that are expanded.
+If you collapse one group and open another, then press "Select All", only those items from the open group are selected.
+</p>
+<p> Note that the collapsed_by_default is ignored if collapsible is not activated. </p>
 """
 
 options = {"Group 1": [["id1.1", "Title 1.1"], ["id1.2", "Title 1.2"]],
