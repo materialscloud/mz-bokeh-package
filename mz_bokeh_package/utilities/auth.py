@@ -12,12 +12,12 @@ from mz_bokeh_package import utilities
 
 def get_user(request_handler: RequestHandler) -> str:
     """
-    authenticate user based on api_key and user_key that are sent via the query parameters of the request and
+    authenticate user based on api_key that are sent via the query parameters of the request and
     return the user_id if the user is authenticated and otherwise return None
 
     Args:
         request_handler: a tornado RequestHandler object that contains the query parameters of the request,
-            which contains the api_key and user_key of the user
+            which contains the api_key of the user
 
     Returns:
         the user id when authentication is successful, and otherwise None
