@@ -86,9 +86,9 @@ class Environment:
         env = cls.get_environment()
 
         if env in {'staging', 'dev'}:
-            return "https://app-staging.materials.zone/insights/error"
+            return "https://bokeh-staging.materials.zone/error"
         elif env == 'production':
-            return "https://app.materials.zone/insights/error"
+            return "https://bokeh.materials.zone/error"
 
     @classmethod
     def _getenv_or_raise_value_error(cls, env_var_name: str):
