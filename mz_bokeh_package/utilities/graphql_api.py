@@ -69,7 +69,7 @@ class MZGraphQLClient:
         try:
             validate(result, schema=result_schema)
         except ValidationError as e:
-            raise GraphqlQueryError(f"invalid result of GraphQL query for getting the user's organization ID. "
+            raise GraphqlQueryError(f"invalid result of GraphQL query for getting the user's organization ID and name. "
                                     f"Validation error: {e.message}")
 
         return User(id=result['viewer']['id'], name=result['viewer']['name'])
