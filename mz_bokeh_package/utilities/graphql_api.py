@@ -15,8 +15,8 @@ requests_logger.setLevel(logging.WARNING)
 
 @dataclass
 class User:
-    id: str = ""
-    name: str = ""
+    id: str
+    name: str
 
 
 class GraphqlQueryError(Exception):
@@ -31,7 +31,7 @@ class MZGraphQLClient:
         self._client = self._get_gql_client()
 
     @lru_cache()
-    def get_user(self) -> User | None:
+    def get_user(self) -> User:
         """This method fetches the id and name of a given user.
 
         Returns:
@@ -72,11 +72,7 @@ class MZGraphQLClient:
             raise GraphqlQueryError(f"invalid result of GraphQL query for getting the user's organization ID. "
                                     f"Validation error: {e.message}")
 
-        viewer = result['viewer']
-        if not viewer:
-            return None
-        else:
-            return User(id=viewer['id'], name=viewer['name'])
+        return User(id=result['viewer']['id'], name=result['viewer']['name'])
 
     @staticmethod
     def _get_gql_client() -> Client:

@@ -82,7 +82,7 @@ class CurrentUser:
         else:
             user_id = utilities.MZGraphQLClient().get_user().id
 
-        return user_id if user_id else None
+        return user_id
 
     @staticmethod
     def get_user_name() -> str:
