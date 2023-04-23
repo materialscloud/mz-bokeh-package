@@ -36,7 +36,7 @@ class Environment:
         Returns:
             the full URL of the request
         """
-        host = Environment.getenv_or_raise_value_error('API_HOST')
+        host = Environment._getenv_or_raise_value_error('API_HOST')
         return f"{host}/{endpoint}"
 
     @classmethod
@@ -47,7 +47,7 @@ class Environment:
         Returns:
             the full URL of the GraphQL API server
         """
-        host = Environment.getenv_or_raise_value_error('GRAPHQL_API_HOST')
+        host = Environment._getenv_or_raise_value_error('GRAPHQL_API_HOST')
         return host
 
     @classmethod
@@ -62,7 +62,7 @@ class Environment:
             the full URL of the request
         """
 
-        host = Environment.getenv_or_raise_value_error('PARSER_SERVICE_HOST')
+        host = Environment._getenv_or_raise_value_error('PARSER_SERVICE_HOST')
         return f"{host}/{endpoint}"
 
     @classmethod
@@ -73,14 +73,7 @@ class Environment:
         Returns:
             str: Web app host.
         """
-        return Environment.getenv_or_raise_value_error('WEBAPP_HOST')
-
-    @classmethod
-    def getenv_or_raise_value_error(cls, env_var_name: str):
-        host = os.getenv(env_var_name)
-        if not host:
-            raise KeyError(f'The {env_var_name} environment variable is not set.')
-        return host
+        return Environment._getenv_or_raise_value_error('WEBAPP_HOST')
 
     @classmethod
     def get_error_page_url(cls) -> str:
@@ -96,3 +89,10 @@ class Environment:
             return "https://app-staging.materials.zone/insights/error"
         elif env == 'production':
             return "https://app.materials.zone/insights/error"
+
+    @classmethod
+    def _getenv_or_raise_value_error(cls, env_var_name: str):
+        host = os.getenv(env_var_name)
+        if not host:
+            raise KeyError(f'The {env_var_name} environment variable is not set.')
+        return host
