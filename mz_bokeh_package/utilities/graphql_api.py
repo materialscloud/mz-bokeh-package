@@ -8,7 +8,8 @@ from jsonschema import validate, ValidationError
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport, log as requests_logger
 
-from mz_bokeh_package import utilities
+from mz_bokeh_package.utilities.environment import Environment
+from mz_bokeh_package.utilities.current_user import CurrentUser
 
 requests_logger.setLevel(logging.WARNING)
 
@@ -72,6 +73,9 @@ class MZGraphQLClient:
             raise GraphqlQueryError(f"invalid result of GraphQL query for getting the user's organization ID and name. "
                                     f"Validation error: {e.message}")
 
+        if "viewer" not in result:
+            raise GraphqlQueryError("invalid result of GraphQL query for getting the user's organization ID and name. "
+                                    "Validation error: result does not contain a viewer.")
         return User(id=result['viewer']['id'], name=result['viewer']['name'])
 
     @staticmethod
@@ -82,8 +86,8 @@ class MZGraphQLClient:
             GraphQL client
         """
 
-        transport = RequestsHTTPTransport(url=utilities.Environment.get_graphql_api_url(), verify=True, retries=3)
+        transport = RequestsHTTPTransport(url=Environment.get_graphql_api_url(), verify=True, retries=3)
         client = Client(transport=transport)
 
-        client.transport.headers = {"authorization": f"API {utilities.CurrentUser.get_api_key()}"}
+        client.transport.headers = {"authorization": f"API {CurrentUser.get_api_key()}"}
         return client
