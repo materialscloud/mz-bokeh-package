@@ -37,7 +37,7 @@ def get_login_url(request_handler: RequestHandler) -> str:
         the MZ App URL (environment dependant) to redirect to if authentication fails
     """
 
-    return utilities.Environment.get_error_page_url()
+    return utilities.Environment.get_webapp_host()
 
 
 class CurrentUser:

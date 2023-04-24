@@ -76,21 +76,6 @@ class Environment:
         return Environment._getenv_or_raise_value_error('WEBAPP_HOST')
 
     @classmethod
-    def get_error_page_url(cls) -> str:
-        """get the url for the MaterialsZone app
-
-        Returns:
-            the URL of the MaterialsZone app
-        """
-
-        env = cls.get_environment()
-
-        if env in {'staging', 'dev'}:
-            return "https://bokeh-staging.materials.zone/error"
-        elif env == 'production':
-            return "https://bokeh.materials.zone/error"
-
-    @classmethod
     def _getenv_or_raise_value_error(cls, env_var_name: str):
         host = os.getenv(env_var_name)
         if not host:
