@@ -56,13 +56,7 @@ class CurrentUser:
             the user_id of the current user
         """
 
-        # in the development environment, allow overriding the api_key via env variables
-        if Environment.get_environment() == 'dev':
-            user_id = os.getenv('USER_KEY')
-        else:
-            user_id = MZGraphQLClient().get_user().id
-
-        return user_id
+        return MZGraphQLClient().get_user(CurrentUser.get_api_key()).id
 
     @staticmethod
     def get_user_name() -> str:
@@ -72,7 +66,7 @@ class CurrentUser:
             the name of the current user
         """
 
-        return MZGraphQLClient().get_user().name
+        return MZGraphQLClient().get_user(CurrentUser.get_api_key()).name
 
     @staticmethod
     def get_api_key() -> str:
