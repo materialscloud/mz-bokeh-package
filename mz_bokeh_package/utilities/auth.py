@@ -2,7 +2,7 @@
 This module takes care of the authentication of calls to bokeh apps
 
 """
-
+import os
 from tornado.web import RequestHandler
 
 from mz_bokeh_package.utilities.environment import Environment
@@ -27,8 +27,14 @@ def get_user(request_handler: RequestHandler) -> bool | None:
     if request_handler.request.path.split("/")[-1] in ("health", "error"):
         return True
 
+    # in the development environment, allow overriding the api_key via env variables
+    if Environment.get_environment() == 'dev':
+        api_key = os.getenv('API_KEY', None)
+    else:
+        api_key = request_handler.request.query_arguments.get("api_key")
+
     try:
-        _ = CurrentUser.get_user_info(request_handler.request.query_arguments)
+        _ = CurrentUser.get_user_info(api_key)
     except GraphqlQueryError:
         return None
 

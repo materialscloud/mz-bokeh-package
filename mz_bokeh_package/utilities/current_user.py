@@ -27,12 +27,12 @@ class CurrentUser:
              a ValueError if neither a session nor an API key is provided.
         """
 
-        session_id = curdoc().session_context.id
+        session_id = curdoc().session_context.id if curdoc().session_context else None
 
         if session_id and session_id in CurrentUser._users:
             return CurrentUser._users[session_id]
 
-        if not session_id and api_key is None:
+        if session_id is None and api_key is None:
             raise ValueError("api_key or an active session required to fetch user info.")
 
         api_key = api_key or CurrentUser.get_api_key()
@@ -40,10 +40,10 @@ class CurrentUser:
         if not api_key:
             raise ValueError("api_key or an active session required to fetch user info.")
 
-        user_info = asdict(MZGraphQLClient.get_user(api_key))
-        CurrentUser._users[session_id] = user_info
+        user_info = asdict(MZGraphQLClient().get_user(api_key))
 
         if session_id:
+            CurrentUser._users[session_id] = user_info
             curdoc().on_session_destroyed(lambda: CurrentUser._remove_user_info(session_id))
 
         return user_info
