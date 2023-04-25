@@ -9,7 +9,6 @@ from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport, log as requests_logger
 
 from mz_bokeh_package.utilities.environment import Environment
-from mz_bokeh_package.utilities.current_user import CurrentUser
 
 requests_logger.setLevel(logging.WARNING)
 
@@ -32,7 +31,7 @@ class MZGraphQLClient:
         self._client = self._get_gql_client()
 
     @lru_cache()
-    def get_user(self) -> User:
+    def get_user(self, api_key: str) -> User:
         """This method fetches the id and name of a given user.
 
         Returns:
@@ -65,6 +64,7 @@ class MZGraphQLClient:
             },
         }
 
+        self._client.transport.headers = {"authorization": f"API {api_key}"}
         result = self._client.execute(query)
 
         try:
@@ -89,5 +89,4 @@ class MZGraphQLClient:
         transport = RequestsHTTPTransport(url=Environment.get_graphql_api_url(), verify=True, retries=3)
         client = Client(transport=transport)
 
-        client.transport.headers = {"authorization": f"API {CurrentUser.get_api_key()}"}
         return client

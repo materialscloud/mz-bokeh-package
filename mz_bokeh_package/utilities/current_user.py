@@ -1,50 +1,78 @@
 import os
+from dataclasses import asdict
 from bokeh.io import curdoc
 
 from mz_bokeh_package.utilities.environment import Environment
+from mz_bokeh_package.utilities.graphql_api import MZGraphQLClient
 
 
 class CurrentUser:
     """
-    A singleton class with methods for getting information about the current user
+    Class with static methods for getting information about the current user
     """
-    _instances = {}
 
-    @classmethod
-    def __call__(cls):
+    _users = {}
+
+    @staticmethod
+    def get_user_info(api_key: str | None) -> dict:
+        """Retrieves user information for the current session or API key, caching the information for future use.
+
+        Args:
+            api_key: unique user api key.
+
+        Returns:
+            dictionary of user "id" and "name".
+
+        Raises:
+             a ValueError if neither a session nor an API key is provided.
+        """
+
         session_id = curdoc().session_context.id
-        if session_id not in cls._instances:
-            raise KeyError("Instance of CurrentUser has not been initiated in this session")
-        return cls._instances[session_id]
 
-    def __init__(self, user_id: str, user_name: str):
-        self._user_id = user_id
-        self._user_name = user_name
+        if session_id and session_id in CurrentUser._users:
+            return CurrentUser._users[session_id]
 
-    @classmethod
-    def add_instance(cls, user_id: str, user_name: str):
-        session_id = curdoc().session_context.id
-        if session_id in cls._instances:
-            raise KeyError("Instance of CurrentUser already added in this session")
-        cls._instances[session_id] = cls(user_id, user_name)
+        if not session_id and api_key is None:
+            raise ValueError("api_key or an active session required to fetch user info.")
 
-    def get_user_id(self) -> str | None:
+        api_key = api_key or CurrentUser.get_api_key()
+
+        if not api_key:
+            raise ValueError("api_key or an active session required to fetch user info.")
+
+        user_info = asdict(MZGraphQLClient.get_user(api_key))
+        CurrentUser._users[session_id] = user_info
+
+        if session_id:
+            curdoc().on_session_destroyed(lambda: CurrentUser._remove_user_info(session_id))
+
+        return user_info
+
+    @staticmethod
+    def get_user_id() -> str | None:
         """get the user_id of the current user
 
         Returns:
             the user_id of the current user
         """
 
-        return self._user_id
+        # in the development environment, allow overriding the api_key via env variables
+        if Environment.get_environment() == 'dev':
+            user_id = os.getenv('USER_KEY')
+        else:
+            user_id = MZGraphQLClient().get_user().id
 
-    def get_user_name(self) -> str:
+        return user_id
+
+    @staticmethod
+    def get_user_name() -> str:
         """get the name of the current user, this is obtained by an API call
 
         Returns:
             the name of the current user
         """
 
-        return self._user_name
+        return MZGraphQLClient().get_user().name
 
     @staticmethod
     def get_api_key() -> str:
@@ -68,3 +96,7 @@ class CurrentUser:
             api_key = ""
 
         return api_key
+
+    @staticmethod
+    def _remove_user_info(session_id):
+        del CurrentUser._users[session_id]
