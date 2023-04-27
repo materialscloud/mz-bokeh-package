@@ -44,7 +44,7 @@ class CurrentUser:
 
         if session_id:
             CurrentUser._users[session_id] = user_info
-            curdoc().on_session_destroyed(lambda: CurrentUser._remove_user_info(session_id))
+            curdoc().on_session_destroyed(lambda: CurrentUser._users.pop(session_id, None))
 
         return user_info
 
@@ -90,7 +90,3 @@ class CurrentUser:
             api_key = ""
 
         return api_key
-
-    @staticmethod
-    def _remove_user_info(session_id):
-        del CurrentUser._users[session_id]
