@@ -68,7 +68,8 @@ class MZGraphQLClient:
 
         if "viewer" not in result:
             raise GraphqlQueryError("invalid result of GraphQL query for getting the user's organization ID and name. "
-                                    "Validation error: result does not contain a viewer.")
+                                    "Validation error: 'viewer' field not found. The provided API key may be invalid"
+                                    "or expired.")
         return result['viewer']
 
     @staticmethod
