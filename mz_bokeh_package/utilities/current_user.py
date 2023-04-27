@@ -47,7 +47,7 @@ class CurrentUser:
             the user_id of the current user
         """
 
-        return cls.get_user_info().get("id")
+        return cls.get_user_info(CurrentUser.get_api_key()).get("id")
 
     @classmethod
     def get_user_name(cls) -> str:
@@ -57,7 +57,7 @@ class CurrentUser:
             the name of the current user
         """
 
-        return cls.get_user_info().get("name")
+        return cls.get_user_info(CurrentUser.get_api_key()).get("name")
 
     @staticmethod
     def get_api_key() -> str | None:
