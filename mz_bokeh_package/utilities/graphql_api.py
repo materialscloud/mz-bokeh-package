@@ -2,7 +2,6 @@ from __future__ import annotations  # to support internal types as type hints
 
 import logging
 from functools import lru_cache
-from dataclasses import dataclass
 
 from jsonschema import validate, ValidationError
 from gql import Client, gql
@@ -11,12 +10,6 @@ from gql.transport.requests import RequestsHTTPTransport, log as requests_logger
 from mz_bokeh_package.utilities.environment import Environment
 
 requests_logger.setLevel(logging.WARNING)
-
-
-@dataclass
-class User:
-    id: str
-    name: str
 
 
 class GraphqlQueryError(Exception):
@@ -31,7 +24,7 @@ class MZGraphQLClient:
         self._client = self._get_gql_client()
 
     @lru_cache()
-    def get_user(self, api_key: str) -> User:
+    def get_user(self, api_key: str) -> dict:
         """This method fetches the id and name of a given user.
 
         Returns:
@@ -76,7 +69,7 @@ class MZGraphQLClient:
         if "viewer" not in result:
             raise GraphqlQueryError("invalid result of GraphQL query for getting the user's organization ID and name. "
                                     "Validation error: result does not contain a viewer.")
-        return User(id=result['viewer']['id'], name=result['viewer']['name'])
+        return result['viewer']
 
     @staticmethod
     def _get_gql_client() -> Client:

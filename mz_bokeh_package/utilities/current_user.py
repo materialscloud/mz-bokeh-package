@@ -1,5 +1,4 @@
 import os
-from dataclasses import asdict
 from bokeh.io import curdoc
 
 from mz_bokeh_package.utilities.environment import Environment
@@ -40,7 +39,7 @@ class CurrentUser:
         if not api_key:
             raise ValueError("api_key or an active session required to fetch user info.")
 
-        user_info = asdict(MZGraphQLClient().get_user(api_key))
+        user_info = MZGraphQLClient().get_user(api_key)
 
         if session_id:
             CurrentUser._users[session_id] = user_info
@@ -56,7 +55,7 @@ class CurrentUser:
             the user_id of the current user
         """
 
-        return MZGraphQLClient().get_user(CurrentUser.get_api_key()).id
+        return MZGraphQLClient().get_user(CurrentUser.get_api_key())["id"]
 
     @staticmethod
     def get_user_name() -> str:
@@ -66,7 +65,7 @@ class CurrentUser:
             the name of the current user
         """
 
-        return MZGraphQLClient().get_user(CurrentUser.get_api_key()).name
+        return MZGraphQLClient().get_user(CurrentUser.get_api_key())["name"]
 
     @staticmethod
     def get_api_key() -> str:
