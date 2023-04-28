@@ -1,6 +1,6 @@
 from bokeh.io import curdoc
 from bokeh.models import Column, Row, Div
-from mz_bokeh_package.custom_widgets import CustomMultiSelect, CustomSelect
+from mz_bokeh_package.custom_widgets import CustomMultiSelect, CustomMultiSelectAsSingleSelect, CustomSelect
 
 explanation = """<p>This panel shows all boolean options for the CustomSelect and for the
 CustomMultiSelect widgets. </p>
@@ -18,9 +18,7 @@ options = {"Group 1": [["id1.1", "Title 1.1"], ["id1.2", "Title 1.2"]],
 
 boolean_attributes_ms = ["enabled", "enable_filtering", "include_select_all", "collapsible", "collapsed_by_default"]
 boolean_attributes_single = ["enabled", "enable_filtering", "allow_non_selected"]
-
-select_widgets = [CustomSelect.create(title="CustomSelect, default settings")]
-multi_select_widgets = [CustomMultiSelect.create(title="CustomMultiSelect, default settings")]
+boolean_attributes_ms_as_single = boolean_attributes_single + ["collapsible", "collapsed_by_default"]
 
 
 def on_change(attr, old, new):
@@ -28,25 +26,49 @@ def on_change(attr, old, new):
           f"                                new selection: {new}")
 
 
-for attr in boolean_attributes_ms:
-    multi_select_widgets.append(CustomMultiSelect.create(title=""))
-    non_default_ms = not getattr(multi_select_widgets[-1], attr)
-    setattr(multi_select_widgets[-1], attr, non_default_ms)
-    multi_select_widgets[-1].title = f"CustomMultiSelect, {attr} {'activated' if non_default_ms else 'deactivated'}"
+def create_custom_widgets_with_switched_boolean_attributes(widget: CustomSelect | CustomMultiSelect,
+                                                           attributes: list[str], name):
+    list_of_widgets = [widget.create(title=f"{name}, default settings")]
+
+    for attr in attributes:
+        list_of_widgets.append(widget.create(title=""))
+        non_default_ms = not getattr(list_of_widgets[-1], attr)
+        setattr(list_of_widgets[-1], attr, non_default_ms)
+        list_of_widgets[-1].title = f"{name}, {attr} {'activated' if non_default_ms else 'deactivated'}"
+
+    return list_of_widgets
+
+
+select_widgets = create_custom_widgets_with_switched_boolean_attributes(CustomSelect,
+                                                                        boolean_attributes_single, "CustomSelect")
+multi_select_widgets = create_custom_widgets_with_switched_boolean_attributes(CustomMultiSelect,
+                                                                              boolean_attributes_ms,
+                                                                              "CustomMultiSelect")
+single_multi_select_widgets = create_custom_widgets_with_switched_boolean_attributes(CustomMultiSelectAsSingleSelect,
+                                                                                     boolean_attributes_ms_as_single,
+                                                                                     "CustomMultiSelectAsSingle")
+
 
 multi_select_widgets.append(CustomMultiSelect.create(title="CustomMultiSelect, collapsible AND collapsed_by_default"))
 multi_select_widgets[-1].collapsible = True
 multi_select_widgets[-1].collapsed_by_default = True
 
-for attr in boolean_attributes_single:
-    select_widgets.append(CustomSelect.create(title=""))
-    non_default_single = not getattr(select_widgets[-1], attr)
-    setattr(select_widgets[-1], attr, non_default_single)
-    select_widgets[-1].title = f"Select, {attr} {'activated' if non_default_single else 'deactivated'}"
+single_multi_select_widgets.append(CustomMultiSelectAsSingleSelect.create(title="CustomMultiSelectAsSingle, "
+                                                                                "collapsible AND collapsed_by_default"))
+single_multi_select_widgets[-1].collapsible = True
+single_multi_select_widgets[-1].collapsed_by_default = True
 
-for widget in multi_select_widgets + select_widgets:
+for widget in multi_select_widgets + select_widgets + single_multi_select_widgets:
     widget.options = options
     widget.on_change("value", on_change)
 
-curdoc().add_root(Column(Div(text=explanation, width=600),
-                         Row(Column(*select_widgets),  Column(*multi_select_widgets))))
+curdoc().add_root(
+    Column(
+        Div(text=explanation, width=600),
+        Row(
+            Column(*select_widgets),
+            Column(*multi_select_widgets),
+            Column(*single_multi_select_widgets)
+        )
+    )
+)
