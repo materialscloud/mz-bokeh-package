@@ -27,7 +27,7 @@ class CurrentUser:
              a ValueError if an API key is not provided and the user info is not cached for this session.
         """
 
-        session_id = curdoc().session_context.id if curdoc().session_context else None
+        session_id = cls._get_session_id()
         if session_id and session_id in CurrentUser._users:
             return CurrentUser._users[session_id]
 
@@ -87,3 +87,7 @@ class CurrentUser:
     def _cache_user_info(cls, session_id: str, user_info: dict):
         CurrentUser._users[session_id] = user_info
         curdoc().on_session_destroyed(lambda session_context: CurrentUser._users.pop(session_id, None))
+
+    @staticmethod
+    def _get_session_id() -> str | None:
+        return curdoc().session_context.id if curdoc().session_context else None
