@@ -24,11 +24,16 @@ class MZGraphQLClient:
         self._client = self._get_gql_client()
 
     @lru_cache()
-    def get_user(self, api_key: str) -> dict:
-        """This method fetches the id and name of a given user.
+    def get_user(self, api_key: str) -> dict[str, str]:
+        """Gets the ID and name of the currently active viewer using a valid API key.
+
+        Args:
+            api_key: The API key to use for the API call.
 
         Returns:
-            User object.
+            A dictionary with the following keys:
+            - id: The ID of the user.
+            - name: The name of the user.
         """
 
         query = gql(
@@ -74,7 +79,7 @@ class MZGraphQLClient:
 
     @staticmethod
     def _get_gql_client() -> Client:
-        """get a graphql client with the appropriate authorization header for the current user
+        """Get a graphql client with the appropriate authorization header for the current user
 
         Returns:
             GraphQL client
