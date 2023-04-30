@@ -47,8 +47,8 @@ class CurrentUser:
         Returns:
             the user ID of the currently active viewer
         """
-
-        return cls.get_user_info(CurrentUser.get_api_key()).get("id")
+        user_info = cls.get_user_info(CurrentUser.get_api_key())
+        return user_info["id"]
 
     @classmethod
     def get_user_name(cls) -> str:
@@ -57,8 +57,8 @@ class CurrentUser:
         Returns:
             the name of the currently active viewer.
         """
-
-        return cls.get_user_info(CurrentUser.get_api_key()).get("name")
+        user_info = cls.get_user_info(CurrentUser.get_api_key())
+        return user_info["name"]
 
     @staticmethod
     def get_api_key() -> str | None:
