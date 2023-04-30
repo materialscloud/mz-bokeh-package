@@ -14,16 +14,17 @@ class CurrentUser:
 
     @classmethod
     def get_user_info(cls, api_key: str | None) -> dict:
-        """Retrieves user information for the current session or API key, caching the information for future use.
+        """Retrieve user information for the current session or API key, caching the information for future use.
 
         Args:
             api_key: unique user api key.
 
         Returns:
-            dictionary of user "id" and "name".
+            a dictionary containing the user id and name corresponding to the user with this api_key:
+            {"id": <user id>, "name": <user name>}
 
         Raises:
-             a ValueError if neither a session nor an API key is provided.
+             a ValueError if an API key is not provided and the user info is not cached for this session.
         """
 
         session_id = curdoc().session_context.id if curdoc().session_context else None
@@ -40,21 +41,21 @@ class CurrentUser:
             raise ValueError("an api_key is required in order to fetch the user info.")
 
     @classmethod
-    def get_user_id(cls) -> str | None:
-        """get the user_id of the current user
+    def get_user_id(cls) -> str:
+        """Retrieves the user ID of the currently active viewer
 
         Returns:
-            the user_id of the current user
+            the user ID of the currently active viewer
         """
 
         return cls.get_user_info(CurrentUser.get_api_key()).get("id")
 
     @classmethod
     def get_user_name(cls) -> str:
-        """get the name of the current user, this is obtained by an API call
+        """Retrieves the name of the currently active viewer.
 
         Returns:
-            the name of the current user
+            the name of the currently active viewer.
         """
 
         return cls.get_user_info(CurrentUser.get_api_key()).get("name")
@@ -65,8 +66,9 @@ class CurrentUser:
 
         Returns:
             The api_key of the current user if it exists in either the environment variable or the request header,
-            None otherwise.
+            otherwise None.
         """
+
         # in the development environment, allow overriding the api_key and user_key via env variables
         if Environment.get_environment() == 'dev':
             api_key = os.getenv('API_KEY')

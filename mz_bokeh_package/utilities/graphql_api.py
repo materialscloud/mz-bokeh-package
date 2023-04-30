@@ -31,9 +31,8 @@ class MZGraphQLClient:
             api_key: The API key to use for the API call.
 
         Returns:
-            A dictionary with the following keys:
-            - id: The ID of the user.
-            - name: The name of the user.
+            a dictionary containing the user id and name corresponding to the user with this api_key:
+            {"id": <user id>, "name": <user name>}
         """
 
         query = gql(
