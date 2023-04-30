@@ -1,6 +1,4 @@
 import pytest
-from bokeh.document import Document
-from dataclasses import dataclass
 
 from mz_bokeh_package.utilities import CurrentUser
 from mz_bokeh_package.utilities import MZGraphQLClient
@@ -12,32 +10,26 @@ USER_NAME = "user_name"
 
 
 TESTS = [
-    # Test 1: session ID provided and is logged in CurrentUser._users. API key not requered.
+    # Test 1: session ID provided and is cached in CurrentUser._users. API key not required.
     {
         "input": {
-            "session_active": True,
-            "logged_user": True,
-            "session_id": SESSION_ID,
+            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
             "api_key": None,
         },
         "output": {"id": USER_ID, "name": USER_NAME}
     },
-    # Test 2: session ID provided and is not logged in CurrentUser._users. API key provided.
+    # Test 2: session ID provided and is not cached in CurrentUser._users. API key provided.
     {
         "input": {
-            "session_active": True,
-            "logged_user": False,
-            "session_id": SESSION_ID,
+            "users_cache": {SESSION_ID: {}},
             "api_key": API_KEY,
         },
         "output": {"id": USER_ID, "name": USER_NAME}
     },
-    # Test 3: session ID not provided and is not logged in CurrentUser._users. API key provided.
+    # Test 3: session ID not provided and is not cached in CurrentUser._users. API key provided.
     {
         "input": {
-            "session_active": False,
-            "logged_user": False,
-            "session_id": None,
+            "users_cache": {},
             "api_key": API_KEY,
         },
         "output": {"id": USER_ID, "name": USER_NAME}
@@ -45,43 +37,20 @@ TESTS = [
 ]
 
 
-@dataclass
-class SessionContext:
-    id: str = ""
-
-
 @pytest.mark.parametrize("parameters", TESTS)
 def test_get_user_info(monkeypatch, parameters: dict):
-    CurrentUser._users = {}
-    session_active = parameters['input']['session_active']
-    logged_user = parameters['input']['logged_user']
-    session_id = parameters['input']['session_id']
-    api_key = parameters['input']['api_key']
-    expected_output = parameters['output']
 
-    if session_active and logged_user:
-        session_context = SessionContext(id=session_id)
-        CurrentUser._users[session_id] = expected_output
-    elif session_active:
-        session_context = SessionContext(id=session_id)
-    else:
-        session_context = None
+    session_id = next(iter(parameters["input"]["users_cache"]), None)
+    monkeypatch.setattr(CurrentUser, "_get_session_id", lambda: session_id)
 
-    monkeypatch.setattr(Document, "session_context", session_context)
-    monkeypatch.setattr(CurrentUser, "get_api_key", lambda: api_key)
+    users_cache = parameters["input"]["users_cache"]
+    monkeypatch.setattr(CurrentUser, "_users", users_cache if any(users_cache.values()) else {})
+
     monkeypatch.setattr(MZGraphQLClient, "_get_gql_client", lambda cls_object: None)
-    monkeypatch.setattr(
-        MZGraphQLClient,
-        "get_user",
-        lambda cls_object, api_key_input: {"id": USER_ID, "name": USER_NAME} if api_key_input else None
-    )
+    monkeypatch.setattr(MZGraphQLClient, "get_user", _get_user)
 
-    try:
-        user_info = CurrentUser.get_user_info(api_key)
-    except Exception as e:
-        user_info = type(e)
-    finally:
-        assert user_info == expected_output
+    user_info = CurrentUser.get_user_info(parameters['input']['api_key'])
+    assert user_info == parameters['output']
 
 
 def test_get_user_info_error():
@@ -94,3 +63,10 @@ def test_get_user_info_error():
     """
     with pytest.raises(ValueError):
         CurrentUser.get_user_info(None)
+
+
+def _get_user(cls_object, api_key_input):
+    if api_key_input:
+        return {"id": USER_ID, "name": USER_NAME}
+    else:
+        return None
