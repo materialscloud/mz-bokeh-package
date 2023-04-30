@@ -76,7 +76,7 @@ class MaterialsZoneApi:
         """
 
         # user credentials
-        params = {"api_key": CurrentUser.get_api_id()}
+        params = {"api_key": CurrentUser.get_api_key()}
 
         # get parser endpoint
         parser_route = "parse/{}".format(processing_parameters_code.lstrip("#"))
