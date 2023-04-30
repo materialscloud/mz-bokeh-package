@@ -42,16 +42,6 @@ TESTS = [
         },
         "output": {"id": USER_ID, "name": USER_NAME}
     },
-    # Test 4: session ID not provided and is not logged in CurrentUser._users. API key not provided.
-    {
-        "input": {
-            "session_active": False,
-            "logged_user": False,
-            "session_id": None,
-            "api_key": None,
-        },
-        "output": ValueError
-    },
 ]
 
 
@@ -92,3 +82,15 @@ def test_get_user_info(monkeypatch, parameters: dict):
         user_info = type(e)
     finally:
         assert user_info == expected_output
+
+
+def test_get_user_info_error():
+    """
+    Test that CurrentUser.get_user_info raises a ValueError when no session ID, no CurrentUser._users is cashed, and
+    no API key is provided.
+
+    Raises:
+        ValueError: If both session ID and API key are not provided.
+    """
+    with pytest.raises(ValueError):
+        CurrentUser.get_user_info(None)
