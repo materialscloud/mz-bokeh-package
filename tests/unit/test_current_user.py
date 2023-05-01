@@ -137,22 +137,14 @@ def monkeypatch_parameters(request, monkeypatch):
     return parameters
 
 
-@pytest.mark.parametrize(
-    "monkeypatch_parameters",
-    [param for param in TESTS_PASS],
-    indirect=["monkeypatch_parameters"]
-)
+@pytest.mark.parametrize("monkeypatch_parameters", TESTS_PASS, indirect=["monkeypatch_parameters"])
 def test_get_user_info_pass(monkeypatch_parameters):
     user_info = CurrentUser._get_user_info(monkeypatch_parameters['input']['api_key'])
     assert user_info == monkeypatch_parameters['output']["user_info"]
     assert CurrentUser._users_cache == monkeypatch_parameters['output']["users_cache"]
 
 
-@pytest.mark.parametrize(
-    "monkeypatch_parameters",
-    [param for param in TESTS_FAILURE],
-    indirect=["monkeypatch_parameters"]
-)
+@pytest.mark.parametrize("monkeypatch_parameters", TESTS_FAILURE, indirect=["monkeypatch_parameters"])
 def test_get_user_info_error(monkeypatch_parameters):
     with pytest.raises(monkeypatch_parameters['output']["error"]):
         CurrentUser._get_user_info(monkeypatch_parameters['input']['api_key'])
