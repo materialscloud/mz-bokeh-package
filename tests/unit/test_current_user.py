@@ -129,9 +129,9 @@ TESTS_FAILURE = [
 ]
 
 
-@pytest.mark.parametrize("parameters", TESTS_PASS)
-def test_get_user_info(monkeypatch, parameters: dict):
-
+@pytest.fixture(scope="function")
+def monkeypatch_parameters(request, monkeypatch):
+    parameters = request.param
     session_id = parameters["input"]["session_id"]
     monkeypatch.setattr(CurrentUser, "_get_session_id", lambda: session_id)
 
@@ -144,25 +144,25 @@ def test_get_user_info(monkeypatch, parameters: dict):
     get_user = parameters["input"]["get_user"]
     monkeypatch.setattr(MZGraphQLClient, "get_user", lambda api_key: get_user)
 
-    user_info = CurrentUser._get_user_info(parameters['input']['api_key'])
-    assert user_info == parameters['output']["user_info"]
-    assert CurrentUser._users_cache == parameters['output']["users_cache"]
+    return parameters
 
 
-@pytest.mark.parametrize("parameters", TESTS_FAILURE)
-def test_get_user_info_error(monkeypatch, parameters: dict):
+@pytest.mark.parametrize(
+    "monkeypatch_parameters",
+    [param for param in TESTS_PASS],
+    indirect=["monkeypatch_parameters"]
+)
+def test_get_user_info_pass(monkeypatch_parameters):
+    user_info = CurrentUser._get_user_info(monkeypatch_parameters['input']['api_key'])
+    assert user_info == monkeypatch_parameters['output']["user_info"]
+    assert CurrentUser._users_cache == monkeypatch_parameters['output']["users_cache"]
 
-    session_id = parameters["input"]["session_id"]
-    monkeypatch.setattr(CurrentUser, "_get_session_id", lambda: session_id)
 
-    users_cache = parameters["input"]["users_cache"]
-    monkeypatch.setattr(CurrentUser, "_users_cache", users_cache)
-
-    get_api_key = parameters["input"]["get_api_key"]
-    monkeypatch.setattr(CurrentUser, "get_api_key", lambda: get_api_key)
-
-    get_user = parameters["input"]["get_user"]
-    monkeypatch.setattr(MZGraphQLClient, "get_user", lambda api_key: get_user)
-
-    with pytest.raises(parameters['output']["error"]):
-        CurrentUser._get_user_info(None)
+@pytest.mark.parametrize(
+    "monkeypatch_parameters",
+    [param for param in TESTS_FAILURE],
+    indirect=["monkeypatch_parameters"]
+)
+def test_get_user_info_error(monkeypatch_parameters):
+    with pytest.raises(monkeypatch_parameters['output']["error"]):
+        CurrentUser._get_user_info(monkeypatch_parameters['input']['api_key'])
