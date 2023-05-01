@@ -58,7 +58,7 @@ class CurrentUser:
         return api_key
 
     @staticmethod
-    def _get_api_key_from_query_arguments(query_arguments: list) -> str | None:
+    def _get_api_key_from_query_arguments(query_arguments: dict) -> str | None:
         api_keys = query_arguments.get("api_key")
         if api_keys is not None and len(api_keys) == 1:
             api_key = api_keys[0]
@@ -69,7 +69,7 @@ class CurrentUser:
             return None
 
     @classmethod
-    def _get_user_info(cls, api_key: str = None) -> dict:
+    def _get_user_info(cls, api_key: str | None = None) -> dict:
         session_id = cls._get_session_id()
         if session_id and session_id in CurrentUser._users_cache:
             return CurrentUser._users_cache[session_id]

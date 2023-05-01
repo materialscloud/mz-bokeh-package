@@ -10,7 +10,6 @@ USER_NAME = "user_name"
 
 
 TESTS_PASS = [
-    # Test 1: session ID provided and is cached in CurrentUser._users_cache. API key not required.
     {
         "input": {
             "session_id": SESSION_ID,
@@ -25,7 +24,6 @@ TESTS_PASS = [
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
         },
     },
-    # # Test 2: session ID provided and is not cached in CurrentUser._users_cache. API key provided as argument.
     {
         "input": {
             "session_id": SESSION_ID,
@@ -39,7 +37,6 @@ TESTS_PASS = [
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
         },
     },
-    # Test 3: session ID not provided and is not cached in CurrentUser._users_cache. API key provided as argument.
     {
         "input": {
             "session_id": None,
@@ -53,8 +50,6 @@ TESTS_PASS = [
             "users_cache": {},
         },
     },
-    # Test 4: session ID provided and is not cached in CurrentUser._users_cache.
-    # API key provided as an environment variable.
     {
         "input": {
             "session_id": SESSION_ID,
@@ -68,8 +63,6 @@ TESTS_PASS = [
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
         },
     },
-    # Test 5: session ID not provided and is not cached in CurrentUser._users_cache.
-    # API key provided as an environment variable.
     {
         "input": {
             "session_id": None,
@@ -87,7 +80,6 @@ TESTS_PASS = [
 
 
 TESTS_FAILURE = [
-    # Test 1: no session ID, no CurrentUser._users_cache is cashed, and no API key is provided.
     {
         "input": {
             "session_id": None,
@@ -100,7 +92,6 @@ TESTS_FAILURE = [
             "error": FetchUserInfoError,
         },
     },
-    # Test 2: session ID provided, no CurrentUser._users_cache is cashed, and no API key is provided.
     {
         "input": {
             "session_id": SESSION_ID,
@@ -113,7 +104,6 @@ TESTS_FAILURE = [
             "error": FetchUserInfoError,
         },
     },
-    # Test 3: no session ID, CurrentUser._users_cache is cashed, and no API key is provided.
     {
         "input": {
             "session_id": None,
