@@ -20,7 +20,6 @@ class GraphqlQueryError(Exception):
 class MZGraphQLClient:
 
     @staticmethod
-    @lru_cache()
     def get_user(api_key: str) -> dict[str, str]:
         """Gets the ID and name of the currently active viewer using a valid API key.
 
