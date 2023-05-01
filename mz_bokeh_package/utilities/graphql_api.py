@@ -5,6 +5,7 @@ import logging
 from jsonschema import validate, ValidationError
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport, log as requests_logger
+from requests.exceptions import RetryError
 
 from mz_bokeh_package.utilities.environment import Environment
 
@@ -58,7 +59,12 @@ class MZGraphQLClient:
         }
 
         client = MZGraphQLClient._get_gql_client(api_key)
-        result = client.execute(query)
+
+        try:
+            result = client.execute(query)
+        except RetryError as e:
+            raise GraphqlQueryError(f"invalid result of the viewer GraphQL query. The provided API key may be invalid"
+                                    f"Retry error: {e.message}")
 
         try:
             validate(result, schema=result_schema)
