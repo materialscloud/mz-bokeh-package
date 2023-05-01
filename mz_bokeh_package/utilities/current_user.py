@@ -103,7 +103,7 @@ class CurrentUser:
     @classmethod
     def _cache_user_info(cls, session_id: str, user_info: dict):
         CurrentUser._users[session_id] = user_info
-        curdoc().on_session_destroyed(lambda session_context: CurrentUser._users.pop(session_id, None))
+        curdoc().on_session_destroyed(lambda session_context: CurrentUser._users.pop(session_context.id, None))
 
     @staticmethod
     def _get_session_id() -> str | None:
