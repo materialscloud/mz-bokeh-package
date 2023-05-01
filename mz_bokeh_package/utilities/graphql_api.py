@@ -19,12 +19,9 @@ class GraphqlQueryError(Exception):
 
 class MZGraphQLClient:
 
-    def __init__(self):
-
-        self._client = self._get_gql_client()
-
+    @staticmethod
     @lru_cache()
-    def get_user(self, api_key: str) -> dict[str, str]:
+    def get_user(api_key: str) -> dict[str, str]:
         """Gets the ID and name of the currently active viewer using a valid API key.
 
         Args:
@@ -61,8 +58,9 @@ class MZGraphQLClient:
             },
         }
 
-        self._client.transport.headers = {"authorization": f"API {api_key}"}
-        result = self._client.execute(query)
+        client = MZGraphQLClient._get_gql_client(api_key)
+        client.transport.headers = {"authorization": f"API {api_key}"}
+        result = client.execute(query)
 
         try:
             validate(result, schema=result_schema)
@@ -77,8 +75,11 @@ class MZGraphQLClient:
         return result['viewer']
 
     @staticmethod
-    def _get_gql_client() -> Client:
+    def _get_gql_client(api_key) -> Client:
         """Get a graphql client with the appropriate authorization header for the current user
+
+        Args:
+            api_key: The API key to use for the API call.
 
         Returns:
             GraphQL client
@@ -86,5 +87,6 @@ class MZGraphQLClient:
 
         transport = RequestsHTTPTransport(url=Environment.get_graphql_api_url(), verify=True, retries=3)
         client = Client(transport=transport)
+        client.transport.headers = {"authorization": f"API {api_key}"}
 
         return client

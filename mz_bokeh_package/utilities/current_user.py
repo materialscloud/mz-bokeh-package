@@ -33,7 +33,7 @@ class CurrentUser:
 
         api_key = api_key or CurrentUser.get_api_key()
         if api_key:
-            user_info = MZGraphQLClient().get_user(api_key)
+            user_info = MZGraphQLClient.get_user(api_key)
             if session_id:
                 cls._cache_user_info(session_id, user_info)
             return user_info

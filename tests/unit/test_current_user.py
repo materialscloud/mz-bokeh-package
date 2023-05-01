@@ -46,7 +46,6 @@ def test_get_user_info(monkeypatch, parameters: dict):
     users_cache = parameters["input"]["users_cache"]
     monkeypatch.setattr(CurrentUser, "_users", users_cache if any(users_cache.values()) else {})
 
-    monkeypatch.setattr(MZGraphQLClient, "_get_gql_client", lambda cls_object: None)
     monkeypatch.setattr(MZGraphQLClient, "get_user", _get_user)
 
     user_info = CurrentUser.get_user_info(parameters['input']['api_key'])
@@ -65,7 +64,7 @@ def test_get_user_info_error():
         CurrentUser.get_user_info(None)
 
 
-def _get_user(cls_object, api_key_input):
+def _get_user(api_key_input):
     if api_key_input:
         return {"id": USER_ID, "name": USER_NAME}
     else:
