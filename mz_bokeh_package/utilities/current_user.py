@@ -69,7 +69,7 @@ class CurrentUser:
             return None
 
     @classmethod
-    def _get_user_info(cls, api_key: str | None) -> dict:
+    def _get_user_info(cls, api_key: str = None) -> dict:
         session_id = cls._get_session_id()
         if session_id and session_id in CurrentUser._users_cache:
             return CurrentUser._users_cache[session_id]
