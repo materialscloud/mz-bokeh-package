@@ -21,7 +21,7 @@ TESTS_PASS = [
 
         },
         "output": {
-            "session_id": {"id": USER_ID, "name": USER_NAME},
+            "user_info": {"id": USER_ID, "name": USER_NAME},
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
         },
     },
@@ -35,7 +35,7 @@ TESTS_PASS = [
             "get_user": {"id": USER_ID, "name": USER_NAME}
         },
         "output": {
-            "session_id": {"id": USER_ID, "name": USER_NAME},
+            "user_info": {"id": USER_ID, "name": USER_NAME},
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
         },
     },
@@ -49,7 +49,7 @@ TESTS_PASS = [
             "get_user": {"id": USER_ID, "name": USER_NAME}
         },
         "output": {
-            "session_id": {"id": USER_ID, "name": USER_NAME},
+            "user_info": {"id": USER_ID, "name": USER_NAME},
             "users_cache": {},
         },
     },
@@ -64,7 +64,7 @@ TESTS_PASS = [
             "get_user": {"id": USER_ID, "name": USER_NAME}
         },
         "output": {
-            "session_id": {"id": USER_ID, "name": USER_NAME},
+            "user_info": {"id": USER_ID, "name": USER_NAME},
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
         },
     },
@@ -79,8 +79,51 @@ TESTS_PASS = [
             "get_user": {"id": USER_ID, "name": USER_NAME}
         },
         "output": {
-            "session_id": {"id": USER_ID, "name": USER_NAME},
+            "user_info": {"id": USER_ID, "name": USER_NAME},
             "users_cache": {},
+        },
+    },
+]
+
+
+TESTS_FAILURE = [
+    # Test 1: no session ID, no CurrentUser._users_cache is cashed, and no API key is provided.
+    {
+        "input": {
+            "session_id": None,
+            "users_cache": {},
+            "api_key": None,
+            "get_api_key": None,
+            "get_user": None
+        },
+        "output": {
+            "error": FetchUserInfoError,
+        },
+    },
+    # Test 2: session ID provided, no CurrentUser._users_cache is cashed, and no API key is provided.
+    {
+        "input": {
+            "session_id": SESSION_ID,
+            "users_cache": {},
+            "api_key": None,
+            "get_api_key": None,
+            "get_user": None
+        },
+        "output": {
+            "error": FetchUserInfoError,
+        },
+    },
+    # Test 3: no session ID, CurrentUser._users_cache is cashed, and no API key is provided.
+    {
+        "input": {
+            "session_id": None,
+            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
+            "api_key": None,
+            "get_api_key": None,
+            "get_user": None
+        },
+        "output": {
+            "error": FetchUserInfoError,
         },
     },
 ]
@@ -102,13 +145,24 @@ def test_get_user_info(monkeypatch, parameters: dict):
     monkeypatch.setattr(MZGraphQLClient, "get_user", lambda api_key: get_user)
 
     user_info = CurrentUser._get_user_info(parameters['input']['api_key'])
-    assert user_info == parameters['output']["session_id"]
+    assert user_info == parameters['output']["user_info"]
     assert CurrentUser._users_cache == parameters['output']["users_cache"]
 
 
-def test_get_user_info_error():
-    """Test that CurrentUser.get_user_info raises a ValueError when no session ID, no CurrentUser._users_cache is cashed, and
-    no API key is provided.
-    """
-    with pytest.raises(FetchUserInfoError):
+@pytest.mark.parametrize("parameters", TESTS_FAILURE)
+def test_get_user_info_error(monkeypatch, parameters: dict):
+
+    session_id = parameters["input"]["session_id"]
+    monkeypatch.setattr(CurrentUser, "_get_session_id", lambda: session_id)
+
+    users_cache = parameters["input"]["users_cache"]
+    monkeypatch.setattr(CurrentUser, "_users_cache", users_cache)
+
+    get_api_key = parameters["input"]["get_api_key"]
+    monkeypatch.setattr(CurrentUser, "get_api_key", lambda: get_api_key)
+
+    get_user = parameters["input"]["get_user"]
+    monkeypatch.setattr(MZGraphQLClient, "get_user", lambda api_key: get_user)
+
+    with pytest.raises(parameters['output']["error"]):
         CurrentUser._get_user_info(None)
