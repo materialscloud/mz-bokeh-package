@@ -5,40 +5,17 @@ from mz_bokeh_package.utilities.environment import Environment
 from mz_bokeh_package.utilities.graphql_api import MZGraphQLClient
 
 
+class FetchUserInfoError(Exception):
+    """ This exception is raised when an API key is not provided and the user info is not cached for a session. """
+    pass
+
+
 class CurrentUser:
     """
     Class with static methods for getting information about the current user
     """
 
-    _users = {}
-
-    @classmethod
-    def get_user_info(cls, api_key: str | None) -> dict:
-        """Retrieve user information for the current session or API key, caching the information for future use.
-
-        Args:
-            api_key: unique user api key.
-
-        Returns:
-            a dictionary containing the user id and name corresponding to the user with this api_key:
-            {"id": <user id>, "name": <user name>}
-
-        Raises:
-             a ValueError if an API key is not provided and the user info is not cached for this session.
-        """
-
-        session_id = cls._get_session_id()
-        if session_id and session_id in CurrentUser._users:
-            return CurrentUser._users[session_id]
-
-        api_key = api_key or CurrentUser.get_api_key()
-        if api_key:
-            user_info = MZGraphQLClient.get_user(api_key)
-            if session_id:
-                cls._cache_user_info(session_id, user_info)
-            return user_info
-        else:
-            raise ValueError("an api_key is required in order to fetch the user info.")
+    _users_cache = {}
 
     @classmethod
     def get_user_id(cls) -> str:
@@ -47,7 +24,7 @@ class CurrentUser:
         Returns:
             the user ID of the currently active viewer
         """
-        user_info = cls.get_user_info(CurrentUser.get_api_key())
+        user_info = cls._get_user_info()
         return user_info["id"]
 
     @classmethod
@@ -57,7 +34,7 @@ class CurrentUser:
         Returns:
             the name of the currently active viewer.
         """
-        user_info = cls.get_user_info(CurrentUser.get_api_key())
+        user_info = cls._get_user_info()
         return user_info["name"]
 
     @staticmethod
@@ -76,21 +53,12 @@ class CurrentUser:
 
         # get the api_key from the request header
         query_arguments = curdoc().session_context.request.arguments
-        api_key = CurrentUser.get_api_key_from_query_arguments(query_arguments)
+        api_key = CurrentUser._get_api_key_from_query_arguments(query_arguments)
 
         return api_key
 
     @staticmethod
-    def get_api_key_from_query_arguments(query_arguments: list) -> str | None:
-        """Retrieves and decodes an API key from a list of query arguments.
-
-        Args:
-            query_arguments: A list of query arguments to search for the API key.
-
-        Returns:
-            The retrieved API key as a string, or None if the API key is not found or if there are multiple API keys.
-        """
-
+    def _get_api_key_from_query_arguments(query_arguments: list) -> str | None:
         api_keys = query_arguments.get("api_key")
         if api_keys is not None and len(api_keys) == 1:
             api_key = api_keys[0]
@@ -101,9 +69,24 @@ class CurrentUser:
             return None
 
     @classmethod
+    def _get_user_info(cls, api_key: str | None) -> dict:
+        session_id = cls._get_session_id()
+        if session_id and session_id in CurrentUser._users_cache:
+            return CurrentUser._users_cache[session_id]
+
+        api_key = api_key or CurrentUser.get_api_key()
+        if api_key:
+            user_info = MZGraphQLClient.get_user(api_key)
+            if session_id:
+                cls._cache_user_info(session_id, user_info)
+            return user_info
+        else:
+            raise FetchUserInfoError("an api_key is required in order to fetch the user info.")
+
+    @classmethod
     def _cache_user_info(cls, session_id: str, user_info: dict):
-        CurrentUser._users[session_id] = user_info
-        curdoc().on_session_destroyed(lambda session_context: CurrentUser._users.pop(session_context.id, None))
+        CurrentUser._users_cache[session_id] = user_info
+        curdoc().on_session_destroyed(lambda session_context: CurrentUser._users_cache.pop(session_context.id, None))
 
     @staticmethod
     def _get_session_id() -> str | None:

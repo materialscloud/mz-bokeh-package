@@ -50,26 +50,22 @@ class MZGraphQLClient:
                         "id": {"type": "string"},
                         "name": {"type": "string"},
                     },
-                    "required": ["id", "name"],
-                    "additionalProperties": False,
-                },
+                    "required": ["id", "name"]
+                }
             },
+            "required": ["viewer"],
+            "additionalProperties": False
         }
 
         client = MZGraphQLClient._get_gql_client(api_key)
-        client.transport.headers = {"authorization": f"API {api_key}"}
         result = client.execute(query)
 
         try:
             validate(result, schema=result_schema)
         except ValidationError as e:
-            raise GraphqlQueryError(f"invalid result of GraphQL query for getting the user's organization ID and name. "
+            raise GraphqlQueryError(f"invalid result of the viewer GraphQL query."
                                     f"Validation error: {e.message}")
 
-        if "viewer" not in result:
-            raise GraphqlQueryError("invalid result of GraphQL query for getting the user's organization ID and name. "
-                                    "Validation error: 'viewer' field not found. The provided API key may be invalid"
-                                    "or expired.")
         return result['viewer']
 
     @staticmethod

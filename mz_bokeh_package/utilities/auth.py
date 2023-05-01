@@ -27,9 +27,10 @@ def get_user(request_handler: RequestHandler) -> bool | None:
         return True
 
     query_arguments = request_handler.request.query_arguments
-    api_key = CurrentUser.get_api_key_from_query_arguments(query_arguments)
+    # accessing two private methods since get_user is conceptually part of CurrentUser
+    api_key = CurrentUser._get_api_key_from_query_arguments(query_arguments)  # noqa F401
     try:
-        CurrentUser.get_user_info(api_key)
+        CurrentUser._get_user_info(api_key)  # noqa F401
     except GraphqlQueryError:
         return None
 
