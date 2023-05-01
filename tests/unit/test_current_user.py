@@ -13,6 +13,7 @@ TESTS = [
     # Test 1: session ID provided and is cached in CurrentUser._users. API key not required.
     {
         "input": {
+            "session_id": SESSION_ID,
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
             "api_key": None,
         },
@@ -21,7 +22,8 @@ TESTS = [
     # Test 2: session ID provided and is not cached in CurrentUser._users. API key provided.
     {
         "input": {
-            "users_cache": {SESSION_ID: {}},
+            "session_id": SESSION_ID,
+            "users_cache": {},
             "api_key": API_KEY,
         },
         "output": {"id": USER_ID, "name": USER_NAME}
@@ -29,6 +31,7 @@ TESTS = [
     # Test 3: session ID not provided and is not cached in CurrentUser._users. API key provided.
     {
         "input": {
+            "session_id": None,
             "users_cache": {},
             "api_key": API_KEY,
         },
@@ -40,11 +43,11 @@ TESTS = [
 @pytest.mark.parametrize("parameters", TESTS)
 def test_get_user_info(monkeypatch, parameters: dict):
 
-    session_id = next(iter(parameters["input"]["users_cache"]), None)
+    session_id = parameters["input"]["session_id"]
     monkeypatch.setattr(CurrentUser, "_get_session_id", lambda: session_id)
 
     users_cache = parameters["input"]["users_cache"]
-    monkeypatch.setattr(CurrentUser, "_users", users_cache if any(users_cache.values()) else {})
+    monkeypatch.setattr(CurrentUser, "_users", users_cache)
 
     monkeypatch.setattr(MZGraphQLClient, "get_user", _get_user)
 
