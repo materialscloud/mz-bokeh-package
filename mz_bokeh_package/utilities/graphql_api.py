@@ -73,8 +73,8 @@ class MZGraphQLClient:
         return result['viewer']
 
     @staticmethod
-    def _get_gql_client(api_key) -> Client:
-        """Get a graphql client with the appropriate authorization header for the current user
+    def _get_gql_client(api_key: str) -> Client:
+        """Get a graphql client with the appropriate authorization header for the current user.
 
         Args:
             api_key: The API key to use for the API call.

@@ -56,8 +56,7 @@ def test_get_user_info(monkeypatch, parameters: dict):
 
 
 def test_get_user_info_error():
-    """
-    Test that CurrentUser.get_user_info raises a ValueError when no session ID, no CurrentUser._users is cashed, and
+    """Test that CurrentUser.get_user_info raises a ValueError when no session ID, no CurrentUser._users is cashed, and
     no API key is provided.
     """
     with pytest.raises(ValueError):
