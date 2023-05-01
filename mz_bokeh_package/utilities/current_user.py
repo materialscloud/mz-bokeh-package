@@ -75,13 +75,30 @@ class CurrentUser:
             return api_key
 
         # get the api_key from the request header
-        api_keys = curdoc().session_context.request.arguments.get("api_key") if curdoc().session_context else None
-        if api_keys is not None and len(api_keys) == 1:
-            api_key = api_keys[0]
-        else:
-            api_key = None
+        query_arguments = curdoc().session_context.request.arguments
+        api_key = CurrentUser.get_api_key_from_query_arguments(query_arguments)
 
         return api_key
+
+    @staticmethod
+    def get_api_key_from_query_arguments(query_arguments: list) -> str | None:
+        """Retrieves and decodes an API key from a list of query arguments.
+
+        Args:
+            query_arguments: A list of query arguments to search for the API key.
+
+        Returns:
+            The retrieved API key as a string, or None if the API key is not found or if there are multiple API keys.
+        """
+
+        api_keys = query_arguments.get("api_key")
+        if api_keys is not None and len(api_keys) == 1:
+            api_key = api_keys[0]
+            if isinstance(api_key, bytes):
+                api_key = api_key.decode('utf8')
+            return api_key
+        else:
+            return None
 
     @classmethod
     def _cache_user_info(cls, session_id: str, user_info: dict):

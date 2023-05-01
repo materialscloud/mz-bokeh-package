@@ -26,7 +26,8 @@ def get_user(request_handler: RequestHandler) -> bool | None:
     if request_handler.request.path.split("/")[-1] in ("health", "error"):
         return True
 
-    api_key = request_handler.request.query_arguments.get("api_key")
+    query_arguments = request_handler.request.query_arguments
+    api_key = CurrentUser.get_api_key_from_query_arguments(query_arguments)
     try:
         CurrentUser.get_user_info(api_key)
     except GraphqlQueryError:

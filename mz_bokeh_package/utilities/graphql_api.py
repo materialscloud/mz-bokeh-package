@@ -1,7 +1,6 @@
 from __future__ import annotations  # to support internal types as type hints
 
 import logging
-from functools import lru_cache
 
 from jsonschema import validate, ValidationError
 from gql import Client, gql
