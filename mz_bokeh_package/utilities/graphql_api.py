@@ -7,7 +7,7 @@ from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport, log as requests_logger
 from requests.exceptions import RetryError
 
-from .environment import Environment
+from mz_bokeh_package.utilities.environment import Environment
 
 requests_logger.setLevel(logging.WARNING)
 

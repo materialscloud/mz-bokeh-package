@@ -4,9 +4,9 @@ This module takes care of the authentication of calls to bokeh apps
 """
 from tornado.web import RequestHandler
 
-from .environment import Environment
-from .graphql_api import GraphqlQueryError
-from .current_user import CurrentUser
+from mz_bokeh_package.utilities.environment import Environment
+from mz_bokeh_package.utilities.graphql_api import GraphqlQueryError
+from mz_bokeh_package.utilities.current_user import CurrentUser
 
 
 def get_user(request_handler: RequestHandler) -> bool | None:
