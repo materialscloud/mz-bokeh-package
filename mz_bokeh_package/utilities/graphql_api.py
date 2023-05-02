@@ -64,13 +64,13 @@ class MZGraphQLClient:
             result = client.execute(query)
         except RetryError as e:
             raise GraphqlQueryError(f"invalid result of the viewer GraphQL query. The provided API key may be invalid"
-                                    f"Retry error: {e.message}")
+                                    f"Retry error: {e}")
 
         try:
             validate(result, schema=result_schema)
         except ValidationError as e:
             raise GraphqlQueryError(f"invalid result of the viewer GraphQL query."
-                                    f"Validation error: {e.message}")
+                                    f"Validation error: {e}")
 
         return result['viewer']
 
