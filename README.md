@@ -25,7 +25,7 @@ API_KEY=<API key>
 On **staging** or **production**, set the following environment variable ```ENVIRONMENT=`staging` or `production` ```
 and provide the API key via the URL arguments. For example: `http://localhost:5006/correlation?api_key=valid_key` 
 
-To install branches during development, edit the `master` with the branch name.
+To install a branch during development, edit the `master` with the branch name.
 This will work for both options above.
 
 ## Changes and Version Number
