@@ -3,9 +3,9 @@ import pytest
 from mz_bokeh_package.utilities import CurrentUser, FetchUserInfoError
 from mz_bokeh_package.utilities import MZGraphQLClient
 
-API_KEY = "6fzQxEJL1YX9ldWUhHv5NPpiIcV7Gg8r03KwmeCqyRakj2nSAstDMTb4oB"
-SESSION_ID = "LME0EBfddYQCJqpZoO4ysYvynDXFLavC8hu3RzHW6e5e"
-USER_ID = "79e8e0f4-d2d6-4c16-b833-0a8986a6ce53"
+API_KEY = "6fzQxEJL"
+SESSION_ID = "pZoO4ysY"
+USER_ID = "79e8e0f4"
 USER_NAME = "user_name"
 
 
