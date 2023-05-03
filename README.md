@@ -18,7 +18,7 @@ This will work for both options above.
 
 To access the dashboards, user authentication is mandatory and involves two steps.
 
-#### 2.1. Define the `--auth-module` when running the Bokeh server.
+#### 2.1. Define the `--auth-module` when running the Bokeh server
 ```
 bokeh serve <relative path of dashboard> --auth-module=<full path to mz_bokeh_package/utilities/auth.py>
 ```
@@ -27,7 +27,7 @@ For example:
 bokeh serve dashboards/histogram --auth-module=<root path>/data-overview-apps/venv/lib/python3.10/site-packages/mz_bokeh_package/utilities/auth.py.
 ```
 
-#### 2.2. Set up the User API Key.
+#### 2.2. Set up the User API Key
 
 There are two pathways to obtain user authentication.
 
