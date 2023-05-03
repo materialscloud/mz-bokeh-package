@@ -1,4 +1,4 @@
-from authentication import auth
+from .authentication import auth  # noqa F401
 import logging
 
 # Setup logging
