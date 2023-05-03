@@ -14,7 +14,6 @@ TESTS_PASS = [
         "input": {
             "session_id": SESSION_ID,
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
-            "api_key": None,
             "get_api_key": None,
             "get_user": None
 
@@ -28,33 +27,6 @@ TESTS_PASS = [
         "input": {
             "session_id": SESSION_ID,
             "users_cache": {},
-            "api_key": API_KEY,
-            "get_api_key": None,
-            "get_user": {"id": USER_ID, "name": USER_NAME}
-        },
-        "output": {
-            "user_info": {"id": USER_ID, "name": USER_NAME},
-            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
-        },
-    },
-    {
-        "input": {
-            "session_id": None,
-            "users_cache": {},
-            "api_key": API_KEY,
-            "get_api_key": None,
-            "get_user": {"id": USER_ID, "name": USER_NAME}
-        },
-        "output": {
-            "user_info": {"id": USER_ID, "name": USER_NAME},
-            "users_cache": {},
-        },
-    },
-    {
-        "input": {
-            "session_id": SESSION_ID,
-            "users_cache": {},
-            "api_key": None,
             "get_api_key": API_KEY,
             "get_user": {"id": USER_ID, "name": USER_NAME}
         },
@@ -67,7 +39,6 @@ TESTS_PASS = [
         "input": {
             "session_id": None,
             "users_cache": {},
-            "api_key": None,
             "get_api_key": API_KEY,
             "get_user": {"id": USER_ID, "name": USER_NAME}
         },
@@ -84,7 +55,6 @@ TESTS_FAILURE = [
         "input": {
             "session_id": None,
             "users_cache": {},
-            "api_key": None,
             "get_api_key": None,
             "get_user": None
         },
@@ -96,7 +66,6 @@ TESTS_FAILURE = [
         "input": {
             "session_id": SESSION_ID,
             "users_cache": {},
-            "api_key": None,
             "get_api_key": None,
             "get_user": None
         },
@@ -108,7 +77,6 @@ TESTS_FAILURE = [
         "input": {
             "session_id": None,
             "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
-            "api_key": None,
             "get_api_key": None,
             "get_user": None
         },
@@ -139,7 +107,7 @@ def monkeypatch_parameters(request, monkeypatch):
 
 @pytest.mark.parametrize("monkeypatch_parameters", TESTS_PASS, indirect=["monkeypatch_parameters"])
 def test_get_user_info_pass(monkeypatch_parameters):
-    user_info = CurrentUser._get_user_info(monkeypatch_parameters['input']['api_key'])
+    user_info = CurrentUser._get_user_info()
     assert user_info == monkeypatch_parameters['output']["user_info"]
     assert CurrentUser._users_cache == monkeypatch_parameters['output']["users_cache"]
 
@@ -147,4 +115,4 @@ def test_get_user_info_pass(monkeypatch_parameters):
 @pytest.mark.parametrize("monkeypatch_parameters", TESTS_FAILURE, indirect=["monkeypatch_parameters"])
 def test_get_user_info_error(monkeypatch_parameters):
     with pytest.raises(monkeypatch_parameters['output']["error"]):
-        CurrentUser._get_user_info(monkeypatch_parameters['input']['api_key'])
+        CurrentUser._get_user_info()

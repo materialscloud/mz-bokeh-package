@@ -5,8 +5,8 @@ This module takes care of the authentication of calls to bokeh apps
 from tornado.web import RequestHandler
 
 from mz_bokeh_package.utilities.environment import Environment
-from mz_bokeh_package.utilities.graphql_api import GraphqlQueryError
-from mz_bokeh_package.utilities.current_user import CurrentUser
+from mz_bokeh_package.utilities.graphql_api import MZGraphQLClient, GraphqlQueryError
+from mz_bokeh_package.utilities.helpers import get_api_key_from_query_arguments
 
 
 def get_user(request_handler: RequestHandler) -> bool | None:
@@ -27,10 +27,9 @@ def get_user(request_handler: RequestHandler) -> bool | None:
         return True
 
     query_arguments = request_handler.request.query_arguments
-    # accessing two private methods since get_user is conceptually part of CurrentUser
-    api_key = CurrentUser._get_api_key_from_query_arguments(query_arguments)  # noqa F401
+    api_key = get_api_key_from_query_arguments(query_arguments)
     try:
-        CurrentUser._get_user_info(api_key)  # noqa F401
+        MZGraphQLClient.get_user(api_key)
     except GraphqlQueryError:
         return None
 

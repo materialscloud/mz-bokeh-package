@@ -3,6 +3,7 @@ from bokeh.io import curdoc
 
 from .environment import Environment
 from .graphql_api import MZGraphQLClient
+from .helpers import get_api_key_from_query_arguments
 
 
 class FetchUserInfoError(Exception):
@@ -53,28 +54,17 @@ class CurrentUser:
 
         # get the api_key from the request header
         query_arguments = curdoc().session_context.request.arguments
-        api_key = CurrentUser._get_api_key_from_query_arguments(query_arguments)
+        api_key = get_api_key_from_query_arguments(query_arguments)
 
         return api_key
 
-    @staticmethod
-    def _get_api_key_from_query_arguments(query_arguments: dict) -> str | None:
-        api_keys = query_arguments.get("api_key")
-        if api_keys is not None and len(api_keys) == 1:
-            api_key = api_keys[0]
-            if isinstance(api_key, bytes):
-                api_key = api_key.decode('utf8')
-            return api_key
-        else:
-            return None
-
     @classmethod
-    def _get_user_info(cls, api_key: str | None = None) -> dict:
+    def _get_user_info(cls) -> dict:
         session_id = cls._get_session_id()
         if session_id and session_id in CurrentUser._users_cache:
             return CurrentUser._users_cache[session_id]
 
-        api_key = api_key or CurrentUser.get_api_key()
+        api_key = CurrentUser.get_api_key()
         if api_key:
             user_info = MZGraphQLClient.get_user(api_key)
             if session_id:
