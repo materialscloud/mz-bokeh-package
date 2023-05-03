@@ -3,8 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="mz_bokeh_package",
     version="0.16.0",
-    packages=find_packages(where="mz_bokeh_package"),
-    package_dir={"mz_bokeh_package": "mz_bokeh_package"},
+    packages=["mz_bokeh_package"],
     include_package_data=True,
 
     # Requirements for the package.

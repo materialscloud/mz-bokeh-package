@@ -3,3 +3,4 @@ recursive-include mz_bokeh_package/custom_widgets *
 recursive-include mz_bokeh_package/utilities *
 recursive-include mz_bokeh_package/templates *
 recursive-include mz_bokeh_package/assets *
+recursive-include mz_bokeh_package/authentication *
