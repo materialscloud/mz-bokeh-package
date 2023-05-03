@@ -3,7 +3,7 @@ import requests
 from io import BytesIO
 from typing import Dict, List, Optional, Tuple, Union, Any
 
-from .auth import CurrentUser
+from .current_user import CurrentUser
 from .helpers import download_image
 from .environment import Environment
 
