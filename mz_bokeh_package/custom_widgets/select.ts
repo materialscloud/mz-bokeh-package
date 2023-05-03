@@ -46,6 +46,7 @@ export class CustomSelectView extends InputWidgetView {
   init_select_element(): HTMLSelectElement{
     // Create a "Select" web element
     const select_el = select({
+      multiple: "multiple",
       size: this.model.allow_non_selected ? 2 : 1,  // Allows none of the options to be selected
       class: "custom-select",
       name: this.model.name,

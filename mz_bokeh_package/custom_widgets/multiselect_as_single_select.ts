@@ -23,6 +23,7 @@ export class CustomMultiSelectAsSingleSelectView extends InputWidgetView {
   protected options: any
   protected plugin_config: any
   protected all_values: Array<string> = []
+  protected last_selection: any
 
   connect_signals(): void {
     super.connect_signals()
@@ -49,6 +50,7 @@ export class CustomMultiSelectAsSingleSelectView extends InputWidgetView {
     // Create a "Select" web element
     const select_el = select({
       multiple: "multiple",
+      size: 2,
       class: "custom-select",
       name: this.model.name,
       style: "display: none;",
@@ -113,13 +115,14 @@ export class CustomMultiSelectAsSingleSelectView extends InputWidgetView {
     const plugin_config = {
       maxHeight: 200,
       disableIfEmpty: true,
+      allow_non_selected: this.model.allow_non_selected,
       nonSelectedText: this.model.non_selected_text,
       enableCollapsibleOptGroups: this.model.collapsible,
       collapseOptGroupsByDefault: this.model.collapsed_by_default,
       enableCaseInsensitiveFiltering: this.model.enable_filtering,
       buttonWidth: '100%',
-      numberDisplayed: 1,
       enableClickableOptGroups: false,
+      onChange: this.on_dropdown_change.bind(this),
       onDropdownShown: this.on_dropdown_opened.bind(this),
       onDropdownHidden: this.on_dropdown_closed.bind(this),
     }
@@ -192,14 +195,22 @@ export class CustomMultiSelectAsSingleSelectView extends InputWidgetView {
 
   // Runs after a change occurs
   on_dropdown_change(): void {
-    console.log("on_dropdown_change")
+    console.log("on_dropdown_change   ***************************")
     console.log(this.model.value)
+    debugger;
     if (this.model.allow_non_selected)
       return
 
-    const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
-    console.log(selected)
-    console.log(selected.length)
+    const selected = $('button.multiselect-option.dropdown-item.active', this.group_el);
+    console.log(selected);
+    console.log(selected.length);
+    console.log("this             : ", this);
+    console.log("this.select_el   : ", this.select_el);
+    console.log("this.group_el    : ", this.group_el);
+    console.log("this.model.value : ", this.model.value);
+    console.log("$(this.select_el): ", $(this.select_el));
+    debugger;
+
     if (!selected.length) {
       $(this.select_el).multiselect('select', this.model.value).multiselect('refresh')
     }
@@ -223,7 +234,9 @@ export class CustomMultiSelectAsSingleSelectView extends InputWidgetView {
     let was_value_changed: boolean
     const selectedValue = $(this.select_el).val() || ""
 
-    console.log(selectedValue)
+    console.log("on_dropdown_closed   *********************************");
+    console.log("selectedValue : ", selectedValue);
+    debugger;
 
     if (this.model.is_opt_grouped) {
       value = this.all_values.find((v: any) => v[1] === selectedValue) || ""

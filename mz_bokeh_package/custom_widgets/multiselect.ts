@@ -158,7 +158,7 @@ export class CustomMultiSelectView extends InputWidgetView {
 
     return plugin_config
   }
-  
+
   // Apply styles specifically for the current widget
   apply_unique_styles(): void {
     const root_el = $(this.group_el).parents('.bk-root')[0]
