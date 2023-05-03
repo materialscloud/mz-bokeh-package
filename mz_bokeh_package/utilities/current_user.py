@@ -1,8 +1,8 @@
 import os
 from bokeh.io import curdoc
 
-from mz_bokeh_package.utilities.environment import Environment
-from mz_bokeh_package.utilities.graphql_api import MZGraphQLClient
+from .environment import Environment
+from .graphql_api import MZGraphQLClient
 
 
 class FetchUserInfoError(Exception):
