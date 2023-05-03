@@ -1,3 +1,4 @@
+from authentication import auth
 import logging
 
 # Setup logging
