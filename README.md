@@ -24,7 +24,7 @@ bokeh serve <relative path of dashboard> --auth-module=<full path to mz_bokeh_pa
 ```
 For example:
 ```
-bokeh serve dashboards/histogram --auth-module=<root path>/data-overview-apps/venv/lib/python3.10/site-packages/mz_bokeh_package/utilities/auth.py. If you are running the dashboard using a configuration in PyCharm, then set the Module Name to bokeh, the Parameters to serve <full path of dashboard>.
+bokeh serve dashboards/histogram --auth-module=<root path>/data-overview-apps/venv/lib/python3.10/site-packages/mz_bokeh_package/utilities/auth.py.
 ```
 
 #### 2.2. Set up the User API Key.
