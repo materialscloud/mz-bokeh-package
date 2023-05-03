@@ -16,17 +16,10 @@ This will work for both options above.
 
 ### 2. User Authentication
 
-To access the dashboards, user authentication is mandatory and requires setting up of the User API Key.
-The method for obtaining the User API Key varies depending on the environment setting.
-
-On **development**, set the following environment variables:
+To access the dashboards, user authentication is mandatory and requires setting up of the User API Key as an environment variable:
 ```
-ENVIRONMENT=dev
 API_KEY=<API key>
 ```
-
-On **staging** or **production**, set the following environment variable ```ENVIRONMENT=`staging` or `production` ```
-and provide the API key via the URL arguments. For example: `http://localhost:5006/correlation?api_key=valid_key` 
 
 ### 3. Authentication Module Development
 
@@ -39,6 +32,9 @@ For example:
 ```
 bokeh serve dashboards/histogram --auth-module=<root path>/data-overview-apps/venv/lib/python3.10/site-packages/mz_bokeh_package/authentication/auth.py
 ```
+
+To provide the User API Key, it must be included in the URL arguments.
+For example: `http://localhost:5006/correlation?api_key=valid_key`
 
 ### 4. Changes and Version Number
 With every PR merged into the `master` branch, please add a version tag to the latest commit
