@@ -1,6 +1,14 @@
 """
-This module takes care of the authentication of calls to bokeh apps
+This module is used for authentication with the Materials Zone platform when running a Bokeh server using the `bokeh
+serve` command.
 
+To enable authentication, pass the absolute path of this module via the `--auth-module` flag to the `bokeh serve`
+command as follows:
+
+   bokeh serve <relative path of dashboard> --auth-module=<absolute to auth.py>
+
+To authenticate when running a dashboard, provide the User API Key in the URL arguments as follows:
+   http://localhost:5006/histogram?api_key=<api key>
 """
 from tornado.web import RequestHandler
 

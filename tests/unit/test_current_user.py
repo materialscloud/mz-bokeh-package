@@ -1,7 +1,7 @@
 import pytest
 
 from mz_bokeh_package.utilities import CurrentUser, FetchUserInfoError
-from mz_bokeh_package.utilities import MZGraphQLClient
+from mz_bokeh_package.utilities.graphql_api import MZGraphQLClient
 
 API_KEY = "6fzQxEJL"
 SESSION_ID = "pZoO4ysY"

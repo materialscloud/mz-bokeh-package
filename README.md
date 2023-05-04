@@ -1,42 +1,37 @@
 ## MaterialsZone Bokeh Package
 
-### 1. Installation
-To install the latest version of this package in your current environment do:
-```bash
-pip install git+https://github.com/materialscloud/mz-bokeh-package.git@<version-number>
-```
+This package offers common functionality that can be used in Materials Zone Bokeh app repos.
+Included in this repo are the following sub-packages and resources:
+1. utilities package - a collection of classes and modules that can be used for fetching the identity of the current
+   user, fetching environment-specific, and more.
+2. auth.py module - a module that is used for authenticating with Materials Zone (see the docstring of the auth.py 
+   module for instructions).
+3. components package - common components including the AppState class, ConfirmationModal, LoadingSpinner, and 
+   PlotSettings.
+4. custom_widgets - custom widgets including custom select, custom multiselect, and custom toggle.
+5. assets directory - common assets such as icons.
 
-Or add to your `requirements.txt`/`setup.py`/`pyproject.toml` file the following:
+
+### 1. Installing the mz-bokeh-package in a repo
+To install a specific version of this package in the environment of your Bokeh app repo, add the following to your 
+`requirements.txt`/`setup.py`/`pyproject.toml` file:
 ```
 git+https://github.com/materialscloud/mz-bokeh-package.git@<version-number>
 ```
+Replace `<version-number>` with the tag of the version you would like to install.
 
-To install a branch during development, replace `<version-number>` with the branch name.
-This will work for both options above.
+Note: to install a branch during development of the mz-bokeh-package, replace `<version-number>` with the branch name.
 
-### 2. User Authentication
 
-To access the dashboards, user authentication is mandatory. The authentication process varies depending on the chosen environment.
-
-On **development**, provide the User API Key as an environment variable:
+### 2. Development
+To create a new version of mz-bokeh-package, update the version number in the setup.py file in a dedicated commit, add
+a tag to the `master` branch by first checking out the branch, and then running the command:
+```bash
+git tag <version-number> -am <version description>
 ```
-API_KEY=<API key>
-```
-
-On **staging/production**, define the `--auth-module` when running the Bokeh server as follows:
-```
-bokeh serve <relative path of dashboard> --auth-module=<full path to auth.py>
+Then, push the tag:
+```bash
+git push <version-number>
 ```
 
-For example:
-```
-bokeh serve dashboards/histogram --auth-module=<root path>/data-overview-apps/venv/lib/python3.10/site-packages/mz_bokeh_package/authentication/auth.py
-```
 
-To provide the User API Key, it must be included in the URL arguments.
-For example: `http://localhost:5006/histogram?api_key=valid_key`
-
-
-### 4. Changes and Version Number
-With every PR merged into the `master` branch, please add a version tag to the latest commit
-and add a __short__ description to it.
