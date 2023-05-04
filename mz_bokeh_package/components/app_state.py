@@ -132,7 +132,7 @@ class AppState:
         the new value as a HTTP cookie.
         """
         dashboard_title = BokehUtilities.get_document_title(self._doc.session_context)
-        user_id = CurrentUser().get_user_key()
+        user_id = CurrentUser().get_user_id()
         cookie_value = data if isinstance(data, str) else json.dumps(data)
         env = Environment.get_environment()
         cookie_saver = curdoc().select_one({"name": "cookie_saver"})
@@ -157,7 +157,7 @@ class AppState:
         session_context = self._doc.session_context
         request_cookies = session_context.request.cookies
         dashboard_title = BokehUtilities.get_document_title(session_context)
-        user_id = CurrentUser().get_user_key()
+        user_id = CurrentUser().get_user_id()
         cookies_prefix = f"{user_id}_{dashboard_title}_"
 
         dashboard_cookies = {}

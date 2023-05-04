@@ -10,17 +10,21 @@ on:
     branches: [master]
 
 jobs:
-  build:
-    runs-on: ubuntu-18.04
+  linting-and-testing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install .[development]
       - name: Lint with flake8
         run: |
@@ -30,4 +34,4 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
       - name: Test with pytest
         run: |
-          pytest
+          PYTHONPATH=$GITHUB_WORKSPACE pytest

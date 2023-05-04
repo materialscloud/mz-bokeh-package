@@ -81,18 +81,3 @@ class Environment:
         if not host:
             raise KeyError(f'The {env_var_name} environment variable is not set.')
         return host
-
-    @classmethod
-    def get_error_page_url(cls) -> str:
-        """get the url for the MaterialsZone app
-
-        Returns:
-            the URL of the MaterialsZone app
-        """
-
-        env = cls.get_environment()
-
-        if env in {'staging', 'dev'}:
-            return "https://bokeh-staging.materials.zone/error"
-        elif env == 'production':
-            return "https://bokeh.materials.zone/error"

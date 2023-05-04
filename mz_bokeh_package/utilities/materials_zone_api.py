@@ -3,7 +3,7 @@ import requests
 from io import BytesIO
 from typing import Dict, List, Optional, Tuple, Union, Any
 
-from .auth import CurrentUser
+from .current_user import CurrentUser
 from .helpers import download_image
 from .environment import Environment
 
@@ -76,10 +76,7 @@ class MaterialsZoneApi:
         """
 
         # user credentials
-        params = {
-            "key": CurrentUser.get_api_key(),
-            "uid": CurrentUser.get_user_key()
-        }
+        params = {"api_key": CurrentUser.get_api_key()}
 
         # get parser endpoint
         parser_route = "parse/{}".format(processing_parameters_code.lstrip("#"))

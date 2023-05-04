@@ -73,13 +73,6 @@ def test_get_graphql_api_url():
     assert Environment.get_graphql_api_url() == "graphql.api.host"
 
 
-@pytest.mark.parametrize('environment_set, expected_url', test_parameters_get_error_page_url)
-def test_get_error_page_url(environment_set: Optional[str], expected_url: str) -> None:
-    set_environment(environment_set)
-
-    assert Environment.get_error_page_url() == expected_url
-
-
 def test_get_webapp_host():
     if 'WEBAPP_HOST' in os.environ:
         del os.environ['WEBAPP_HOST']
