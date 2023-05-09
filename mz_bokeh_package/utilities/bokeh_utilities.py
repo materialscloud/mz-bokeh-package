@@ -2,6 +2,7 @@ import re
 import inspect
 from functools import partial
 from typing import Optional
+from bokeh.io import curdoc
 
 TYPE_HINT_PATTERN = r"\: ?[^ ,)]+"
 
@@ -29,7 +30,7 @@ class BokehUtilities:
                 self._state["is_loading"] = True
                 if function_to_execute is not None:
                     getattr(self, function_to_execute)(True)
-                self._doc.add_next_tick_callback(partial(inner, func, self, *args, **kwargs))
+                curdoc().add_next_tick_callback(partial(inner, func, self, *args, **kwargs))
 
             def inner(f, self, *args, **kwargs):
                 f(self, *args, **kwargs)

@@ -83,7 +83,6 @@ class AppState:
     """
 
     def __init__(self, persistent_keys: Optional[Iterable[str]] = None):
-        self._doc = curdoc()
         self._values: Dict[str, AppStateValue] = {}
 
         if persistent_keys:
@@ -111,27 +110,37 @@ class AppState:
             self._values[key] = AppStateValue()
         self._values[key].subscribe(callback_function)
 
-    def _add_cookie_saver_to_doc(self):
+    def _set_persistent_value(self, key: str, value: Optional[Any] = None):
+        self[key] = value
+        self.on_change(key, partial(self._store_cookie_callback, cookie_name=key))
+
+    def _add_persistent_values(self, persistent_keys: Iterable[str]):
+        cookies = self._get_cookies()
+
+        for key in persistent_keys:
+            self._set_persistent_value(key, cookies.get(key))
+
+        self._add_cookie_saver_to_doc()
+
+    @staticmethod
+    def _add_cookie_saver_to_doc():
         """Adds a dummy bokeh widget to the bokeh document.
 
         This dummy widget can be used to store cookies using a JS callback.
         """
         cookie_saver = Toggle(visible=False, name="cookie_saver")
         cookie_saver.js_on_change("active", CustomJS(code=""))
-        self._doc.add_root(cookie_saver)
+        curdoc().add_root(cookie_saver)
 
-    def _set_persistent_value(self, key: str, value: Optional[Any] = None):
-        self[key] = value
-        self.on_change(key, partial(self._store_cookie_callback, cookie_name=key))
-
-    def _store_cookie_callback(self, data, cookie_name):
-        """Stores data to a HTTP cookie.
+    @staticmethod
+    def _store_cookie_callback(data, cookie_name):
+        """Stores data to an HTTP cookie.
 
         This callback is used for persistent AppStateValue instances.
         Each time the value of persistent instances changes, this callback stores
         the new value as a HTTP cookie.
         """
-        dashboard_title = BokehUtilities.get_document_title(self._doc.session_context)
+        dashboard_title = BokehUtilities.get_document_title(curdoc().session_context)
         user_id = CurrentUser().get_user_id()
         cookie_value = data if isinstance(data, str) else json.dumps(data)
         env = Environment.get_environment()
@@ -148,13 +157,14 @@ class AppState:
         cookie_saver.js_property_callbacks["change:active"][0].code = code
         cookie_saver.active = not cookie_saver.active
 
-    def _get_cookies(self) -> Dict[str, Any]:
+    @staticmethod
+    def _get_cookies() -> Dict[str, Any]:
         """Fetches dashboard-related cookies.
 
         Returns:
             Dict[str, Any]: HTTP cookies dictionary.
         """
-        session_context = self._doc.session_context
+        session_context = curdoc().session_context
         request_cookies = session_context.request.cookies
         dashboard_title = BokehUtilities.get_document_title(session_context)
         user_id = CurrentUser().get_user_id()
@@ -173,11 +183,3 @@ class AppState:
                 dashboard_cookies[key] = value
 
         return dashboard_cookies
-
-    def _add_persistent_values(self, persistent_keys: Iterable[str]):
-        cookies = self._get_cookies()
-
-        for key in persistent_keys:
-            self._set_persistent_value(key, cookies.get(key))
-
-        self._add_cookie_saver_to_doc()
