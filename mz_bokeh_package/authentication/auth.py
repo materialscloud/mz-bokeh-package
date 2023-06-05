@@ -1,6 +1,9 @@
 """
 This module is used for authentication with the Materials Zone platform when running a Bokeh server using the `bokeh
-serve` command.
+serve` command. The module contains two methods: get_user and get_login_url as specified in the Bokeh documentation:
+    https://docs.bokeh.org/en/2.4.3/docs/user_guide/server.html#auth-module
+The get_user method is responsible for authenticating the user and the get_login_url returns the url the user should
+be forwarded to when authentication fails.
 
 To enable authentication, pass the absolute path of this module via the `--auth-module` flag to the `bokeh serve`
 command as follows:
@@ -18,9 +21,9 @@ from mz_bokeh_package.utilities.helpers import get_api_key_from_query_arguments
 
 
 def get_user(request_handler: RequestHandler) -> bool | None:
-    """
-    authenticate user based on the api_key that is sent via the query parameters of the request and
-    return the user_id if the user is authenticated and otherwise return None
+    """Function used by the Bokeh server for user authentication. The function authenticates the user by fetching the
+    user's API key from the URL query arguments and sending a query to the GraphQL API. When authentication is
+    successful, True is returned, when it fails, None is returned. See the module docstring for more details.
 
     Args:
         request_handler: a tornado RequestHandler object that contains the query parameters of the request,
@@ -31,7 +34,7 @@ def get_user(request_handler: RequestHandler) -> bool | None:
     """
 
     # bypass authentication in the case of health.py dashboard to allow GCP to perform health checks
-    if request_handler.request.path.split("/")[-1] in ("health", "error"):
+    if request_handler.request.path.endswith("/health"):
         return True
 
     query_arguments = request_handler.request.query_arguments
@@ -45,7 +48,8 @@ def get_user(request_handler: RequestHandler) -> bool | None:
 
 
 def get_login_url(request_handler: RequestHandler) -> str:
-    """gets the login url for failed authentication depending on the environment
+    """Function used by the Bokeh server to get the url the user should be forwarded to when authentication fails.
+    See the module docstring for more details.
 
     Returns:
         the MZ App URL (environment dependant) to redirect to if authentication fails
