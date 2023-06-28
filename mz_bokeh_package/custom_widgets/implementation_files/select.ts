@@ -224,10 +224,16 @@ export class CustomSelectView extends InputWidgetView {
       onChange: this.on_dropdown_change.bind(this),
       onDropdownShown: this.on_dropdown_opened.bind(this),
       onDropdownHidden: this.on_dropdown_closed.bind(this),
+      enableCollapsibleOptGroups: this.model.collapsible,
+      collapseOptGroupsByDefault: this.model.collapsed_by_default,
     }
 
     if (this.model.width) {
       plugin_config.buttonWidth = `${this.model.width}px`
+    }
+
+    if (!this.model.collapsible) {
+      plugin_config.collapseOptGroupsByDefault = false
     }
 
     return plugin_config
@@ -352,6 +358,8 @@ export namespace CustomSelect {
     allow_non_selected: p.Property<boolean>
     non_selected_text: p.Property<string>
     is_opt_grouped: p.Property<boolean>
+    collapsible: p.Property<boolean>
+    collapsed_by_default: p.Property<boolean>
   }
 }
 
@@ -376,6 +384,8 @@ export class CustomSelect extends InputWidget {
       allow_non_selected:    [ Boolean, true ],
       non_selected_text:     [ String, "Select..." ],
       is_opt_grouped:        [ Boolean, false ],
+      collapsible:           [ Boolean, false ],
+      collapsed_by_default:  [ Boolean, false ],
     }))
   }
 }

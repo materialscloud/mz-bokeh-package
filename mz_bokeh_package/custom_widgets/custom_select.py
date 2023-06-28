@@ -60,6 +60,11 @@ class CustomSelect(InputWidget):
     Indicates whether the widget contains grouped options or not.
     """)
 
+    collapsible = Bool(default=False, help="""Allows to collapse the groups of options.""")
+
+    collapsed_by_default = Bool(default=False, help="""Defines the state of the collapsible groups at startup.
+    Can be set to True only if collapsible is activated.""")
+
     @classmethod
     def create(cls: Type[T], title: str) -> T:
         """This function creates a custom single select filter with the title given.
