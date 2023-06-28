@@ -14,13 +14,13 @@ class CustomSelect(InputWidget):
     __implementation__ = "select.ts"
     __javascript__ = [
         "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js",
     ]
     __css__ = [
-        "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css",
-        "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/css/bootstrap-multiselect.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/bootstrap-multiselect.min.css",
     ]
 
     options = Either(Dict(String, List(Either(String, Tuple(String, String)))), List(Either(String, Tuple(String, String))), help="""
