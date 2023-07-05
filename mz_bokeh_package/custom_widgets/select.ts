@@ -4,107 +4,10 @@ import * as p from "core/properties"
 
 import {InputWidget, InputWidgetView} from "models/widgets/input_widget"
 
+import {common_styles, DropdownOption, GroupedOptions} from "./select_widgets_common_components"
+
 declare function $(...args: any[]): any
 
-// styles that are common to both single and multi select widgets
-const common_styles = `
-  .dropdown-toggle.custom-select {
-    font-size: inherit;
-    display: flex;
-    background: #fff url('data:image/svg+xml;utf8,<svg version="1.1" viewBox="0 0 25 20" xmlns="http://www.w3.org/2000/svg"><path d="M 0,0 25,0 12.5,20 Z" fill="black" /></svg>') no-repeat right 7px center/7px 10px;
-  }
-  .multiselect-container.dropdown-menu {
-    width: inherit;
-    overflow: auto auto !important;
-  }
-  .multiselect-option.dropdown-item {
-    color: inherit;
-    padding: 0 24px;
-  }
-  .multiselect-option.dropdown-item.active,
-  .multiselect-option.dropdown-item:active {
-    color: inherit;
-    background-color: #FFFFFF;
-  }
-  .multiselect-option.dropdown-item:focus {
-    outline: none;
-  }
-  .multiselect-group.dropdown-item-text {
-    font-size: 13px;
-  }
-  .form-check-input {
-    display: none;
-  }
-  .form-check-label {
-    font-size: 13px;
-  }
-  .dropdown-item.active label.form-check-label::before {
-    background-color: #60cbe0;
-    border: 1px solid #60cbe0;
-  }
-  .dropdown-item.active label.form-check-label::after {
-    display: block;
-  }
-  label.form-check-label::before {
-    content: "";
-    width: 14px;
-    height: 14px;
-    display: block;
-    border: 1px solid currentColor;
-    border-radius: 2px;
-    box-sizing: border-box;
-    left: -21px;
-    top: calc(50% - 7px);
-    position: absolute;
-  }
-  label.form-check-label {
-    position: relative;
-  }
-  label.form-check-label::after {
-    content: "";
-    width: 5px;
-    height: 8px;
-    box-sizing: border-box;
-    border-bottom: 2px solid white;
-    border-right: 2px solid white;
-    position: absolute;
-    display: none;
-    transform: rotate(45deg);
-    left: -16px;
-    top: calc(50% - 5px);
-    z-index: 1;
-  }
-  div.input-group-prepend > svg.input-group-text {
-    width: 30px !important;
-    height: inherit !important;
-  }
-  .multiselect-filter {
-    position: sticky; 
-    top: -6px; 
-    left: 0;
-    right: 0;
-    z-index: 2;
-  }
-  .multiselect-filter .input-group-prepend,
-  .multiselect-filter .input-group-append {
-    height: 31px;
-  }
-  span.multiselect-selected-text {
-    width: 100%; 
-    overflow: hidden; 
-    text-overflow: ellipsis;
-    text-align: left;
-  }
-  span.multiselect-native-select {
-    width: inherit;
-  }
-  .dropdown-item.active:hover {
-    background-color: #f8f9fa;
-  }
-  .multiselect-clear-filter.input-group-text {
-    outline: none;
-  }
-`
 const default_styles = common_styles + `
   .multiselect-group.dropdown-item-text {
     padding-left: 10px;
@@ -114,19 +17,9 @@ const default_styles = common_styles + `
   }
 `;
 
-interface DropdownOption {
-  value: string,
-  label: string,
-  selected: boolean,
-}
-interface GroupedOptions {
-  label: string,
-  children: Array<DropdownOption>
-}
-
 export class CustomSelectView extends InputWidgetView {
   model: CustomSelect
-  protected input_el: HTMLSelectElement
+  protected select_el: HTMLSelectElement
   protected options: any
   protected plugin_config: any
   protected all_values: Array<string|string[]>
@@ -147,12 +40,12 @@ export class CustomSelectView extends InputWidgetView {
     super.initialize()
     super.render()
 
-    this.input_el = this.init_select_element()
+    this.select_el = this.init_select_element()
   }
 
   init_select_element(): HTMLSelectElement{
     // Create a "Select" web element
-    const input_el = select({
+    const select_el = select({
       size: this.model.allow_non_selected ? 2 : 1,  // Allows none of the options to be selected
       class: "custom-select",
       name: this.model.name,
@@ -160,9 +53,9 @@ export class CustomSelectView extends InputWidgetView {
     })
 
     // Add the "Select" web element to its container 
-    this.group_el.appendChild(input_el)
+    this.group_el.appendChild(select_el)
 
-    return input_el
+    return select_el
   }
 
   parse_options_list(options: Array<(string | string[])>): Array<DropdownOption> {
@@ -224,10 +117,16 @@ export class CustomSelectView extends InputWidgetView {
       onChange: this.on_dropdown_change.bind(this),
       onDropdownShown: this.on_dropdown_opened.bind(this),
       onDropdownHidden: this.on_dropdown_closed.bind(this),
+      enableCollapsibleOptGroups: this.model.collapsible,
+      collapseOptGroupsByDefault: this.model.collapsed_by_default,
     }
 
     if (this.model.width) {
       plugin_config.buttonWidth = `${this.model.width}px`
+    }
+
+    if (!this.model.collapsible) {
+      plugin_config.collapseOptGroupsByDefault = false
     }
 
     return plugin_config
@@ -256,7 +155,7 @@ export class CustomSelectView extends InputWidgetView {
 
     this.plugin_config = this.set_plugin_config()
     
-    $(this.input_el).multiselect(this.plugin_config).multiselect('dataprovider', this.options).multiselect('rebuild')
+    $(this.select_el).multiselect(this.plugin_config).multiselect('dataprovider', this.options).multiselect('rebuild')
   
     // fixes the scroll issue on mobile
     $('.multiselect-container.dropdown-menu', this.group_el).unbind('touchstart')
@@ -292,7 +191,7 @@ export class CustomSelectView extends InputWidgetView {
     const hasOptions = (this.model.is_opt_grouped && this.options.some((opt: any) => opt.children.length)) || this.options.length
     
     if (hasOptions) {
-      $(document).ready(() => $(this.input_el).multiselect(`${this.model.enabled ? 'enable' : 'disable'}`))
+      $(document).ready(() => $(this.select_el).multiselect(`${this.model.enabled ? 'enable' : 'disable'}`))
     }
   }
 
@@ -300,11 +199,11 @@ export class CustomSelectView extends InputWidgetView {
   on_dropdown_change(): void {
     if (this.model.allow_non_selected)
       return
-    
+
     const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
     
     if (!selected.length) {
-      $(this.input_el).multiselect('select', this.model.value).multiselect('refresh')
+      $(this.select_el).multiselect('select', this.model.value).multiselect('refresh')
     }
   }
 
@@ -324,7 +223,7 @@ export class CustomSelectView extends InputWidgetView {
   on_dropdown_closed(): void {
     let value: string | string[]
     let was_value_changed: boolean
-    const selectedValue = $(this.input_el).val() || ""
+    const selectedValue = $(this.select_el).val() || ""
 
     if (this.model.is_opt_grouped) {
       value = this.all_values.find((v: any) => v[1] === selectedValue) || ""
@@ -352,6 +251,8 @@ export namespace CustomSelect {
     allow_non_selected: p.Property<boolean>
     non_selected_text: p.Property<string>
     is_opt_grouped: p.Property<boolean>
+    collapsible: p.Property<boolean>
+    collapsed_by_default: p.Property<boolean>
   }
 }
 
@@ -376,6 +277,8 @@ export class CustomSelect extends InputWidget {
       allow_non_selected:    [ Boolean, true ],
       non_selected_text:     [ String, "Select..." ],
       is_opt_grouped:        [ Boolean, false ],
+      collapsible:           [ Boolean, false ],
+      collapsed_by_default:  [ Boolean, false ],
     }))
   }
 }

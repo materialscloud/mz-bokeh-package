@@ -7,7 +7,7 @@ options = {"Group 1": [["id1.1", "Title 1.1"], ["id1.2", "Title 1.2"]],
            }
 
 boolean_attributes_ms = ["enabled", "enable_filtering", "include_select_all", "collapsible", "collapsed_by_default"]
-boolean_attributes_single = ["enabled", "enable_filtering", "allow_non_selected"]
+boolean_attributes_single = ["enabled", "enable_filtering", "allow_non_selected", "collapsible", "collapsed_by_default"]
 
 select_widgets = [CustomSelect.create(title="CustomSelect, default settings")]
 multi_select_widgets = [CustomMultiSelect.create(title="CustomMultiSelect, default settings")]
@@ -33,6 +33,10 @@ for attr in boolean_attributes_single:
     non_default_single = not getattr(select_widgets[-1], attr)
     setattr(select_widgets[-1], attr, non_default_single)
     select_widgets[-1].title = f"Select, {attr} {'activated' if non_default_single else 'deactivated'}"
+
+select_widgets.append(CustomSelect.create(title="Select, collapsible AND collapsed_by_default"))
+select_widgets[-1].collapsible = True
+select_widgets[-1].collapsed_by_default = True
 
 for widget in multi_select_widgets + select_widgets:
     widget.options = options
