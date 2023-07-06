@@ -1063,7 +1063,12 @@
             var value = $group.attr("value");
             var title = $group.attr('title');
 
-            var $groupOption = $("<span class='multiselect-group dropdown-item-text'></span>");
+            if (this.options.collapseOptGroupsByDefault) {
+                var $groupOption = $("<span class='multiselect-group dropdown-item-text closed'></span>");
+            }
+            else {
+                var $groupOption = $("<span class='multiselect-group dropdown-item-text'></span>");
+            }
 
             if (this.options.enableClickableOptGroups && this.options.multiple) {
                 $groupOption = $(this.options.templates.optionGroup);
