@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <!-- Include Twitter Bootstrap and jQuery: -->
+    <link rel="stylesheet" href="css/bootstrap-4.6.2.min.css" type="text/css"/>
+    <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle-4.6.2.min.js"></script>
+    <script type="text/javascript" src="js/font-awesome-5.15.2.all.min.js"></script>
+
+    <!-- Include the plugin's CSS and JS: -->
+    <script type="text/javascript" src="js/bootstrap-multiselect-1.1.2.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-multiselect-1.1.2.min.css" type="text/css"/>
+  </head>
+  <body>
+    <select id="example-getting-started" multiple="multiple">
+      <option value="cheese">Cheese</option>
+      <option value="tomatoes">Tomatoes</option>
+      <option value="mozarella">Mozzarella</option>
+      <option value="mushrooms">Mushrooms</option>
+      <option value="pepperoni">Pepperoni</option>
+      <option value="onions">Onions</option>
+    </select>
+    <!-- Initialize the plugin: -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#example-getting-started').multiselect({
+              enableFiltering: true,
+              collapsibleOptGroups: true,
+            });
+        });
+    </script>
+
+    <br><br><br><br>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#example-multiple-optgroups').multiselect({
+          enableFiltering: true,
+          enableCollapsibleOptGroups: true,
+          collapseOptGroupsByDefault: true,
+        });
+      });
+    </script>
+    <select id="example-multiple-optgroups">
+        <optgroup label="Group 1" class="group-1">
+            <option value="1-1">Option 1.1</option>
+            <option value="1-2" selected="selected">Option 1.2</option>
+            <option value="1-3" selected="selected">Option 1.3</option>
+        </optgroup>
+        <optgroup label="Group 2" class="group-2">
+            <option value="2-1">Option 2.1</option>
+            <option value="2-2">Option 2.2</option>
+            <option value="2-3">Option 2.3</option>
+        </optgroup>
+    </select>
+
+
+  </body>
+</html>
