@@ -16,11 +16,11 @@ class CustomSelect(InputWidget):
         "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js",
     ]
     __css__ = [
         "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css",
         "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/bootstrap-multiselect.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
     ]
 
     options = Either(Dict(String, List(Either(String, Tuple(String, String)))), List(Either(String, Tuple(String, String))), help="""
