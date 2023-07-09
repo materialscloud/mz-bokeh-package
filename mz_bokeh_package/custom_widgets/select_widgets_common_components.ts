@@ -1,7 +1,6 @@
 // styles that are common to both single and multi select widgets
 export const common_styles = `
   .custom_select .dropdown-toggle.caret-container {
-    cursor: auto;
     margin-left: -12px;
     padding: 7px 3px 8px 12px;
   }
