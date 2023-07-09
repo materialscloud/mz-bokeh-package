@@ -15,7 +15,7 @@ class CustomMultiSelect(InputWidget):
     __javascript__ = [
         "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js",
+        "custom_select/static/bootstrap-multiselect-1.1.2.js",
     ]
     __css__ = [
         "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css",
