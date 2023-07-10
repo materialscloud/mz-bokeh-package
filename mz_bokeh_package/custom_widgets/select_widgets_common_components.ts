@@ -1,8 +1,13 @@
 // styles that are common to both single and multi select widgets
 export const common_styles = `
+  /* Expand clickable area of the caret for collapsing groups */
   .custom_select .dropdown-toggle.caret-container {
     margin-left: -12px;
     padding: 7px 3px 8px 12px;
+  }
+  /* fix orientation of the open/close caret */
+  .multiselect-container .multiselect-group.closed .dropdown-toggle::after {
+    transform: none !important;
   }
   .dropdown-toggle.custom-select {
     font-size: inherit;
