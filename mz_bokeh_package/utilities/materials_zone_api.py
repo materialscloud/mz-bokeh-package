@@ -47,7 +47,7 @@ class MaterialsZoneApi:
 
         # Upload the files.
         # A response object will be returned with a success or fail message.
-        res = requests.post(Environment.get_request_url("upload/items"), files=files, params=params)
+        res = requests.post(Environment.get_request_url("items"), files=files, params=params)
 
         if res.status_code != 200:
             raise Exception(res.json()["error"])
