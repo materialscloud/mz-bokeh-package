@@ -1,5 +1,10 @@
 // styles that are common to both single and multi select widgets
 export const common_styles = `
+  /* Expand clickable area of the caret for collapsing groups */
+  .custom_select .dropdown-toggle.caret-container {
+    margin-left: -12px;
+    padding: 7px 3px 8px 12px;
+  }
   .dropdown-toggle.custom-select {
     font-size: inherit;
     display: flex;
@@ -106,4 +111,12 @@ export interface DropdownOption {
 export interface GroupedOptions {
   label: string,
   children: Array<DropdownOption>
+}
+
+declare function $(...args: any[]): any
+
+// Fixes an issue with the "collapseOptGroupsByDefault" plugin setting
+// where the caret icon indicates that the groups are expanded instead of collapsed.
+export function fix_collapsed_by_default(group_el: HTMLElement): void {
+  $('.multiselect-group', group_el).addClass('closed');
 }

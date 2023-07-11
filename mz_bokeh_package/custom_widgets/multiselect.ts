@@ -4,7 +4,12 @@ import * as p from "core/properties"
 
 import {InputWidget, InputWidgetView} from "models/widgets/input_widget"
 
-import {common_styles, DropdownOption, GroupedOptions} from "./select_widgets_common_components"
+import {
+  common_styles, 
+  DropdownOption, 
+  GroupedOptions, 
+  fix_collapsed_by_default,
+} from "./select_widgets_common_components"
 
 declare function $(...args: any[]): any
 
@@ -193,6 +198,9 @@ export class CustomMultiSelectView extends InputWidgetView {
     this solves the issue that the dropdown items width doesn't 
     stretch when the dropdown overflows on the x axis */
     this.add_options_wrapper()
+
+    if (this.model.collapsed_by_default && this.model.collapsible)
+      fix_collapsed_by_default(this.group_el)
   }
 
   render(): void {
