@@ -155,6 +155,18 @@ export class CustomSelectView extends InputWidgetView {
     }
   }
 
+  allow_deselect_option(resetSelection: any): void {
+    function handleClick(this: any): void {
+      if ($(this).hasClass('active')) {
+        $(this).removeClass('active')
+        $(this).off('click', handleClick)
+        resetSelection()
+      }
+    }
+  
+    $('.multiselect-option.dropdown-item.active', this.group_el).on('click', handleClick)
+  }
+
   apply_plugin(): void {
     this.options = this.parse_options()
 
@@ -185,6 +197,10 @@ export class CustomSelectView extends InputWidgetView {
 
     if (this.model.collapsed_by_default && this.model.collapsible)
       fix_collapsed_by_default(this.group_el)
+
+    // Fixes issue for deselecting an option.
+    if (this.model.allow_non_selected)
+      this.allow_deselect_option(() => this.model.setv({value: ''}, {silent: false}));
   }
 
   render(): void {
