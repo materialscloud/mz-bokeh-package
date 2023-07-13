@@ -198,7 +198,7 @@ export class CustomSelectView extends InputWidgetView {
 
     // Fixes issue for deselecting an option.
     if (this.model.allow_non_selected)
-      this.allow_deselect_option(() => this.model.setv({value: ''}, {silent: false}));
+      this.allow_deselect_option(() => $(this.select_el).val(''));
   }
 
   render(): void {
