@@ -157,11 +157,9 @@ export class CustomSelectView extends InputWidgetView {
 
   allow_deselect_option(resetSelection: any): void {
     function handleClick(this: any): void {
-      if ($(this).hasClass('active')) {
-        $(this).removeClass('active')
-        $(this).off('click', handleClick)
-        resetSelection()
-      }
+      $(this).removeClass('active')
+      $(this).off('click', handleClick)
+      resetSelection()
     }
   
     $('.multiselect-option.dropdown-item.active', this.group_el).on('click', handleClick)
