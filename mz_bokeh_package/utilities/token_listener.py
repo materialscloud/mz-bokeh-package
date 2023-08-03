@@ -1,42 +1,38 @@
-import json
-from dataclasses import dataclass
+from bokeh.events import ButtonClick
 from bokeh.io import curdoc
+from bokeh.models import CustomJS, Button
+from bokeh.layouts import column
 
-
-@dataclass
-class Message:
-    event: str
-    payload: str
+from .current_user import CurrentUser
 
 
 class TokenListener:
-    """ A static class responsible for listening to messages and updating an internal token value.
+    """ A class responsible for listening to messages and updating the CurrentUser token values. """
+    def __init__(self):
+        self._token = None
+        # add a dummy element that will trigger a token event
+        self._token_button_trigger = Button(label="1", visible=False)
+        self._token_button_trigger.on_event(ButtonClick, self._on_click_token_button_trigger)
+        # add a dummy data source that will collect the token
+        js_callback = CustomJS(
+            args=dict(bokehButton=self._token_button_trigger),
+            code="""
+                let token_value = document.getElementById('token-invoker').getAttribute('payload')
+                let tokenButton = document.evaluate(
+                        "//div[@id='token-invoker']//button", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null
+                    ).singleNodeValue
 
-    Methods:
-        start_listening(): Starts listening for messages using the `curdoc().on_message` method
-            to registers and handle "message" events.
+                bokehButton.label = token_value
+                tokenButton.click();
+            """)
+        self._token_button_trigger.js_on_change('disabled', js_callback)
+        curdoc().add_periodic_callback(self._check_token, 10000)
 
-        get_token(): Retrieves the current authentication token.
-    """
-    _token: str | None = None
+        self.layout = column(self._token_button_trigger, name="token_trigger")
 
-    @staticmethod
-    def start_listening():
-        """ Start listening for messages and register the internal event handler for "message" events. """
-        curdoc().on_message("message", TokenListener._on_message)
+    def _check_token(self):
+        self._token_button_trigger.disabled = not self._token_button_trigger.disabled
 
-    @staticmethod
-    def get_token() -> str:
-        """ Get the current authentication token. """
-        return TokenListener._token
-
-    @staticmethod
-    def _on_message(message: str):
-        """ Event handler method called when a new message is received.
-
-        Args:
-            message: The incoming message in JSON format.
-        """
-        message = Message(**json.loads(message))
-        if message.event == "AUTH_TOKEN_UPDATE":
-            TokenListener._token = message.payload
+    def _on_click_token_button_trigger(self, trigger):
+        self._token = self._token_button_trigger.label
+        CurrentUser.update_token(self._token)
