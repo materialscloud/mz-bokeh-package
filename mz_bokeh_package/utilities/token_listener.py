@@ -13,7 +13,6 @@ class TokenListener:
         # add a dummy element that will trigger a token event
         self._token_button_trigger = Button(label="1", visible=False)
         self._token_button_trigger.on_event(ButtonClick, self._on_click_token_button_trigger)
-        # add a dummy data source that will collect the token
         js_callback = CustomJS(
             args=dict(bokehButton=self._token_button_trigger),
             code="""
@@ -26,11 +25,11 @@ class TokenListener:
                 tokenButton.click();
             """)
         self._token_button_trigger.js_on_change('disabled', js_callback)
-        curdoc().add_periodic_callback(self._check_token, 10000)
+        curdoc().add_periodic_callback(self._trigger_token_update, 10000)
 
         self.layout = column(self._token_button_trigger, name="token_trigger")
 
-    def _check_token(self):
+    def _trigger_token_update(self):
         self._token_button_trigger.disabled = not self._token_button_trigger.disabled
 
     def _on_click_token_button_trigger(self, trigger):
