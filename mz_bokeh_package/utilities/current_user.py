@@ -3,7 +3,7 @@ from bokeh.io import curdoc
 
 from .environment import Environment
 from .graphql_api import MZGraphQLClient
-from .helpers import get_api_key_from_query_arguments
+from .helpers import get_argument_from_query_arguments
 
 
 class FetchUserInfoError(Exception):
@@ -20,10 +20,10 @@ class CurrentUser:
 
     @classmethod
     def get_user_id(cls) -> str:
-        """Retrieves the user ID of the currently active viewer
+        """Retrieves the user ID of the currently active viewer.
 
         Returns:
-            the user ID of the currently active viewer
+            the user ID of the currently active viewer.
         """
         user_info = cls._get_user_info()
         return user_info["id"]
@@ -40,7 +40,7 @@ class CurrentUser:
 
     @staticmethod
     def get_api_key() -> str | None:
-        """Get the api_key of the current user
+        """Get the api_key of the current active viewer.
 
         Returns:
             The api_key of the current user if it exists in either the environment variable or the request header,
@@ -54,7 +54,7 @@ class CurrentUser:
 
         # get the api_key from the request header
         query_arguments = curdoc().session_context.request.arguments
-        api_key = get_api_key_from_query_arguments(query_arguments)
+        api_key = get_argument_from_query_arguments(query_arguments, "api_key")
 
         return api_key
 

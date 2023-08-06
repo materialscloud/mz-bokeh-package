@@ -12,22 +12,23 @@ def get_temp_dir_path():
     return abspath(join(current_dir, "../temp"))
 
 
-def get_api_key_from_query_arguments(query_arguments: dict) -> str | None:
+def get_argument_from_query_arguments(query_arguments: dict, argument: str) -> str | None:
     """Get API key from the provided query arguments.
 
     Args:
         query_arguments: A dictionary containing query arguments.
+        argument: An argument name.
 
     Returns:
-        The API key if found in the query arguments and only one is present, otherwise None.
+        The argument value if found in the query arguments and only one is present, otherwise None.
     """
 
-    api_keys = query_arguments.get("api_key")
-    if api_keys is not None and len(api_keys) == 1:
-        api_key = api_keys[0]
-        if isinstance(api_key, bytes):
-            api_key = api_key.decode('utf8')
-        return api_key
+    values = query_arguments.get(argument)
+    if values is not None and len(values) == 1:
+        value = values[0]
+        if isinstance(value, bytes):
+            value = value.decode('utf8')
+        return value
     else:
         return None
 
