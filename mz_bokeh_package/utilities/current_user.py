@@ -83,7 +83,7 @@ class CurrentUser:
             return CurrentUser._users_cache[session_id]
 
         api_key = CurrentUser.get_api_key()
-        token = CurrentUser._get_initial_token_token()
+        token = CurrentUser._get_initial_token()
         if api_key or token:
             user_info = MZGraphQLClient.get_user(api_key, token)
             user_info["token"] = token
@@ -91,7 +91,7 @@ class CurrentUser:
                 cls._cache_user_info(session_id, user_info)
             return user_info
         else:
-            raise FetchUserInfoError("an api_key is required in order to fetch the user info.")
+            raise FetchUserInfoError("The user's credentials has not been provided.")
 
     @classmethod
     def _cache_user_info(cls, session_id: str, user_info: dict):
@@ -103,6 +103,6 @@ class CurrentUser:
         return curdoc().session_context.id if curdoc().session_context else None
 
     @staticmethod
-    def _get_initial_token_token() -> str | None:
+    def _get_initial_token() -> str | None:
         query_arguments = curdoc().session_context.request.arguments
         return get_argument_from_query_arguments(query_arguments, "auth_token")
