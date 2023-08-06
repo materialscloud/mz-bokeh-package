@@ -1,3 +1,17 @@
+"""
+The purpose of the TokenListener class is to collect token values provided by a parent window event
+and update the CurrentUser.
+
+Usage:
+
+1. Embed the token_trigger in the HTML code within a div element with the ID "token-invoker."
+2. Implement JS code:
+ 2.1 Listen to a 'message' event.
+ 2.2 Assign the token content to the 'token-invoker' as a payload attribute.
+3. Initialize the TokenListener class.
+4. Add the TokenListener layout.
+"""
+
 from bokeh.events import ButtonClick
 from bokeh.io import curdoc
 from bokeh.models import CustomJS, Button

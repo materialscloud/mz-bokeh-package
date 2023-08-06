@@ -14,7 +14,7 @@ TESTS_PASS = [
     {
         "input": {
             "session_id": SESSION_ID,
-            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME, "token": TOKEN,}},
+            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME, "token": TOKEN}},
             "get_api_key": None,
             "get_token": None,
             "get_user": None
@@ -35,7 +35,7 @@ TESTS_PASS = [
         },
         "output": {
             "user_info": {"id": USER_ID, "name": USER_NAME, "token": TOKEN},
-            "users_cache": {SESSION_ID: {"id": USER_ID,"name": USER_NAME, "token": TOKEN}}
+            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME, "token": TOKEN}}
         },
     },
     {
