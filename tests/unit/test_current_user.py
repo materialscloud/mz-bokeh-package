@@ -4,6 +4,7 @@ from mz_bokeh_package.utilities import CurrentUser, FetchUserInfoError
 from mz_bokeh_package.utilities.graphql_api import MZGraphQLClient
 
 API_KEY = "6fzQxEJL"
+TOKEN = "eyJhbGciO"
 SESSION_ID = "pZoO4ysY"
 USER_ID = "79e8e0f4"
 USER_NAME = "user_name"
@@ -13,14 +14,15 @@ TESTS_PASS = [
     {
         "input": {
             "session_id": SESSION_ID,
-            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
+            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME, "token": TOKEN}},
             "get_api_key": None,
+            "get_token": None,
             "get_user": None
 
         },
         "output": {
-            "user_info": {"id": USER_ID, "name": USER_NAME},
-            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
+            "user_info": {"id": USER_ID, "name": USER_NAME, "token": TOKEN},
+            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME, "token": TOKEN}}
         },
     },
     {
@@ -28,11 +30,12 @@ TESTS_PASS = [
             "session_id": SESSION_ID,
             "users_cache": {},
             "get_api_key": API_KEY,
+            "get_token": TOKEN,
             "get_user": {"id": USER_ID, "name": USER_NAME}
         },
         "output": {
-            "user_info": {"id": USER_ID, "name": USER_NAME},
-            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
+            "user_info": {"id": USER_ID, "name": USER_NAME, "token": TOKEN},
+            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME, "token": TOKEN}}
         },
     },
     {
@@ -40,10 +43,11 @@ TESTS_PASS = [
             "session_id": None,
             "users_cache": {},
             "get_api_key": API_KEY,
+            "get_token": TOKEN,
             "get_user": {"id": USER_ID, "name": USER_NAME}
         },
         "output": {
-            "user_info": {"id": USER_ID, "name": USER_NAME},
+            "user_info": {"id": USER_ID, "name": USER_NAME, "token": TOKEN},
             "users_cache": {},
         },
     },
@@ -56,6 +60,7 @@ TESTS_FAILURE = [
             "session_id": None,
             "users_cache": {},
             "get_api_key": None,
+            "get_token": None,
             "get_user": None
         },
         "output": {
@@ -67,6 +72,7 @@ TESTS_FAILURE = [
             "session_id": SESSION_ID,
             "users_cache": {},
             "get_api_key": None,
+            "get_token": None,
             "get_user": None
         },
         "output": {
@@ -76,8 +82,9 @@ TESTS_FAILURE = [
     {
         "input": {
             "session_id": None,
-            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME}},
+            "users_cache": {SESSION_ID: {"id": USER_ID, "name": USER_NAME, "token": TOKEN}},
             "get_api_key": None,
+            "get_token": None,
             "get_user": None
         },
         "output": {
@@ -99,8 +106,14 @@ def monkeypatch_parameters(request, monkeypatch):
     get_api_key = parameters["input"]["get_api_key"]
     monkeypatch.setattr(CurrentUser, "get_api_key", lambda: get_api_key)
 
+    get_token = parameters["input"]["get_token"]
+    monkeypatch.setattr(CurrentUser, "get_token", lambda: get_token)
+
+    _get_initial_token = parameters["input"]["get_token"]
+    monkeypatch.setattr(CurrentUser, "_get_initial_token", lambda: _get_initial_token)
+
     get_user = parameters["input"]["get_user"]
-    monkeypatch.setattr(MZGraphQLClient, "get_user", lambda api_key: get_user)
+    monkeypatch.setattr(MZGraphQLClient, "get_user", lambda api_key, token: get_user)
 
     return parameters
 
