@@ -63,7 +63,7 @@ class CurrentUser:
         """ Retrieves the current active viewer authentication token.
 
         Returns:
-            the token of the currently active viewer.
+            The token of the currently active viewer.
         """
         user_info = cls._get_user_info()
         return user_info["token"]

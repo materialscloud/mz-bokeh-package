@@ -13,7 +13,7 @@ def get_temp_dir_path():
 
 
 def get_argument_from_query_arguments(query_arguments: dict, argument: str) -> str | None:
-    """Get API key from the provided query arguments.
+    """Get a given argument from the provided query arguments.
 
     Args:
         query_arguments: A dictionary containing query arguments.
