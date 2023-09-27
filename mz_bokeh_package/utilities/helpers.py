@@ -29,28 +29,3 @@ def get_api_key_from_query_arguments(query_arguments: dict) -> str | None:
         return api_key
     else:
         return None
-
-
-def save_file(file_name: str, file_content: Union[str, bytes]) -> str:
-    """Saves a file to the "temp" folder.
-
-    Args:
-        file_name (str): Name of the file (including format).
-        file_content (Union[str, bytes]): Content of the file.
-
-    Returns:
-        str: Absolute path to the file.
-    """
-
-    temp_path = get_temp_dir_path()
-
-    if not isdir(temp_path):
-        os.mkdir(temp_path)
-
-    file_path = join(temp_path, file_name)
-
-    write_mode = "wb+" if isinstance(file_content, bytes) else "w+"
-    with open(file_path, write_mode) as f:
-        f.write(file_content)
-
-    return file_path
