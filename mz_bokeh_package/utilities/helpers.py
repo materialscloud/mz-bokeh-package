@@ -54,9 +54,3 @@ def save_file(file_name: str, file_content: Union[str, bytes]) -> str:
         f.write(file_content)
 
     return file_path
-
-
-def clean_temp_folder():
-    temp_path = get_temp_dir_path()
-    for filename in os.listdir(temp_path):
-        os.remove(join(temp_path, filename))
