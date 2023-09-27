@@ -1,16 +1,3 @@
-import os
-from os.path import abspath, dirname, isdir, join
-from typing import Union
-
-
-def get_temp_dir_path():
-    """Returns The absolute path to the "temp" folder.
-    """
-
-    current_dir = dirname(__file__)
-    return abspath(join(current_dir, "../temp"))
-
-
 def get_api_key_from_query_arguments(query_arguments: dict) -> str | None:
     """Get API key from the provided query arguments.
 
