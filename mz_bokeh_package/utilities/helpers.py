@@ -1,7 +1,6 @@
 import os
 from os.path import abspath, dirname, isdir, join
 from typing import Union
-import requests
 
 
 def get_temp_dir_path():
@@ -61,17 +60,3 @@ def clean_temp_folder():
     temp_path = get_temp_dir_path()
     for filename in os.listdir(temp_path):
         os.remove(join(temp_path, filename))
-
-
-def download_image(url: str) -> bytes:
-    """Downloads an image from a given url path.
-
-    Args:
-        url (str): URL address of the image.
-
-    Returns:
-        bytes: Image data.
-    """
-    res = requests.get(url)
-
-    return res._content
