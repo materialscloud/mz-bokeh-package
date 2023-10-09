@@ -8,7 +8,6 @@ setup(
 
     # Requirements for the package.
     install_requires=[
-        "requests~=2.31.0",
         "bokeh>=2.3.0, <2.5",
         "seaborn~=0.12.0",
         "gql[requests]~=3.4.0",
