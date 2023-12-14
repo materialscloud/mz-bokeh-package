@@ -203,12 +203,21 @@ export class CustomSelectView extends InputWidgetView {
     }
   }
 
+  // function to bind to selected item for allowing to deselect it again.
+  // this function is called twice, but the python event is raised only once.
+  deselect_option(): void {
+    this.model.value = ""
+    const dropdown_menu = $('div.multiselect-container.dropdown-menu', this.group_el)
+    dropdown_menu.removeClass("show")
+  }
+
   // Runs after a change occurs 
   on_dropdown_change(): void {
-    if (this.model.allow_non_selected)
-      return
-
     const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
+
+    if (this.model.allow_non_selected)
+      selected[0].onclick = this.deselect_option.bind(this)
+      return
     
     if (!selected.length) {
       $(this.select_el).multiselect('select', this.model.value).multiselect('refresh')
