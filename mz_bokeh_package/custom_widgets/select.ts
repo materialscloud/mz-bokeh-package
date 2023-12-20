@@ -213,11 +213,10 @@ export class CustomSelectView extends InputWidgetView {
 
   // Runs after a change occurs 
   on_dropdown_change(): void {
-    const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
-
     if (this.model.allow_non_selected)
-      selected[0].onclick = this.deselect_option.bind(this)
       return
+
+    const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
     
     if (!selected.length) {
       $(this.select_el).multiselect('select', this.model.value).multiselect('refresh')
