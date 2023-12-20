@@ -183,6 +183,11 @@ export class CustomSelectView extends InputWidgetView {
       this.model.setv({value}, {silent: true})
     }
 
+    // allow for deselecting and leaving the widget in the unselected state.
+    const selected_button = $('button.multiselect-option.dropdown-item.active', this.group_el)
+    if (this.model.allow_non_selected && selected_button.length)
+      selected_button[0].onclick = this.deselect_option.bind(this)
+
     if (this.model.collapsed_by_default && this.model.collapsible)
       fix_collapsed_by_default(this.group_el)
   }
@@ -213,11 +218,10 @@ export class CustomSelectView extends InputWidgetView {
 
   // Runs after a change occurs 
   on_dropdown_change(): void {
-    const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
-
     if (this.model.allow_non_selected)
-      selected[0].onclick = this.deselect_option.bind(this)
       return
+
+    const selected = $('button.multiselect-option.dropdown-item.active', this.group_el)
     
     if (!selected.length) {
       $(this.select_el).multiselect('select', this.model.value).multiselect('refresh')
