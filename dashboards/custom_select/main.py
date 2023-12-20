@@ -38,6 +38,9 @@ select_widgets.append(CustomSelect.create(title="Select, collapsible AND collaps
 select_widgets[-1].collapsible = True
 select_widgets[-1].collapsed_by_default = True
 
+select_widgets.append(CustomSelect.create(title="Select, default with one option preselected."))
+select_widgets[-1].value = ["Group 1", "id1.1"]
+
 for widget in multi_select_widgets + select_widgets:
     widget.options = options
     widget.on_change("value", on_change)
