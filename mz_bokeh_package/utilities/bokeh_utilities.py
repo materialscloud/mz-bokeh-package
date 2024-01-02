@@ -15,7 +15,7 @@ class BokehUtilities:
 
         This decorator will cause the decorated event handler to run asynchronously, the loading spinner
         will be turned on while the event handler is running, and the function_to_execute will be called before the
-        event handler is executed with a True parameter and after with a False parameter.
+        event handler is executed with a += 1 addition and after with a -= 1 subtraction.
         The latter can be used, for example, to disable certain controls while the event handler is executing.
 
         Params:
@@ -27,7 +27,7 @@ class BokehUtilities:
         def _async_event_handler(func):
 
             def outer(self, *args, **kwargs):
-                self._state["is_loading"] = True
+                self._state["is_loading"] += 1
                 if function_to_execute is not None:
                     getattr(self, function_to_execute)(True)
                 curdoc().add_next_tick_callback(partial(inner, func, self, *args, **kwargs))
@@ -36,7 +36,7 @@ class BokehUtilities:
                 f(self, *args, **kwargs)
                 if function_to_execute is not None:
                     getattr(self, function_to_execute)(False)
-                self._state["is_loading"] = False
+                self._state["is_loading"] -= 1
 
             # create a version of outer that has the same signature as func (since that is expected by Bokeh)
             # Note! type hints are removed from the signature.
