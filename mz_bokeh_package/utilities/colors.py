@@ -69,11 +69,11 @@ def denormalize_rgb(rgb_color: Tuple[float]) -> Tuple[int]:
     return tuple(int(x*255) for x in rgb_color)
 
 
-def generate_continuous_palette(colors, n_colors: int = 256) -> List[str]:
+def generate_continuous_palette(colors: list[str], n_colors: int = 256) -> List[str]:
     """Generates a continuous color palette out of a given sequence of colors.
 
     Args:
-        colors (str): A sequence of Hex colors.
+        colors (list[str]): A sequence of Hex colors.
         n_colors (int, optional): Number of colors to include in the resulting palette. Defaults to 256.
 
     Returns:
