@@ -88,7 +88,7 @@ POINT_SHAPES = [
     "x",
     "y",
 ]
-PLOT_DIMENSIONS_SETTINGS = ["custom_plot_dimensions", "plot_height", "plot_width"]
+PLOT_DIMENSIONS_SETTINGS = ["custom_plot_dimensions", "plot_height", "plot_width", "aspect_ratio"]
 BASE_SETTINGS = ["grid_lines", "axes_thickness", "plot_outline", *PLOT_DIMENSIONS_SETTINGS]
 
 
@@ -110,6 +110,7 @@ SETTINGS = {
     "custom_plot_dimensions": (CheckboxGroup, {"labels": ["Custom Plot Dimensions:"]}),  # noqa: E501
     "plot_height": (Spinner, {"title": "Height (pixels)", "low": PLOT_DIMENSION_MIN, "high": PLOT_DIMENSION_MAX, "step": PLOT_DIMENSION_STEP, "disabled": True, "css_classes": ["plot-dimensions"]}),  # noqa: E501
     "plot_width": (Spinner, {"title": "Width (pixels)", "low": PLOT_DIMENSION_MIN, "high": PLOT_DIMENSION_MAX, "step": PLOT_DIMENSION_STEP, "disabled": True, "css_classes": ["plot-dimensions"]}),  # noqa: E501
+    "aspect_ratio": (Spinner, {"title": "Aspect Ratio (Width / Height)", "low": 0.5, "high": 5, "step": 0.5, "value": 0}),
     "text_size": (Spinner, {"title": "Text size", "low": 0, "high": 100, "step": 1, "value": 0}),
     "point_size": (Spinner, {"title": "Point size", "low": 0, "high": 100, "step": 1, "value": 0}),
     "point_shape": (CustomSelect, {"title": "Point shape", "options": get_options_from_ids(POINT_SHAPES), "allow_non_selected": False}),  # noqa: E501
@@ -135,6 +136,7 @@ class PlotSettings:
         "custom_plot_dimensions": False,
         "plot_height": 600,
         "plot_width": 600,
+        "aspect_ratio": 1.5,
         "text_size": 14,
         "point_size": 8,
         "point_shape": "circle",
@@ -304,6 +306,14 @@ class PlotSettings:
     def _plot_width(self, value: Optional[int]):
         self._plot.width_policy = "auto"
         self._plot.width = value
+
+    @property
+    def _aspect_ratio(self) -> float:
+        return self._plot.aspect_ratio
+
+    @_aspect_ratio.setter
+    def _aspect_ratio(self, value: float):
+        self._plot.aspect_ratio = value
 
     @property
     def _text_size(self) -> float:
@@ -820,3 +830,4 @@ class PlotSettings:
         is_disabled = False if new else True
         self._get_setting_widget("plot_height").disabled = is_disabled
         self._get_setting_widget("plot_width").disabled = is_disabled
+        self._get_setting_widget("aspect_ratio").disabled = not is_disabled
