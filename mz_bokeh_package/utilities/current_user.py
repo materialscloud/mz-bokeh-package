@@ -3,7 +3,7 @@ from bokeh.io import curdoc
 
 from .environment import Environment
 from .graphql_api import MZGraphQLClient
-from .helpers import get_api_key_from_query_arguments
+from .helpers import get_api_key_from_query_arguments, get_auth_token_from_query_arguments
 
 
 class FetchUserInfoError(Exception):
@@ -58,6 +58,17 @@ class CurrentUser:
 
         return api_key
 
+    @staticmethod
+    def get_auth_token() -> str | None:
+        """Get the auth token of the current user
+
+        Returns:
+            The auth token of the current user if it exists in the request header, otherwise None.
+        """
+        query_arguments = curdoc().session_context.request.arguments
+        auth_token = get_auth_token_from_query_arguments(query_arguments)
+        return auth_token
+
     @classmethod
     def _get_user_info(cls) -> dict:
         session_id = cls._get_session_id()
@@ -65,8 +76,9 @@ class CurrentUser:
             return CurrentUser._users_cache[session_id]
 
         api_key = CurrentUser.get_api_key()
+        auth_token = CurrentUser.get_auth_token()
         if api_key:
-            user_info = MZGraphQLClient.get_user(api_key)
+            user_info = MZGraphQLClient.get_user(api_key, auth_token)
             if session_id:
                 cls._cache_user_info(session_id, user_info)
             return user_info
