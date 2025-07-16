@@ -17,6 +17,7 @@ class CurrentUser:
     """
 
     _users_cache = {}
+    _auth_token_cache = {}
 
     @classmethod
     def get_user_id(cls) -> str:
@@ -65,9 +66,20 @@ class CurrentUser:
         Returns:
             The auth token of the current user if it exists in the request header, otherwise None.
         """
+        session_id = CurrentUser._get_session_id()
+        if session_id and session_id in CurrentUser._auth_token_cache:
+            return CurrentUser._auth_token_cache[session_id]
+
         query_arguments = curdoc().session_context.request.arguments
         auth_token = get_auth_token_from_query_arguments(query_arguments)
         return auth_token
+    
+    @staticmethod
+    def update_auth_token(new_auth_token: str) -> None:
+        """Update the auth token for the current session"""
+        session_id = CurrentUser._get_session_id()
+        if session_id:
+            CurrentUser._auth_token_cache[session_id] = new_auth_token
 
     @classmethod
     def _get_user_info(cls) -> dict:
@@ -88,7 +100,14 @@ class CurrentUser:
     @classmethod
     def _cache_user_info(cls, session_id: str, user_info: dict):
         CurrentUser._users_cache[session_id] = user_info
-        curdoc().on_session_destroyed(lambda session_context: CurrentUser._users_cache.pop(session_context.id, None))
+        curdoc().on_session_destroyed(cls._clear_session_cache)
+
+    @classmethod
+    def _clear_session_cache(cls, session_context):
+        """Clear all cached data for a session when it's destroyed"""
+        session_id = session_context.id
+        CurrentUser._users_cache.pop(session_id, None)
+        CurrentUser._auth_token_cache.pop(session_id, None)
 
     @staticmethod
     def _get_session_id() -> str | None:
