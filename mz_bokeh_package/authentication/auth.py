@@ -17,7 +17,7 @@ from tornado.web import RequestHandler
 
 from mz_bokeh_package.utilities.environment import Environment
 from mz_bokeh_package.utilities.graphql_api import MZGraphQLClient, GraphqlQueryError
-from mz_bokeh_package.utilities.helpers import get_api_key_from_query_arguments
+from mz_bokeh_package.utilities.helpers import get_api_key_from_query_arguments, get_auth_token_from_query_arguments
 
 
 def get_user(request_handler: RequestHandler) -> bool | None:
@@ -38,9 +38,10 @@ def get_user(request_handler: RequestHandler) -> bool | None:
         return True
 
     query_arguments = request_handler.request.query_arguments
+    auth_token = get_auth_token_from_query_arguments(query_arguments)
     api_key = get_api_key_from_query_arguments(query_arguments)
     try:
-        MZGraphQLClient.get_user(api_key)
+        MZGraphQLClient.get_user(api_key, auth_token)
     except GraphqlQueryError:
         return None
 

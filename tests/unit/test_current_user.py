@@ -100,7 +100,7 @@ def monkeypatch_parameters(request, monkeypatch):
     monkeypatch.setattr(CurrentUser, "get_api_key", lambda: get_api_key)
 
     get_user = parameters["input"]["get_user"]
-    monkeypatch.setattr(MZGraphQLClient, "get_user", lambda api_key: get_user)
+    monkeypatch.setattr(MZGraphQLClient, "get_user", lambda api_key, auth_token: get_user)
 
     return parameters
 
