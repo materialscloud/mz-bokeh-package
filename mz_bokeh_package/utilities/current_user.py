@@ -66,6 +66,12 @@ class CurrentUser:
         Returns:
             The auth token of the current user if it exists in the request header, otherwise None.
         """
+
+        # in the development environment, allow overriding the api_key and user_key via env variables
+        if Environment.get_environment() == 'dev':
+            auth_token = os.getenv('AUTH_TOKEN')
+            return auth_token
+
         session_id = CurrentUser._get_session_id()
         if session_id and session_id in CurrentUser._auth_token_cache:
             return CurrentUser._auth_token_cache[session_id]
