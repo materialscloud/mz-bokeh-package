@@ -9,6 +9,7 @@ setup(
     # Requirements for the package.
     install_requires=[
         "bokeh>=2.3.0, <2.5",
+        "numpy<1.24",
         "seaborn~=0.12.0",
         "gql[requests]~=3.4.0",
         "jsonschema~=4.17.0",
