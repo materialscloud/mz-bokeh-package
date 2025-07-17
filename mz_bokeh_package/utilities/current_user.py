@@ -95,13 +95,13 @@ class CurrentUser:
 
         api_key = CurrentUser.get_api_key()
         auth_token = CurrentUser.get_auth_token()
-        if api_key:
+        if api_key or auth_token:
             user_info = MZGraphQLClient.get_user(api_key, auth_token)
             if session_id:
                 cls._cache_user_info(session_id, user_info)
             return user_info
         else:
-            raise FetchUserInfoError("an api_key is required in order to fetch the user info.")
+            raise FetchUserInfoError("an api_key or auth_token is required in order to fetch the user info.")
 
     @classmethod
     def _cache_user_info(cls, session_id: str, user_info: dict):
