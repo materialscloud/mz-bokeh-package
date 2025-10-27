@@ -8,8 +8,8 @@ import itertools
 import numpy as np
 from typing import Any, Dict, List, Optional, Tuple
 from bokeh.io import curdoc
-from bokeh.plotting import Figure
 from bokeh.core.enums import Anchor
+from bokeh.models.plots import Plot
 from bokeh.palettes import Category10
 from bokeh.models.renderers import GlyphRenderer
 from bokeh.models import (
@@ -155,7 +155,7 @@ class PlotSettings:
     def __init__(
         self,
         title: str,
-        plot: Figure,
+        plot: Plot,
         state: AppState,
         included_settings: Optional[List[str]] = None,
         default_values: Optional[Dict[str, Any]] = None,
@@ -164,7 +164,7 @@ class PlotSettings:
 
         Args:
             title (str): The title of the plot settings modal.
-            plot (Figure): The plot to apply the settings to.
+            plot (Plot): The plot to apply the settings to.
             state (AppState): Bokeh application state.
             included_settings (Optional[List[str]], optional): A list of setting IDs to include in the settings modal.
                 The order in which the settings widgets are rendered matches the order they appear in this list.
@@ -572,19 +572,19 @@ class PlotSettings:
         """
         return CustomJS(args=args, code=code)
 
-    def on_apply_dialog(self, new_plot: Optional[Figure] = None):
+    def on_apply_dialog(self, new_plot: Optional[Plot] = None):
         """Modifies the plot based on the settings configurations.
 
         This method can be triggered either by clicking the "Apply" button in the settings modal
         or by another component that replaces the existing plot with a new one and needs to apply the settings on
         the newly created plot. For example, updating the "Parameter to Display" filter in the "Histogram" dashboard
-        causes a creation of a new Figure instance. In such case, the histogram component can use this function
+        causes a creation of a new Plot instance. In such case, the histogram component can use this function
         in order to apply the plot settings on the newly created plot.
 
         Args:
-            new_plot (Optional[Figure], optional): The newly created Figure instance. Defaults to None.
+            new_plot (Optional[Plot], optional): The newly created Plot instance. Defaults to None.
         """
-        if isinstance(new_plot, Figure):
+        if isinstance(new_plot, Plot):
             self._plot = new_plot
             self._plot.add_tools(self._settings_plot_tool)
 

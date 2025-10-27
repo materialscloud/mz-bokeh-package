@@ -55,7 +55,7 @@ class CustomSelect(InputWidget):
     Allows/Disallows none of the options to be selected. If set to False, the first option is selected by default.
     """)
 
-    is_opt_grouped = Bool(readonly=True, help="""
+    is_opt_grouped = Bool(help="""
     Indicates whether the widget contains grouped options or not.
     """)
 

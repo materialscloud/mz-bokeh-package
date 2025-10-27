@@ -65,7 +65,7 @@ class CustomMultiSelect(InputWidget):
     The text to display on the toggle button when none of the options are selected.
     """)
 
-    is_opt_grouped = Bool(readonly=True, help="""
+    is_opt_grouped = Bool(help="""
     Indicates whether the widget contains grouped options or not.
     """)
 
