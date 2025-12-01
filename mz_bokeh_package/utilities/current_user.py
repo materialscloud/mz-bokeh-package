@@ -55,6 +55,9 @@ class CurrentUser:
                 return api_key
 
         # get the api_key from the request header
+        if curdoc().session_context is None:
+            return api_key
+
         query_arguments = curdoc().session_context.request.arguments
         api_key = get_api_key_from_query_arguments(query_arguments)
 
@@ -77,6 +80,9 @@ class CurrentUser:
         session_id = CurrentUser._get_session_id()
         if session_id and session_id in CurrentUser._auth_token_cache:
             return CurrentUser._auth_token_cache[session_id]
+
+        if curdoc().session_context is None:
+            return auth_token
 
         query_arguments = curdoc().session_context.request.arguments
         auth_token = get_auth_token_from_query_arguments(query_arguments)
