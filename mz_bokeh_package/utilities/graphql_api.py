@@ -28,7 +28,7 @@ class MZGraphQLClient:
             auth_token: The auth token to use for the API call.
         Returns:
             a dictionary containing the user id and name corresponding to the user with this api_key:
-            {"id": <user id>, "name": <user name>}
+            {"id": <user id>, "name": <user name>, "organization": {"id": <organization id>, "title": <organization title>}}
         """
 
         query = gql(
@@ -37,6 +37,10 @@ class MZGraphQLClient:
                 viewer {
                     id
                     name
+                    organization {
+                        id
+                        title
+                    }
                 }
             }
             """
@@ -50,6 +54,13 @@ class MZGraphQLClient:
                     "properties": {
                         "id": {"type": "string"},
                         "name": {"type": "string"},
+                        "organization": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "string"},
+                                "title": {"type": "string"},
+                            }
+                        }
                     },
                     "required": ["id", "name"]
                 }
