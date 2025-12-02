@@ -51,9 +51,13 @@ class CurrentUser:
         # in the development environment, allow overriding the api_key and user_key via env variables
         if Environment.get_environment() == 'dev':
             api_key = os.getenv('API_KEY')
-            return api_key
+            if api_key is not None and len(api_key) > 0:
+                return api_key
 
         # get the api_key from the request header
+        if curdoc().session_context is None:
+            return api_key
+
         query_arguments = curdoc().session_context.request.arguments
         api_key = get_api_key_from_query_arguments(query_arguments)
 
@@ -70,11 +74,15 @@ class CurrentUser:
         # in the development environment, allow overriding the api_key and user_key via env variables
         if Environment.get_environment() == 'dev':
             auth_token = os.getenv('AUTH_TOKEN')
-            return auth_token
+            if auth_token is not None and len(auth_token) > 0:
+                return auth_token
 
         session_id = CurrentUser._get_session_id()
         if session_id and session_id in CurrentUser._auth_token_cache:
             return CurrentUser._auth_token_cache[session_id]
+
+        if curdoc().session_context is None:
+            return auth_token
 
         query_arguments = curdoc().session_context.request.arguments
         auth_token = get_auth_token_from_query_arguments(query_arguments)
