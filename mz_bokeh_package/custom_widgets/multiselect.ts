@@ -151,6 +151,7 @@ export class CustomMultiSelectView extends InputWidgetView {
       enableClickableOptGroups: true,
       onDropdownShown: this.on_dropdown_opened.bind(this),
       onDropdownHidden: this.on_dropdown_closed.bind(this),
+      onChange: this.update_partial_states.bind(this),
     }
 
     if (this.model.width) {
@@ -201,6 +202,25 @@ export class CustomMultiSelectView extends InputWidgetView {
 
     if (this.model.collapsed_by_default && this.model.collapsible)
       fix_collapsed_by_default(this.group_el)
+
+    this.update_partial_states()
+  }
+
+  update_partial_states(): void {
+    if (!this.model.collapsible || !this.model.is_opt_grouped) return;
+
+    $('button.multiselect-group.dropdown-item', this.group_el).each((_: any, group_el: HTMLElement) => {
+      const $group = $(group_el);
+      const children = $group.nextUntil('button.multiselect-group.dropdown-item', 'button.multiselect-option.dropdown-item');
+      const total = children.length;
+      const selected = children.filter('.active').length;
+
+      if (selected > 0 && selected < total) {
+        $group.addClass('partial');
+      } else {
+        $group.removeClass('partial');
+      }
+    });
   }
 
   render(): void {

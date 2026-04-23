@@ -101,6 +101,19 @@ export const common_styles = `
   .multiselect-clear-filter.input-group-text {
     outline: none;
   }
+  button.multiselect-group.partial label.form-check-label::before {
+    background-color: #60cbe0;
+    border: 1px solid #60cbe0;
+  }
+  button.multiselect-group.partial label.form-check-label::after {
+    display: block;
+    width: 8px;
+    height: 2px;
+    border-right: none;
+    transform: none;
+    left: -18px;
+    top: calc(50% - 1px);
+  }
   `
 
 export interface DropdownOption {
